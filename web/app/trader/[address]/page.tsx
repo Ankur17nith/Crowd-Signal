@@ -61,7 +61,7 @@ export default function TraderProfilePage({
           <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
           <span>Oracle Sync: Real-time</span>
           <span>·</span>
-          <span className="font-mono tabular-nums">Block #18,409,219</span>
+          <span className="font-mono">Somnia Shannon (50312)</span>
         </div>
       </div>
 
@@ -70,7 +70,7 @@ export default function TraderProfilePage({
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="px-2 py-0.5 rounded bg-[#141414] border border-[#292929] text-[#F5F5F5] text-[11px] font-medium">
-              Top 1% Calibrated
+              Score: {predictor.predictorScore}
             </span>
             <span className="px-2 py-0.5 rounded bg-[#141414] border border-[#292929] text-[#A1A1A1] text-[11px]">
               Somnia Shannon
@@ -93,14 +93,16 @@ export default function TraderProfilePage({
               </h1>
               <div className="flex items-center gap-3 text-[#A1A1A1] text-[13px] mt-0.5">
                 <span>
-                  <strong className="text-[#F5F5F5] font-medium tabular-nums">1,420</strong> followers
+                  Rank: <strong className="text-[#F5F5F5] font-medium tabular-nums">{predictor.rank ? `#${predictor.rank}` : "Unranked"}</strong>
                 </span>
                 <span>·</span>
                 <span>
-                  Following <strong className="text-[#F5F5F5] font-medium tabular-nums">14</strong>
+                  Predictions: <strong className="text-[#F5F5F5] font-medium tabular-nums">{predictor.totalPredictions}</strong>
                 </span>
                 <span>·</span>
-                <span>Joined Feb 2024</span>
+                <span>
+                  Resolved: <strong className="text-[#F5F5F5] font-medium tabular-nums">{predictor.resolvedPredictions}</strong>
+                </span>
               </div>
             </div>
           </div>

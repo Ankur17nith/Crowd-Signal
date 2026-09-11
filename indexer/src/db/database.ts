@@ -349,8 +349,14 @@ export class DatabaseManager {
     // Track participant
     this.stmtUpsertParticipant.run(t.trader, t.timestamp, t.timestamp, t.collateral_amount);
 
-    // Derive prediction from trade
+    // Derive prediction from trade if it represents an observable probabilistic position
     const predictionId = `${t.trader}_${t.market_id}_${t.tx_hash}_${t.log_index}`;
+    // Observable execution price in binary contracts represents empirical hurdle probability
+    const isValidProbabilityPrice = typeof t.price === "number" && t.price > 0 && t.price < 1;
+    const empiricalConfidence = isValidProbabilityPrice
+      ? (t.direction === "UP" ? t.price : 1 - t.price)
+      : null;
+
     this.stmtInsertPrediction.run(
       predictionId,
       t.trader,
@@ -360,7 +366,7 @@ export class DatabaseManager {
       t.tx_hash,
       t.direction,
       t.size,
-      null, // confidence
+      empiricalConfidence,
       t.price
     );
   }
@@ -495,11 +501,10 @@ export class DatabaseManager {
       SELECT m.*, s.best_bid, s.best_ask, s.midpoint, s.spread, s.queue_imbalance, s.microprice, s.open_interest, s.trade_volume
       FROM markets m
       LEFT JOIN (
-        SELECT ms1.* FROM market_snapshots ms1
-        INNER JOIN (
-          SELECT market_id, MAX(timestamp) as max_ts FROM market_snapshots GROUP BY market_id
-        ) ms2 ON ms1.market_id = ms2.market_id AND ms1.timestamp = ms2.max_ts
-      ) s ON m.market_id = s.market_id
+        SELECT market_id, best_bid, best_ask, midpoint, spread, queue_imbalance, microprice, open_interest, trade_volume,
+               ROW_NUMBER() OVER (PARTITION BY market_id ORDER BY timestamp DESC) as rn
+        FROM market_snapshots
+      ) s ON m.market_id = s.market_id AND s.rn = 1
       ORDER BY m.expiry ASC
     `).all();
   }

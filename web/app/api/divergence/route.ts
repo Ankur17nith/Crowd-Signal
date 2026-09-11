@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerDb } from "@/lib/serverDb";
 import { FIXTURE_DIVERGENCE } from "@/fixtures/verifiedFixtures";
-import { DivergenceData } from "@/lib/data";
+import { DivergenceData, DivergenceResponse } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -39,33 +39,37 @@ export async function GET(req: NextRequest) {
 
   if (!divergence) {
     if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
-      divergence = FIXTURE_DIVERGENCE;
-    } else {
-      return NextResponse.json(
-        {
-          asset,
-          status: "Awaiting verified predictor observations",
-          divergencePercent: 0,
-          persistenceScore: 0,
-          interpretation: "No verified predictor positions active for this asset in the current evaluation window.",
-          elapsedMs: Date.now() - startTime,
-        },
-        {
-          status: 200,
-          headers: { "Cache-Control": "public, s-maxage=3, stale-while-revalidate=5" },
-        }
-      );
+      const response: DivergenceResponse = {
+        status: "live",
+        data: FIXTURE_DIVERGENCE,
+        elapsedMs: Date.now() - startTime,
+      };
+      return NextResponse.json(response, {
+        status: 200,
+        headers: { "Cache-Control": "public, s-maxage=3, stale-while-revalidate=5" },
+      });
     }
-  }
 
-  return NextResponse.json(
-    {
-      ...divergence,
+    const response: DivergenceResponse = {
+      status: "unavailable",
+      asset,
+      message: "No verified predictor positions active for this asset in the current evaluation window.",
       elapsedMs: Date.now() - startTime,
-    },
-    {
+    };
+    return NextResponse.json(response, {
       status: 200,
       headers: { "Cache-Control": "public, s-maxage=3, stale-while-revalidate=5" },
-    }
-  );
+    });
+  }
+
+  const response: DivergenceResponse = {
+    status: "live",
+    data: divergence,
+    elapsedMs: Date.now() - startTime,
+  };
+
+  return NextResponse.json(response, {
+    status: 200,
+    headers: { "Cache-Control": "public, s-maxage=3, stale-while-revalidate=5" },
+  });
 }

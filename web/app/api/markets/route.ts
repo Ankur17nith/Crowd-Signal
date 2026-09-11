@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerDb } from "@/lib/serverDb";
 import { FIXTURE_MARKETS } from "@/fixtures/verifiedFixtures";
-import { EventContractWindow } from "@/lib/data";
+import { EventContractWindow, ActiveMarketsResponse } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -17,11 +17,10 @@ export async function GET() {
         SELECT m.*, s.best_bid, s.best_ask, s.midpoint, s.spread, s.queue_imbalance, s.microprice, s.open_interest, s.trade_volume
         FROM markets m
         LEFT JOIN (
-          SELECT ms1.* FROM market_snapshots ms1
-          INNER JOIN (
-            SELECT market_id, MAX(timestamp) as max_ts FROM market_snapshots GROUP BY market_id
-          ) ms2 ON ms1.market_id = ms2.market_id AND ms1.timestamp = ms2.max_ts
-        ) s ON m.market_id = s.market_id
+          SELECT market_id, best_bid, best_ask, midpoint, spread, queue_imbalance, microprice, open_interest, trade_volume,
+                 ROW_NUMBER() OVER (PARTITION BY market_id ORDER BY timestamp DESC) as rn
+          FROM market_snapshots
+        ) s ON m.market_id = s.market_id AND s.rn = 1
         ORDER BY m.expiry ASC
       `).all();
 
@@ -59,18 +58,26 @@ export async function GET() {
     markets = FIXTURE_MARKETS;
   }
 
-  return NextResponse.json(
-    {
-      markets,
-      count: markets.length,
-      status: markets.length > 0 ? "LIVE" : "Awaiting active DreamDEX markets",
-      elapsedMs: Date.now() - startTime,
+  const response: ActiveMarketsResponse =
+    markets.length > 0
+      ? {
+          status: "live",
+          markets,
+          count: markets.length,
+          elapsedMs: Date.now() - startTime,
+        }
+      : {
+          status: "unavailable",
+          markets: [],
+          count: 0,
+          message: "No active DreamDEX binary markets found matching trading criteria on Somnia Shannon.",
+          elapsedMs: Date.now() - startTime,
+        };
+
+  return NextResponse.json(response, {
+    status: 200,
+    headers: {
+      "Cache-Control": "public, s-maxage=3, stale-while-revalidate=5",
     },
-    {
-      status: 200,
-      headers: {
-        "Cache-Control": "public, s-maxage=3, stale-while-revalidate=5",
-      },
-    }
-  );
+  });
 }

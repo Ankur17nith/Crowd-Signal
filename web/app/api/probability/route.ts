@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerDb } from "@/lib/serverDb";
 import { FIXTURE_SIGNALS } from "@/fixtures/verifiedFixtures";
-import { MarketSignal } from "@/lib/data";
+import { MarketSignal, MarketSignalResponse } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -68,36 +68,43 @@ export async function GET(req: NextRequest) {
   // Fallback strictly in DEMO_MODE or return honest awaiting state
   if (!signal) {
     if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
-      signal = FIXTURE_SIGNALS[asset] || FIXTURE_SIGNALS.BTC;
-    } else {
-      return NextResponse.json(
-        {
-          asset,
-          status: "Awaiting on-chain data",
-          message: "Indexer has not observed active trades for this asset on Somnia Shannon yet.",
-          available: false,
-          elapsedMs: Date.now() - startTime,
-        },
-        {
-          status: 200,
-          headers: {
-            "Cache-Control": "public, s-maxage=2, stale-while-revalidate=5",
-          },
-        }
-      );
+      const demoData = FIXTURE_SIGNALS[asset] || FIXTURE_SIGNALS.BTC;
+      const response: MarketSignalResponse = {
+        status: "live",
+        data: demoData,
+        freshnessSeconds: 0,
+        elapsedMs: Date.now() - startTime,
+        source: "FIXTURE_DEMO",
+      };
+      return NextResponse.json(response, {
+        status: 200,
+        headers: { "Cache-Control": "public, s-maxage=2, stale-while-revalidate=5" },
+      });
     }
+
+    const response: MarketSignalResponse = {
+      status: "unavailable",
+      asset,
+      message: "No live trade executions or orderbook observations recorded on Somnia Shannon for this asset yet.",
+      elapsedMs: Date.now() - startTime,
+      source: "INDEXER_AWAITING",
+    };
+    return NextResponse.json(response, {
+      status: 200,
+      headers: { "Cache-Control": "public, s-maxage=2, stale-while-revalidate=5" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      ...signal,
-      elapsedMs: Date.now() - startTime,
-    },
-    {
-      status: 200,
-      headers: {
-        "Cache-Control": "public, s-maxage=2, stale-while-revalidate=5",
-      },
-    }
-  );
+  const response: MarketSignalResponse = {
+    status: signal.lastUpdatedSecondsAgo > 45 ? "delayed" : "live",
+    data: signal,
+    freshnessSeconds: signal.lastUpdatedSecondsAgo,
+    elapsedMs: Date.now() - startTime,
+    source: "SQLITE_WAL",
+  };
+
+  return NextResponse.json(response, {
+    status: 200,
+    headers: { "Cache-Control": "public, s-maxage=2, stale-while-revalidate=5" },
+  });
 }

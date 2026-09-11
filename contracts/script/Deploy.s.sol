@@ -9,10 +9,7 @@ import { DemoConsumer } from "../src/DemoConsumer.sol";
 
 contract DeployScript is Script {
     function run() external {
-        uint256 deployerPrivateKey = vm.envOr(
-            "PUBLISHER_PRIVATE_KEY",
-            uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80) // Anvil default #0
-        );
+        uint256 deployerPrivateKey = vm.envUint("PUBLISHER_PRIVATE_KEY");
 
         address deployerAddress = vm.addr(deployerPrivateKey);
         console.log("Deploying CrowdSignal contracts from:", deployerAddress);

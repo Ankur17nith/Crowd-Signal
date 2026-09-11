@@ -128,6 +128,17 @@ export class ReputationEngineV2 {
   }
 
   /**
+   * Calculate reputation wrapper for indexer compatibility
+   */
+  public static calculateReputation(
+    address: `0x${string}`,
+    calls: EvaluatedCallInput[],
+    currentTimestamp: number = Math.floor(Date.now() / 1000)
+  ): CalculatedTraderReputation {
+    return ReputationEngineV2.evaluatePredictor(address, calls.length, calls, currentTimestamp);
+  }
+
+  /**
    * Evaluate full predictor profile
    */
   public static evaluatePredictor(

@@ -63,8 +63,8 @@ export default function MarketsPage() {
             <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
             Telemetry Synchronized
           </span>
-          <span className="text-[11px] font-mono text-[#707070] tabular-nums">
-            Pyth Multi-Oracle
+          <span className="text-[11px] font-mono text-[#707070]">
+            Somnia Shannon (50312)
           </span>
         </div>
       </div>

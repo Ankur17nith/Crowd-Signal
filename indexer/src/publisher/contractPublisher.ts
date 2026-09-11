@@ -13,30 +13,40 @@ const REPUTATION_REGISTRY_ABI = parseAbi([
 ]);
 
 export class OnchainPublisher {
-  private account;
-  private walletClient;
-  private publicClient;
+  private account?: ReturnType<typeof privateKeyToAccount>;
+  private walletClient?: ReturnType<typeof createWalletClient>;
+  private publicClient: ReturnType<typeof createPublicClient>;
 
   constructor() {
-    this.account = privateKeyToAccount(CONFIG.publisherPrivateKey);
     this.publicClient = createPublicClient({
       chain: somniaShannon,
       transport: http(CONFIG.rpcUrl),
     });
-    this.walletClient = createWalletClient({
-      account: this.account,
-      chain: somniaShannon,
-      transport: http(CONFIG.rpcUrl),
-    });
+
+    if (CONFIG.publisherPrivateKey && CONFIG.publisherPrivateKey.startsWith("0x") && CONFIG.publisherPrivateKey.length === 66) {
+      try {
+        this.account = privateKeyToAccount(CONFIG.publisherPrivateKey);
+        this.walletClient = createWalletClient({
+          account: this.account,
+          chain: somniaShannon,
+          transport: http(CONFIG.rpcUrl),
+        });
+      } catch (err) {
+        console.warn("[SECURITY] Invalid PUBLISHER_PRIVATE_KEY provided. OnchainPublisher running in DRY-RUN mode.");
+      }
+    } else {
+      console.warn("[SECURITY] No valid PUBLISHER_PRIVATE_KEY provided in environment. OnchainPublisher operating in DRY-RUN / observer mode.");
+    }
   }
 
   public async publishSignal(signal: CalculatedMarketSignal): Promise<`0x${string}` | null> {
     if (
+      !this.walletClient ||
       !CONFIG.sentimentPublisherAddress ||
       CONFIG.sentimentPublisherAddress === "0x0000000000000000000000000000000000000000"
     ) {
       console.log(
-        `[DRY-RUN] Signal prepared for ${signal.asset}: UP ${signal.upProbabilityBps / 100}% | Skew: ${
+        `[OBSERVER/DRY-RUN] Signal recorded for ${signal.asset}: UP ${signal.upProbabilityBps / 100}% | Skew: ${
           signal.capitalSkewBps / 100
         }% | Confidence: ${signal.confidenceScore}`
       );
@@ -73,6 +83,7 @@ export class OnchainPublisher {
 
   public async publishReputations(reputations: CalculatedTraderReputation[]): Promise<`0x${string}` | null> {
     if (
+      !this.walletClient ||
       !CONFIG.reputationRegistryAddress ||
       CONFIG.reputationRegistryAddress === "0x0000000000000000000000000000000000000000" ||
       reputations.length === 0

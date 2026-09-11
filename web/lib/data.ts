@@ -137,12 +137,105 @@ export interface DivergenceData {
   topPredictorCount: number;
 }
 
+// --- Discriminated API Contracts (CS-API-2.0) ---
+export type ApiDataStatus = "live" | "delayed" | "unavailable" | "error";
+
+export type MarketSignalResponse =
+  | {
+      status: "live" | "delayed";
+      data: MarketSignal;
+      freshnessSeconds: number;
+      elapsedMs: number;
+      source: "SQLITE_WAL" | "FIXTURE_DEMO";
+    }
+  | {
+      status: "unavailable";
+      asset: string;
+      message: string;
+      elapsedMs: number;
+      source?: string;
+    }
+  | {
+      status: "error";
+      asset: string;
+      error: string;
+      elapsedMs: number;
+    };
+
+export type ActiveMarketsResponse =
+  | {
+      status: "live" | "delayed";
+      markets: EventContractWindow[];
+      count: number;
+      elapsedMs: number;
+    }
+  | {
+      status: "unavailable";
+      markets: EventContractWindow[];
+      count: 0;
+      message: string;
+      elapsedMs: number;
+    }
+  | {
+      status: "error";
+      markets: EventContractWindow[];
+      count: 0;
+      error: string;
+      elapsedMs: number;
+    };
+
+export type DivergenceResponse =
+  | {
+      status: "live" | "delayed";
+      data: DivergenceData;
+      elapsedMs: number;
+    }
+  | {
+      status: "unavailable";
+      asset: string;
+      message: string;
+      elapsedMs: number;
+    }
+  | {
+      status: "error";
+      asset: string;
+      error: string;
+      elapsedMs: number;
+    };
+
+export type LeaderboardResponse =
+  | {
+      status: "live" | "delayed";
+      predictors: PredictorProfile[];
+      count: number;
+      elapsedMs: number;
+    }
+  | {
+      status: "unavailable";
+      predictors: PredictorProfile[];
+      count: 0;
+      message: string;
+      elapsedMs: number;
+    }
+  | {
+      status: "error";
+      predictors: PredictorProfile[];
+      count: 0;
+      error: string;
+      elapsedMs: number;
+    };
+
+export interface OverviewAggregateResponse {
+  signal: MarketSignalResponse;
+  divergence: DivergenceResponse;
+  markets: ActiveMarketsResponse;
+  elapsedMs: number;
+}
+
 export const ONCHAIN_FEED_STATUS = {
   contractAddress: "0xC526aB481079549320e8549e390C8B1D471804E1",
   network: "Somnia Shannon Testnet",
   chainId: 50312,
-  lastUpdatedSecondsAgo: 2.4,
-  blockNumber: 14892014,
   status: "ACTIVE",
   explorerUrl: "https://shannon-explorer.somnia.network/address/0xC526aB481079549320e8549e390C8B1D471804E1",
 };

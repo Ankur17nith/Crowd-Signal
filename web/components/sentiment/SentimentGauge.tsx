@@ -3,16 +3,19 @@
 import React, { useState } from "react";
 import { QuantitativeRegime } from "@/lib/data";
 
-interface SentimentGaugeProps {
+export interface SentimentGaugeProps {
   asset: string;
   interval: string;
-  upProbability: number;
-  downProbability: number;
-  openInterestUsd: number;
-  capitalSkew: number;
-  velocityPerMin: number;
-  confidence: number;
-  marketRegime: QuantitativeRegime;
+  status?: "loading" | "live" | "delayed" | "unavailable" | "error";
+  unavailableMessage?: string;
+  freshnessSeconds?: number;
+  upProbability?: number;
+  downProbability?: number;
+  openInterestUsd?: number;
+  capitalSkew?: number;
+  velocityPerMin?: number;
+  confidence?: number;
+  marketRegime?: QuantitativeRegime;
   // Research fields
   uncertaintyInterval?: [number, number];
   uncertaintyWidth?: number;
@@ -30,8 +33,11 @@ interface SentimentGaugeProps {
 export function SentimentGauge({
   asset,
   interval,
-  upProbability = 50,
-  downProbability = 50,
+  status = "live",
+  unavailableMessage,
+  freshnessSeconds,
+  upProbability,
+  downProbability,
   openInterestUsd = 0,
   capitalSkew = 0,
   velocityPerMin = 0,
@@ -48,10 +54,70 @@ export function SentimentGauge({
   effectiveParticipants,
   signalIndependence,
 }: SentimentGaugeProps) {
-  const [showResearchModal, setShowResearchModal] = useState(false);
-  
-  const safeUp = typeof upProbability === "number" && !isNaN(upProbability) ? upProbability : 50;
-  const safeDown = typeof downProbability === "number" && !isNaN(downProbability) ? downProbability : 100 - safeUp;
+  // 1. Loading State
+  if (status === "loading") {
+    return (
+      <section className="rounded-lg p-10 sm:p-14 text-center bg-[#141414] border border-[#292929]">
+        <div className="max-w-[460px] mx-auto flex flex-col items-center gap-3">
+          <div className="w-6 h-6 border-2 border-[#292929] border-t-[#4DA3FF] rounded-full animate-spin" />
+          <div className="text-[#A1A1A1] font-mono text-[13px] tracking-wide mt-2">
+            CALCULATING EMPIRICAL PROBABILITY...
+          </div>
+          <p className="text-[12px] text-[#707070] font-mono">
+            Ingesting live orderbook touches and trade executions for {asset} on Somnia Shannon.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  // 2. Error State
+  if (status === "error") {
+    return (
+      <section className="rounded-lg p-8 sm:p-12 text-center bg-[#141414] border border-[#3A1D1D]">
+        <div className="max-w-[460px] mx-auto flex flex-col items-center gap-3">
+          <span className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono uppercase tracking-wider bg-[#2B1414] border border-[#522323] text-[#FF6B6B]">
+            DATA FEED DISCONNECTED
+          </span>
+          <h2 className="text-[20px] font-semibold text-[#F5F5F5] tracking-tight">
+            Failed to Synchronize Telemetry
+          </h2>
+          <p className="text-[13px] leading-relaxed text-[#A1A1A1]">
+            {unavailableMessage || "Indexer database is temporarily unreachable. Retrying automatically."}
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  // 3. Unavailable State (Zero fake 50% fallback)
+  if (status === "unavailable" || typeof upProbability !== "number" || isNaN(upProbability)) {
+    return (
+      <section className="rounded-lg p-8 sm:p-12 text-center bg-[#141414] border border-[#292929]">
+        <div className="max-w-[480px] mx-auto flex flex-col items-center gap-3">
+          <span className="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-mono uppercase tracking-wider bg-[#1F1912] border border-[#422D16] text-[#E7A94B]">
+            OBSERVATION UNAVAILABLE · SOMNIA TESTNET
+          </span>
+          <h2 className="text-[20px] font-semibold text-[#F5F5F5] tracking-tight">
+            No Active Market Observations For {asset}
+          </h2>
+          <p className="text-[13px] leading-relaxed text-[#8E8E8E]">
+            {unavailableMessage ||
+              `CrowdSignal strictly requires empirical DreamDEX contract activity. No trades or orderbook liquidity have been recorded for ${asset} on Somnia Shannon yet.`}
+          </p>
+          <div className="flex items-center gap-4 mt-3 text-[11px] font-mono text-[#707070]">
+            <span>Protocol: DreamDEX Event Contracts</span>
+            <span>·</span>
+            <span>Chain ID: 50312</span>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // 4. Live / Delayed State with Genuine Measured Values
+  const safeUp = upProbability;
+  const safeDown = typeof downProbability === "number" ? downProbability : 100 - safeUp;
   const isLeaningUp = safeUp >= 50;
 
   // Compute SVG arc points for semicircle (radius 140, center at (170, 160))
@@ -62,8 +128,18 @@ export function SentimentGauge({
   return (
     <section className="rounded-lg p-6 sm:p-8 text-center bg-[#141414] border border-[#292929]">
       <div className="max-w-[460px] mx-auto flex flex-col items-center">
-        {/* Regime Tag */}
-        <div className="flex items-center gap-2 mb-2">
+        {/* Status / Regime Tag */}
+        <div className="flex items-center gap-2 mb-2 flex-wrap justify-center">
+          {status === "delayed" ? (
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono uppercase tracking-wider bg-[#2A2314] border border-[#4A3A1A] text-[#E7A94B]">
+              DELAYED ({freshnessSeconds ? `T+${freshnessSeconds}s` : "STALE"})
+            </span>
+          ) : (
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono uppercase tracking-wider bg-[#101F2E] border border-[#1C3652] text-[#4DA3FF]">
+              LIVE TELEMETRY
+            </span>
+          )}
+
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono uppercase tracking-wider bg-[#1A1A1A] border border-[#292929] text-[#A0A0A0]">
             REGIME: <strong className="ml-1 text-[#F5F5F5]">{marketRegime}</strong>
           </span>

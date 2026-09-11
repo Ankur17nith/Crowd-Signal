@@ -5,7 +5,7 @@ export type MarketStatus = "Listed" | "Trading" | "Locked" | "Resolved" | "Voide
 
 export interface CanonicalMarket {
   marketId: `0x${string}`;
-  asset: "BTC" | "ETH" | "SOL" | "SOMI";
+  asset: string;
   symbol: string;
   intervalSec: number;
   status: MarketStatus;
@@ -34,11 +34,13 @@ export class DreamDexMarketsAdapter {
    * Fetch active binary markets using canonical Somnia contracts and GraphQL fallback
    */
   public async getMarkets(): Promise<CanonicalMarket[]> {
-    const onchainMarkets = await this.fetchOnchainMarkets();
-    if (onchainMarkets.length > 0) {
-      return onchainMarkets;
+    // 1. Prefer GraphQL indexer as primary discovery because it contains rich asset metadata
+    const graphQLMarkets = await this.fetchGraphQLMarkets();
+    if (graphQLMarkets.length > 0) {
+      return graphQLMarkets;
     }
-    return this.fetchGraphQLMarkets();
+    // 2. Fallback to on-chain registry
+    return this.fetchOnchainMarkets();
   }
 
   /**
@@ -77,9 +79,9 @@ export class DreamDexMarketsAdapter {
           const poolAddress = data[1];
           const collateralAddress = data[4];
 
-          // Infer asset tag
-          const asset: "BTC" | "ETH" | "SOL" | "SOMI" =
-            i % 4 === 0 ? "BTC" : i % 4 === 1 ? "ETH" : i % 4 === 2 ? "SOL" : "SOMI";
+          // Never infer asset from array position index % 4.
+          // If contract metadata does not expose asset symbol, designate as UNKNOWN.
+          const asset = "UNKNOWN";
 
           markets.push({
             marketId,
@@ -133,17 +135,21 @@ export class DreamDexMarketsAdapter {
       if (res.ok) {
         const json: any = await res.json();
         if (json.data && Array.isArray(json.data.binaryMarkets)) {
-          return json.data.binaryMarkets.map((m: any): CanonicalMarket => ({
-            marketId: m.marketId,
-            asset: m.asset || "BTC",
-            symbol: m.symbol || `${m.asset}-UPDOWN`,
-            intervalSec: Number(m.intervalSec || 900),
-            status: m.status || "Trading",
-            expiry: Number(m.expiry || 0),
-            poolAddress: m.poolAddress || DREAMDEX_CONTRACTS.binaryMarketsModule,
-            collateralAddress: m.collateralAddress || DREAMDEX_CONTRACTS.testnetCollateral,
-            source: "GRAPHQL",
-          }));
+          return json.data.binaryMarkets.map((m: any): CanonicalMarket => {
+            const rawAsset = (m.asset || "").trim().toUpperCase();
+            const asset = rawAsset || "UNKNOWN";
+            return {
+              marketId: m.marketId,
+              asset,
+              symbol: m.symbol || (asset !== "UNKNOWN" ? `${asset}-UPDOWN` : "UNKNOWN-UPDOWN"),
+              intervalSec: Number(m.intervalSec || 900),
+              status: m.status || "Trading",
+              expiry: Number(m.expiry || 0),
+              poolAddress: m.poolAddress || DREAMDEX_CONTRACTS.binaryMarketsModule,
+              collateralAddress: m.collateralAddress || DREAMDEX_CONTRACTS.testnetCollateral,
+              source: "GRAPHQL",
+            };
+          });
         }
       }
     } catch {

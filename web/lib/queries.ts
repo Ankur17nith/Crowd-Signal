@@ -1,8 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
-import { MarketSignal, EventContractWindow, PredictorProfile, DivergenceData } from "./data";
+import {
+  ActiveMarketsResponse,
+  DivergenceResponse,
+  LeaderboardResponse,
+  MarketSignalResponse,
+  OverviewAggregateResponse,
+  PredictorProfile,
+} from "./data";
+
+export function useOverview(asset: string) {
+  return useQuery<OverviewAggregateResponse>({
+    queryKey: ["overview", asset],
+    queryFn: async () => {
+      const res = await fetch(`/api/overview?asset=${asset}`);
+      if (!res.ok) throw new Error("Failed to fetch overview intelligence");
+      return res.json();
+    },
+    staleTime: 5_000,
+    refetchInterval: 6_000,
+  });
+}
 
 export function useMarketSignal(asset: string) {
-  return useQuery<MarketSignal>({
+  return useQuery<MarketSignalResponse>({
     queryKey: ["signal", asset],
     queryFn: async () => {
       const res = await fetch(`/api/probability?asset=${asset}`);
@@ -15,7 +35,7 @@ export function useMarketSignal(asset: string) {
 }
 
 export function useActiveMarkets() {
-  return useQuery<{ markets: EventContractWindow[]; count: number; status: string }>({
+  return useQuery<ActiveMarketsResponse>({
     queryKey: ["markets"],
     queryFn: async () => {
       const res = await fetch("/api/markets");
@@ -28,7 +48,7 @@ export function useActiveMarkets() {
 }
 
 export function useDivergence(asset: string) {
-  return useQuery<DivergenceData>({
+  return useQuery<DivergenceResponse>({
     queryKey: ["divergence", asset],
     queryFn: async () => {
       const res = await fetch(`/api/divergence?asset=${asset}`);
@@ -41,7 +61,7 @@ export function useDivergence(asset: string) {
 }
 
 export function useLeaderboard() {
-  return useQuery<{ predictors: PredictorProfile[]; count: number; status: string }>({
+  return useQuery<LeaderboardResponse>({
     queryKey: ["leaderboard"],
     queryFn: async () => {
       const res = await fetch("/api/reputation");

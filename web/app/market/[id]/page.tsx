@@ -272,7 +272,7 @@ export default function MarketDetailPage({
           {/* Trajectory Overlay Info Box */}
           <div className="absolute top-4 left-4 z-10 p-2.5 rounded bg-[#1A1A1A] border border-[#292929] text-[#F5F5F5] flex flex-col gap-0.5 shadow-lg">
             <div className="text-[10px] text-[#707070] font-mono">
-              Cursor T+06:18 / Block #18,492,074
+              Somnia Shannon · Event Window {market.interval}
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[14px] font-mono font-semibold text-[#4DA3FF]">

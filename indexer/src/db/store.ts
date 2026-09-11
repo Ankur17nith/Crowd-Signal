@@ -135,7 +135,7 @@ export class DataStore {
       ask_depth: market.askDepth,
       trade_count: market.tradeCount,
       trade_volume: market.cumulativeQuoteVolume,
-      open_interest: null, // Left null if unobservable
+      open_interest: market.openInterestUsd ?? null,
     });
   }
 

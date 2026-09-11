@@ -58,8 +58,8 @@ export default function LeaderboardPage() {
           <div className="flex items-center gap-3 shrink-0">
             <div className="flex items-center gap-2 px-3 py-1 rounded bg-[#141414] border border-[#292929]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
-              <span className="text-[11px] font-mono text-[#A1A1A1] tabular-nums">
-                Block #18,942,014
+              <span className="text-[11px] font-mono text-[#A1A1A1]">
+                Somnia Shannon · Chain 50312
               </span>
             </div>
             <button

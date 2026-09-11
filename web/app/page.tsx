@@ -6,14 +6,31 @@ import { CrowdVsPredictors } from "@/components/dashboard/CrowdVsPredictors";
 import { ActiveMarketsTable } from "@/components/markets/ActiveMarketsTable";
 import { SettlementFeed } from "@/components/sentiment/SettlementFeed";
 import { HowItWorks } from "@/components/dashboard/HowItWorks";
-import { useMarketSignal, useActiveMarkets, useDivergence } from "@/lib/queries";
+import { useOverview } from "@/lib/queries";
 
 export default function OverviewPage() {
   const [selectedAsset, setSelectedAsset] = useState<"BTC" | "ETH">("BTC");
 
-  const { data: signal, isLoading: signalLoading } = useMarketSignal(selectedAsset);
-  const { data: divergence } = useDivergence(selectedAsset);
-  const { data: marketsData, isLoading: marketsLoading } = useActiveMarkets();
+  // Single aggregated query eliminating request waterfalls (CS-PERF-2.0)
+  const { data: overview, isLoading, error } = useOverview(selectedAsset);
+
+  const signalResp = overview?.signal;
+  const divResp = overview?.divergence;
+  const marketsResp = overview?.markets;
+
+  const signal = (signalResp?.status === "live" || signalResp?.status === "delayed") ? signalResp.data : null;
+  const divergence = (divResp?.status === "live" || divResp?.status === "delayed") ? divResp.data : null;
+  const markets = (marketsResp?.status === "live" || marketsResp?.status === "delayed") ? marketsResp.markets : [];
+
+  const gaugeStatus = isLoading
+    ? "loading"
+    : error
+    ? "error"
+    : signalResp?.status === "live"
+    ? "live"
+    : signalResp?.status === "delayed"
+    ? "delayed"
+    : "unavailable";
 
   return (
     <div className="max-w-[1080px] w-full mx-auto space-y-10">
@@ -60,49 +77,41 @@ export default function OverviewPage() {
 
           {/* Live Status Pill */}
           <div className="flex items-center gap-2 px-3 py-1 rounded text-[12px] font-mono text-[#A1A1A1] bg-[#141414] border border-[#292929]">
-            <span className="w-[6px] h-[6px] rounded-full inline-block bg-[#4DA3FF]" />
-            <span>Live · Testnet</span>
+            <span className={`w-[6px] h-[6px] rounded-full inline-block ${gaugeStatus === "live" ? "bg-[#4DA3FF]" : gaugeStatus === "delayed" ? "bg-[#E7A94B]" : "bg-[#707070]"}`} />
+            <span>{gaugeStatus === "live" ? "Live · Shannon" : gaugeStatus === "delayed" ? "Delayed Feed" : "Somnia Shannon"}</span>
           </div>
         </div>
       </header>
 
       {/* 2. Primary Sentiment Centerpiece (The Sentiment Gauge) */}
-      {signal && typeof signal.upProbability === "number" ? (
-        <SentimentGauge
-          asset={signal.asset}
-          interval="15 MIN"
-          upProbability={signal.upProbability}
-          downProbability={signal.downProbability}
-          openInterestUsd={signal.openInterestUsd}
-          capitalSkew={signal.capitalSkew}
-          velocityPerMin={signal.velocityPerMin}
-          confidence={signal.confidence}
-          marketRegime={signal.marketRegime}
-          uncertaintyInterval={signal.uncertaintyInterval}
-          uncertaintyWidth={signal.uncertaintyWidth}
-          midProbability={signal.midProbability}
-          microProbability={signal.microProbability}
-          micropriceAdjustment={signal.micropriceAdjustment}
-          entropy={signal.entropy}
-          informationVelocity={signal.informationVelocity}
-          changePointProbability={signal.changePointProbability}
-          effectiveParticipants={signal.effectiveParticipants}
-          concentrationHhi={signal.concentrationHhi}
-          signalIndependence={signal.signalIndependence}
-        />
-      ) : (
-        <div className="p-12 text-center border border-[#292929] rounded bg-[#141414] space-y-2">
-          <div className="text-[#A1A1A1] font-mono text-[14px]">
-            {signalLoading ? "Loading real-time market probability..." : "Awaiting active DreamDEX market observations"}
-          </div>
-          <p className="text-[12px] text-[#707070] font-mono">
-            {(signal as any)?.message || "Indexer synchronizing with Somnia Shannon blockchain."}
-          </p>
-        </div>
-      )}
+      <SentimentGauge
+        asset={selectedAsset}
+        interval="15 MIN"
+        status={gaugeStatus}
+        unavailableMessage={signalResp?.status === "unavailable" ? signalResp.message : undefined}
+        freshnessSeconds={signalResp?.status === "delayed" ? signalResp.freshnessSeconds : undefined}
+        upProbability={signal?.upProbability}
+        downProbability={signal?.downProbability}
+        openInterestUsd={signal?.openInterestUsd}
+        capitalSkew={signal?.capitalSkew}
+        velocityPerMin={signal?.velocityPerMin}
+        confidence={signal?.confidence}
+        marketRegime={signal?.marketRegime}
+        uncertaintyInterval={signal?.uncertaintyInterval}
+        uncertaintyWidth={signal?.uncertaintyWidth}
+        midProbability={signal?.midProbability}
+        microProbability={signal?.microProbability}
+        micropriceAdjustment={signal?.micropriceAdjustment}
+        entropy={signal?.entropy}
+        informationVelocity={signal?.informationVelocity}
+        changePointProbability={signal?.changePointProbability}
+        effectiveParticipants={signal?.effectiveParticipants}
+        concentrationHhi={signal?.concentrationHhi}
+        signalIndependence={signal?.signalIndependence}
+      />
 
       {/* 3. Crowd vs. Verified Predictors (Signature Divergence Feature) */}
-      {signal && typeof signal.upProbability === "number" && (
+      {signal && (
         <CrowdVsPredictors
           crowdUpProbability={signal.upProbability}
           crowdVolumeUsd={signal.totalVolumeUsd}
@@ -123,7 +132,7 @@ export default function OverviewPage() {
       )}
 
       {/* 4. Active Event Markets */}
-      <ActiveMarketsTable markets={marketsData?.markets || []} />
+      <ActiveMarketsTable markets={markets} />
 
       {/* 5. Recent Settlements */}
       <SettlementFeed />
