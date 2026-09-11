@@ -67,7 +67,7 @@ export default function OverviewPage() {
       </header>
 
       {/* 2. Primary Sentiment Centerpiece (The Sentiment Gauge) */}
-      {signal ? (
+      {signal && typeof signal.upProbability === "number" ? (
         <SentimentGauge
           asset={signal.asset}
           interval="15 MIN"
@@ -91,15 +91,18 @@ export default function OverviewPage() {
           signalIndependence={signal.signalIndependence}
         />
       ) : (
-        <div className="p-12 text-center border border-[#292929] rounded bg-[#141414]">
+        <div className="p-12 text-center border border-[#292929] rounded bg-[#141414] space-y-2">
           <div className="text-[#A1A1A1] font-mono text-[14px]">
             {signalLoading ? "Loading real-time market probability..." : "Awaiting active DreamDEX market observations"}
           </div>
+          <p className="text-[12px] text-[#707070] font-mono">
+            {(signal as any)?.message || "Indexer synchronizing with Somnia Shannon blockchain."}
+          </p>
         </div>
       )}
 
       {/* 3. Crowd vs. Verified Predictors (Signature Divergence Feature) */}
-      {signal && (
+      {signal && typeof signal.upProbability === "number" && (
         <CrowdVsPredictors
           crowdUpProbability={signal.upProbability}
           crowdVolumeUsd={signal.totalVolumeUsd}

@@ -15,16 +15,24 @@ interface CrowdVsPredictorsProps {
 }
 
 export function CrowdVsPredictors({
-  crowdUpProbability = 64.2,
-  crowdVolumeUsd = 182450,
-  crowdWalletsCount = 1420,
-  verifiedUpProbability = 49.1,
-  verifiedVolumeUsd = 84120,
-  verifiedWalletsCount = 48,
-  divergencePp = 15.1,
-  divergenceDirection = "BEARISH_SKEW",
-  commentary = "Smart money holds contrarian bias against general retail optimism.",
+  crowdUpProbability = 50,
+  crowdVolumeUsd = 0,
+  crowdWalletsCount = 0,
+  verifiedUpProbability = 50,
+  verifiedVolumeUsd = 0,
+  verifiedWalletsCount = 0,
+  divergencePp = 0,
+  divergenceDirection = "CONSENSUS_ALIGNED",
+  commentary = "Aligning signals across market observations.",
 }: Partial<CrowdVsPredictorsProps>) {
+  const safeCrowdUp = typeof crowdUpProbability === "number" && !isNaN(crowdUpProbability) ? crowdUpProbability : 50;
+  const safeCrowdVol = typeof crowdVolumeUsd === "number" && !isNaN(crowdVolumeUsd) ? crowdVolumeUsd : 0;
+  const safeCrowdWallets = typeof crowdWalletsCount === "number" && !isNaN(crowdWalletsCount) ? crowdWalletsCount : 0;
+  const safeVerifiedUp = typeof verifiedUpProbability === "number" && !isNaN(verifiedUpProbability) ? verifiedUpProbability : 50;
+  const safeVerifiedVol = typeof verifiedVolumeUsd === "number" && !isNaN(verifiedVolumeUsd) ? verifiedVolumeUsd : 0;
+  const safeVerifiedWallets = typeof verifiedWalletsCount === "number" && !isNaN(verifiedWalletsCount) ? verifiedWalletsCount : 0;
+  const safeDivergencePp = typeof divergencePp === "number" && !isNaN(divergencePp) ? divergencePp : 0;
+
   const isBearishSkew = divergenceDirection === "BEARISH_SKEW";
   const isBullishSkew = divergenceDirection === "BULLISH_SKEW";
 
@@ -47,17 +55,17 @@ export function CrowdVsPredictors({
           </div>
           <div>
             <div className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">
-              {crowdUpProbability.toFixed(1)}%{" "}
+              {safeCrowdUp.toFixed(1)}%{" "}
               <span className="text-[14px] text-[#4DA3FF] font-medium">UP</span>
             </div>
             <div className="text-[12px] text-[#707070] tabular-nums mt-1">
-              ${crowdVolumeUsd.toLocaleString()} volume · {crowdWalletsCount.toLocaleString()} wallets
+              ${safeCrowdVol.toLocaleString()} volume · {safeCrowdWallets.toLocaleString()} wallets
             </div>
           </div>
           <div className="w-full h-1 rounded-full bg-[#202020]">
             <div
               className="h-full rounded-full bg-[#4DA3FF]"
-              style={{ width: `${crowdUpProbability}%` }}
+              style={{ width: `${safeCrowdUp}%` }}
             />
           </div>
         </div>
@@ -69,25 +77,25 @@ export function CrowdVsPredictors({
           </div>
           <div>
             <div className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">
-              {verifiedUpProbability.toFixed(1)}%{" "}
+              {safeVerifiedUp.toFixed(1)}%{" "}
               <span
                 className={`text-[14px] font-medium ${
-                  verifiedUpProbability >= 50 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
+                  safeVerifiedUp >= 50 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
                 }`}
               >
-                {verifiedUpProbability >= 50 ? "UP" : "DOWN"}
+                {safeVerifiedUp >= 50 ? "UP" : "DOWN"}
               </span>
             </div>
             <div className="text-[12px] text-[#707070] tabular-nums mt-1">
-              ${verifiedVolumeUsd.toLocaleString()} volume · {verifiedWalletsCount.toLocaleString()} wallets
+              ${safeVerifiedVol.toLocaleString()} volume · {safeVerifiedWallets.toLocaleString()} wallets
             </div>
           </div>
           <div className="w-full h-1 rounded-full bg-[#202020]">
             <div
               className={`h-full rounded-full ${
-                verifiedUpProbability >= 50 ? "bg-[#4DA3FF]" : "bg-[#E7A94B]"
+                safeVerifiedUp >= 50 ? "bg-[#4DA3FF]" : "bg-[#E7A94B]"
               }`}
-              style={{ width: `${verifiedUpProbability}%` }}
+              style={{ width: `${safeVerifiedUp}%` }}
             />
           </div>
         </div>
@@ -107,7 +115,7 @@ export function CrowdVsPredictors({
                   : "text-[#F5F5F5]"
               }`}
             >
-              {divergencePp.toFixed(1)} pp
+              {safeDivergencePp.toFixed(1)} pp
             </div>
             <div
               className={`text-[12px] font-medium uppercase tracking-wide mt-0.5 ${

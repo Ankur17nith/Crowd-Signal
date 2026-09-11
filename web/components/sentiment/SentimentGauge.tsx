@@ -30,13 +30,13 @@ interface SentimentGaugeProps {
 export function SentimentGauge({
   asset,
   interval,
-  upProbability,
-  downProbability,
-  openInterestUsd,
-  capitalSkew,
-  velocityPerMin,
-  confidence,
-  marketRegime,
+  upProbability = 50,
+  downProbability = 50,
+  openInterestUsd = 0,
+  capitalSkew = 0,
+  velocityPerMin = 0,
+  confidence = 50,
+  marketRegime = "STABLE",
   uncertaintyInterval,
   uncertaintyWidth,
   midProbability,
@@ -49,10 +49,13 @@ export function SentimentGauge({
   signalIndependence,
 }: SentimentGaugeProps) {
   const [showResearchModal, setShowResearchModal] = useState(false);
-  const isLeaningUp = upProbability >= 50;
+  
+  const safeUp = typeof upProbability === "number" && !isNaN(upProbability) ? upProbability : 50;
+  const safeDown = typeof downProbability === "number" && !isNaN(downProbability) ? downProbability : 100 - safeUp;
+  const isLeaningUp = safeUp >= 50;
 
   // Compute SVG arc points for semicircle (radius 140, center at (170, 160))
-  const angle = Math.PI - (upProbability / 100) * Math.PI;
+  const angle = Math.PI - (safeUp / 100) * Math.PI;
   const splitX = Math.round(170 + 140 * Math.cos(angle));
   const splitY = Math.round(160 - 140 * Math.sin(angle));
 
@@ -103,7 +106,7 @@ export function SentimentGauge({
           {/* Inner Core Values */}
           <div className="absolute inset-0 flex flex-col items-center justify-end pb-3">
             <span className="text-[52px] sm:text-[56px] leading-[56px] font-semibold text-[#F5F5F5] tabular-nums tracking-tight">
-              {upProbability.toFixed(1)}%
+              {safeUp.toFixed(1)}%
             </span>
             <span
               className={`font-mono text-[13px] tracking-widest uppercase mt-2 font-medium ${
@@ -121,17 +124,17 @@ export function SentimentGauge({
         {/* Semantic Ratio Indicator */}
         <div className="w-full mt-8 space-y-2">
           <div className="flex items-center justify-between text-[12px] font-mono">
-            <span className="text-[#4DA3FF] font-medium">UP {upProbability.toFixed(1)}%</span>
-            <span className="text-[#E7A94B] font-medium">DOWN {downProbability.toFixed(1)}%</span>
+            <span className="text-[#4DA3FF] font-medium">UP {safeUp.toFixed(1)}%</span>
+            <span className="text-[#E7A94B] font-medium">DOWN {safeDown.toFixed(1)}%</span>
           </div>
           <div className="w-full h-1.5 rounded-full overflow-hidden flex bg-[#222222]">
             <div
               className="h-full bg-[#4DA3FF] transition-all duration-500"
-              style={{ width: `${upProbability}%` }}
+              style={{ width: `${safeUp}%` }}
             />
             <div
               className="h-full bg-[#E7A94B] transition-all duration-500"
-              style={{ width: `${downProbability}%` }}
+              style={{ width: `${safeDown}%` }}
             />
           </div>
         </div>
@@ -144,7 +147,7 @@ export function SentimentGauge({
             Open Interest
           </div>
           <div className="text-[20px] font-medium text-[#F5F5F5] tabular-nums mt-1">
-            ${openInterestUsd.toLocaleString()}
+            {openInterestUsd > 0 ? `$${openInterestUsd.toLocaleString()}` : "Unavailable"}
           </div>
         </div>
 
@@ -154,10 +157,10 @@ export function SentimentGauge({
           </div>
           <div
             className={`text-[20px] font-medium tabular-nums mt-1 ${
-              capitalSkew >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
+              (capitalSkew ?? 0) >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
             }`}
           >
-            {capitalSkew >= 0 ? `+${capitalSkew.toFixed(1)}%` : `${capitalSkew.toFixed(1)}%`}
+            {(capitalSkew ?? 0) >= 0 ? `+${(capitalSkew ?? 0).toFixed(1)}%` : `${(capitalSkew ?? 0).toFixed(1)}%`}
           </div>
         </div>
 
@@ -167,10 +170,10 @@ export function SentimentGauge({
           </div>
           <div
             className={`text-[20px] font-medium tabular-nums mt-1 ${
-              velocityPerMin >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
+              (velocityPerMin ?? 0) >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
             }`}
           >
-            {velocityPerMin >= 0 ? `+${velocityPerMin.toFixed(1)}%` : `${velocityPerMin.toFixed(1)}%`}{" "}
+            {(velocityPerMin ?? 0) >= 0 ? `+${(velocityPerMin ?? 0).toFixed(1)}%` : `${(velocityPerMin ?? 0).toFixed(1)}%`}{" "}
             <span className="text-[12px] text-[#707070] font-normal">/ 5m</span>
           </div>
         </div>
@@ -180,7 +183,7 @@ export function SentimentGauge({
             Signal Confidence
           </div>
           <div className="text-[20px] font-medium text-[#F5F5F5] tabular-nums mt-1">
-            {confidence}{" "}
+            {confidence ?? 50}{" "}
             <span className="text-[13px] text-[#707070] font-normal">/ 100</span>
           </div>
         </div>
