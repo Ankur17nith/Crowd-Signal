@@ -8,24 +8,35 @@ export function getServerDb() {
   if (dbInstance) return dbInstance;
 
   try {
-    // Look for data/crowdsignal.db in project root or current directory
-    const candidates = [
-      path.resolve(process.cwd(), "../data/crowdsignal.db"),
-      path.resolve(process.cwd(), "data/crowdsignal.db"),
-      path.resolve(process.cwd(), "../../data/crowdsignal.db"),
-    ];
-
-    let dbPath = candidates.find((p) => fs.existsSync(p));
-    if (!dbPath) {
-      // Create data directory if it doesn't exist yet
-      const defaultDir = path.resolve(process.cwd(), "data");
-      if (!fs.existsSync(defaultDir)) {
+    let dbPath: string;
+    if (process.env.DATABASE_PATH) {
+      dbPath = path.resolve(process.env.DATABASE_PATH);
+    } else {
+      // Find workspace root by searching up for package.json with name "crowd-signal"
+      let dir = process.cwd();
+      let rootDir = dir;
+      while (dir && dir !== path.dirname(dir)) {
+        if (fs.existsSync(path.join(dir, "package.json"))) {
+          try {
+            const pkg = JSON.parse(fs.readFileSync(path.join(dir, "package.json"), "utf8"));
+            if (pkg.name === "crowd-signal") {
+              rootDir = dir;
+              break;
+            }
+          } catch {}
+        }
+        dir = path.dirname(dir);
+      }
+      const dataDir = path.join(rootDir, "data");
+      if (!fs.existsSync(dataDir)) {
         try {
-          fs.mkdirSync(defaultDir, { recursive: true });
+          fs.mkdirSync(dataDir, { recursive: true });
         } catch {}
       }
-      dbPath = path.join(defaultDir, "crowdsignal.db");
+      dbPath = path.join(dataDir, "crowdsignal.db");
     }
+
+    console.log(`[Database]\nPath: ${dbPath}`);
 
     // @ts-ignore
     const { DatabaseSync } = require("node:sqlite");
@@ -144,6 +155,27 @@ export function getServerDb() {
         brier_score REAL,
         brier_skill_score REAL,
         resolved_at INTEGER
+      );
+      CREATE TABLE IF NOT EXISTS latest_market_state (
+        market_id TEXT PRIMARY KEY,
+        asset TEXT NOT NULL,
+        symbol TEXT NOT NULL,
+        interval_sec INTEGER NOT NULL,
+        status TEXT NOT NULL,
+        expiry INTEGER NOT NULL,
+        best_bid REAL,
+        best_ask REAL,
+        midpoint REAL,
+        spread REAL,
+        relative_spread REAL,
+        bid_depth REAL,
+        ask_depth REAL,
+        queue_imbalance REAL,
+        microprice REAL,
+        open_interest REAL,
+        trade_count INTEGER DEFAULT 0,
+        trade_volume REAL DEFAULT 0,
+        updated_at INTEGER NOT NULL
       );
     `;
     dbInstance.exec(schemaSql);

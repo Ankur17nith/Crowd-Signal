@@ -259,8 +259,14 @@ export function SentimentGauge({
             Signal Confidence
           </div>
           <div className="text-[20px] font-medium text-[#F5F5F5] tabular-nums mt-1">
-            {confidence ?? 50}{" "}
-            <span className="text-[13px] text-[#707070] font-normal">/ 100</span>
+            {typeof confidence === "number" && !isNaN(confidence) ? (
+              <>
+                {confidence}{" "}
+                <span className="text-[13px] text-[#707070] font-normal">/ 100</span>
+              </>
+            ) : (
+              "Unavailable"
+            )}
           </div>
         </div>
       </div>
@@ -273,11 +279,13 @@ export function SentimentGauge({
               Microprice (Depth Adjusted)
             </div>
             <div className="text-[15px] font-medium text-[#E0E0E0] tabular-nums mt-0.5">
-              {microProbability.toFixed(1)}%{" "}
-              <span className="text-[11px] text-[#4DA3FF]">
-                ({micropriceAdjustment && micropriceAdjustment >= 0 ? "+" : ""}
-                {micropriceAdjustment?.toFixed(1)}pp)
-              </span>
+              {typeof microProbability === "number" ? `${microProbability.toFixed(1)}%` : "Unavailable"}{" "}
+              {typeof micropriceAdjustment === "number" && (
+                <span className="text-[11px] text-[#4DA3FF]">
+                  ({micropriceAdjustment >= 0 ? "+" : ""}
+                  {micropriceAdjustment.toFixed(1)}pp)
+                </span>
+              )}
             </div>
           </div>
 
@@ -286,7 +294,7 @@ export function SentimentGauge({
               Shannon Entropy
             </div>
             <div className="text-[15px] font-medium text-[#E0E0E0] tabular-nums mt-0.5">
-              {entropy?.toFixed(3)}{" "}
+              {typeof entropy === "number" ? entropy.toFixed(3) : "1.000"}{" "}
               <span className="text-[11px] text-[#707070]">bits</span>
             </div>
           </div>
@@ -296,9 +304,15 @@ export function SentimentGauge({
               Information Velocity (dH/dt)
             </div>
             <div className="text-[15px] font-medium text-[#E0E0E0] tabular-nums mt-0.5">
-              {informationVelocity && informationVelocity >= 0 ? "+" : ""}
-              {informationVelocity?.toFixed(3)}{" "}
-              <span className="text-[11px] text-[#707070]">b/m</span>
+              {typeof informationVelocity === "number" ? (
+                <>
+                  {informationVelocity >= 0 ? "+" : ""}
+                  {informationVelocity.toFixed(3)}{" "}
+                  <span className="text-[11px] text-[#707070]">b/m</span>
+                </>
+              ) : (
+                "0.000 b/m"
+              )}
             </div>
           </div>
 
@@ -307,9 +321,9 @@ export function SentimentGauge({
               Effective Sample Size
             </div>
             <div className="text-[15px] font-medium text-[#E0E0E0] tabular-nums mt-0.5">
-              N_eff: {effectiveParticipants}{" "}
+              N_eff: {effectiveParticipants ?? 0}{" "}
               <span className="text-[11px] text-[#707070]">
-                (Indep: {((signalIndependence || 0.8) * 100).toFixed(0)}%)
+                (Indep: {typeof signalIndependence === "number" ? (signalIndependence * 100).toFixed(0) : "80"}%)
               </span>
             </div>
           </div>

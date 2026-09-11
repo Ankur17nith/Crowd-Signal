@@ -113,20 +113,45 @@ export class DatabaseManager {
   private stmtInsertSignal: any;
   private stmtInsertDivergence: any;
   private stmtInsertProvenance: any;
+  private stmtUpsertLatestMarketState: any;
   private stmtGetCursor: any;
   private stmtSetCursor: any;
 
   private constructor(customPath?: string) {
-    const defaultDataDir = path.resolve(process.cwd(), "data");
-    if (!fs.existsSync(defaultDataDir)) {
-      try {
-        fs.mkdirSync(defaultDataDir, { recursive: true });
-      } catch {
-        // Directory might already exist
+    let resolvedDbPath: string;
+    if (customPath === ":memory:") {
+      resolvedDbPath = ":memory:";
+    } else if (customPath) {
+      resolvedDbPath = path.resolve(customPath);
+    } else if (process.env.DATABASE_PATH) {
+      resolvedDbPath = path.resolve(process.env.DATABASE_PATH);
+    } else {
+      // Find workspace root by searching up for package.json with name "crowd-signal"
+      let dir = process.cwd();
+      let rootDir = dir;
+      while (dir && dir !== path.dirname(dir)) {
+        if (fs.existsSync(path.join(dir, "package.json"))) {
+          try {
+            const pkg = JSON.parse(fs.readFileSync(path.join(dir, "package.json"), "utf8"));
+            if (pkg.name === "crowd-signal") {
+              rootDir = dir;
+              break;
+            }
+          } catch {}
+        }
+        dir = path.dirname(dir);
       }
+      const dataDir = path.join(rootDir, "data");
+      if (!fs.existsSync(dataDir)) {
+        try {
+          fs.mkdirSync(dataDir, { recursive: true });
+        } catch {}
+      }
+      resolvedDbPath = path.join(dataDir, "crowdsignal.db");
     }
 
-    this.dbPath = customPath || process.env.DATABASE_PATH || path.join(defaultDataDir, "crowdsignal.db");
+    this.dbPath = resolvedDbPath;
+    console.log(`[Database]\nPath: ${this.dbPath}`);
     this.db = new DatabaseSync(this.dbPath);
 
     this.initSchema();
@@ -258,6 +283,34 @@ export class DatabaseManager {
       INSERT OR REPLACE INTO provenance_records (
         signal_hash, asset, algorithm_version, input_snapshot_hash, timestamp, source_block, source_timestamp, payload_json
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    this.stmtUpsertLatestMarketState = this.db.prepare(`
+      INSERT INTO latest_market_state (
+        market_id, asset, symbol, interval_sec, status, expiry,
+        best_bid, best_ask, midpoint, spread, relative_spread,
+        bid_depth, ask_depth, queue_imbalance, microprice, open_interest,
+        trade_count, trade_volume, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(market_id) DO UPDATE SET
+        asset = excluded.asset,
+        symbol = excluded.symbol,
+        interval_sec = excluded.interval_sec,
+        status = excluded.status,
+        expiry = excluded.expiry,
+        best_bid = COALESCE(excluded.best_bid, latest_market_state.best_bid),
+        best_ask = COALESCE(excluded.best_ask, latest_market_state.best_ask),
+        midpoint = COALESCE(excluded.midpoint, latest_market_state.midpoint),
+        spread = COALESCE(excluded.spread, latest_market_state.spread),
+        relative_spread = COALESCE(excluded.relative_spread, latest_market_state.relative_spread),
+        bid_depth = COALESCE(excluded.bid_depth, latest_market_state.bid_depth),
+        ask_depth = COALESCE(excluded.ask_depth, latest_market_state.ask_depth),
+        queue_imbalance = COALESCE(excluded.queue_imbalance, latest_market_state.queue_imbalance),
+        microprice = COALESCE(excluded.microprice, latest_market_state.microprice),
+        open_interest = COALESCE(excluded.open_interest, latest_market_state.open_interest),
+        trade_count = excluded.trade_count,
+        trade_volume = excluded.trade_volume,
+        updated_at = excluded.updated_at
     `);
 
     this.stmtGetCursor = this.db.prepare(`
@@ -437,19 +490,19 @@ export class DatabaseManager {
     this.stmtInsertSignal.run(
       s.asset,
       s.timestamp,
-      s.block_number,
+      s.block_number ?? null,
       s.latent_probability,
       s.uncertainty_lower,
       s.uncertainty_upper,
-      s.mid_probability,
-      s.micro_probability,
+      s.mid_probability ?? null,
+      s.micro_probability ?? null,
       s.entropy,
       s.information_velocity,
       s.changepoint_probability,
       s.market_regime,
       s.effective_participants,
       s.concentration_hhi,
-      s.open_interest,
+      s.open_interest ?? null,
       s.capital_skew,
       s.provenance_hash,
       s.algorithm_version,
@@ -462,7 +515,7 @@ export class DatabaseManager {
       s.algorithm_version,
       s.input_snapshot_hash,
       s.timestamp,
-      s.block_number,
+      s.block_number ?? null,
       s.timestamp,
       JSON.stringify(s)
     );
@@ -472,12 +525,36 @@ export class DatabaseManager {
     this.stmtInsertDivergence.run(
       d.asset,
       d.timestamp,
-      d.crowd_up_probability,
+      d.crowd_up_probability ?? null,
       d.top_predictor_consensus ?? null,
       d.divergence_percent ?? null,
-      d.effective_predictor_count,
-      d.persistence_score,
-      d.interpretation
+      d.effective_predictor_count ?? 0,
+      d.persistence_score ?? 0,
+      d.interpretation ?? "Consensus aligned"
+    );
+  }
+
+  public upsertLatestMarketState(s: any) {
+    this.stmtUpsertLatestMarketState.run(
+      s.market_id,
+      s.asset,
+      s.symbol,
+      s.interval_sec,
+      s.status,
+      s.expiry,
+      s.best_bid ?? null,
+      s.best_ask ?? null,
+      s.midpoint ?? null,
+      s.spread ?? null,
+      s.relative_spread ?? null,
+      s.bid_depth ?? null,
+      s.ask_depth ?? null,
+      s.queue_imbalance ?? null,
+      s.microprice ?? null,
+      s.open_interest ?? null,
+      s.trade_count ?? 0,
+      s.trade_volume ?? 0,
+      s.updated_at
     );
   }
 
@@ -496,15 +573,20 @@ export class DatabaseManager {
     return rows as DBCrowdSignal[];
   }
 
-  public getActiveMarkets(): any[] {
+  public getActiveMarkets(asset?: string): any[] {
+    if (asset) {
+      return this.db.prepare(`
+        SELECT m.*, l.best_bid, l.best_ask, l.midpoint, l.spread, l.relative_spread, l.bid_depth, l.ask_depth, l.queue_imbalance, l.microprice, l.open_interest, l.trade_count, l.trade_volume
+        FROM markets m
+        LEFT JOIN latest_market_state l ON m.market_id = l.market_id
+        WHERE m.asset = ?
+        ORDER BY m.expiry ASC
+      `).all(asset);
+    }
     return this.db.prepare(`
-      SELECT m.*, s.best_bid, s.best_ask, s.midpoint, s.spread, s.queue_imbalance, s.microprice, s.open_interest, s.trade_volume
+      SELECT m.*, l.best_bid, l.best_ask, l.midpoint, l.spread, l.relative_spread, l.bid_depth, l.ask_depth, l.queue_imbalance, l.microprice, l.open_interest, l.trade_count, l.trade_volume
       FROM markets m
-      LEFT JOIN (
-        SELECT market_id, best_bid, best_ask, midpoint, spread, queue_imbalance, microprice, open_interest, trade_volume,
-               ROW_NUMBER() OVER (PARTITION BY market_id ORDER BY timestamp DESC) as rn
-        FROM market_snapshots
-      ) s ON m.market_id = s.market_id AND s.rn = 1
+      LEFT JOIN latest_market_state l ON m.market_id = l.market_id
       ORDER BY m.expiry ASC
     `).all();
   }

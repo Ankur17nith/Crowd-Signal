@@ -20,11 +20,11 @@ export async function GET(req: NextRequest) {
         SELECT * FROM divergence_observations WHERE asset = ? ORDER BY timestamp DESC LIMIT 1
       `).get(asset);
 
-      if (row) {
+      if (row && Number(row.effective_predictor_count) > 0 && row.top_predictor_consensus !== null) {
         divergence = {
           asset: row.asset as any,
           crowdUpProbability: Number(row.crowd_up_probability),
-          topPredictorConsensus: row.top_predictor_consensus ? Number(row.top_predictor_consensus) : Number(row.crowd_up_probability),
+          topPredictorConsensus: Number(row.top_predictor_consensus),
           divergencePercent: row.divergence_percent ? Number(row.divergence_percent) : 0,
           effectivePredictorCount: Number(row.effective_predictor_count),
           persistenceScore: Number(row.persistence_score),
@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
     const response: DivergenceResponse = {
       status: "unavailable",
       asset,
-      message: "No verified predictor positions active for this asset in the current evaluation window.",
+      message: "Insufficient verified predictor positions active for this asset on Somnia testnet.",
       elapsedMs: Date.now() - startTime,
     };
     return NextResponse.json(response, {

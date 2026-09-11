@@ -87,8 +87,14 @@ export function ActiveMarketsTable({
           </thead>
           <tbody className="text-[13px] divide-y divide-[#1A1A1A]">
             {markets.map((market) => {
-              const isUp = market.upProbability >= 50;
-              const momentum = isUp ? +7.2 : -2.8;
+              const hasProb = typeof market.upProbability === "number" && !isNaN(market.upProbability);
+              const upVal = hasProb ? market.upProbability : 50;
+              const downVal = hasProb ? market.downProbability : 50;
+
+              // Derive real price adjustment if available (microprice delta), otherwise neutral
+              const microDelta = typeof market.microPrice === "number" && hasProb
+                ? market.microPrice - market.upProbability
+                : 0;
 
               return (
                 <tr
@@ -112,36 +118,50 @@ export function ActiveMarketsTable({
                   </td>
 
                   <td className="py-3.5 px-4">
-                    <div className="flex items-center gap-2 max-w-[220px]">
-                      <span className="font-mono text-[11px] text-[#4DA3FF] tabular-nums whitespace-nowrap">
-                        UP {market.upProbability.toFixed(1)}%
-                      </span>
-                      <div className="flex-1 h-1.5 rounded-full overflow-hidden flex bg-[#222222]">
-                        <div
-                          className="h-full bg-[#4DA3FF]"
-                          style={{ width: `${market.upProbability}%` }}
-                        />
-                        <div
-                          className="h-full bg-[#E7A94B]"
-                          style={{ width: `${market.downProbability}%` }}
-                        />
+                    {hasProb ? (
+                      <div className="flex items-center gap-2 max-w-[220px]">
+                        <span className="font-mono text-[11px] text-[#4DA3FF] tabular-nums whitespace-nowrap">
+                          UP {upVal.toFixed(1)}%
+                        </span>
+                        <div className="flex-1 h-1.5 rounded-full overflow-hidden flex bg-[#222222]">
+                          <div
+                            className="h-full bg-[#4DA3FF]"
+                            style={{ width: `${upVal}%` }}
+                          />
+                          <div
+                            className="h-full bg-[#E7A94B]"
+                            style={{ width: `${downVal}%` }}
+                          />
+                        </div>
+                        <span className="font-mono text-[11px] text-[#E7A94B] tabular-nums whitespace-nowrap">
+                          {downVal.toFixed(1)}%
+                        </span>
                       </div>
-                      <span className="font-mono text-[11px] text-[#E7A94B] tabular-nums whitespace-nowrap">
-                        {market.downProbability.toFixed(1)}%
+                    ) : (
+                      <span className="text-[11px] font-mono text-[#707070]">
+                        Awaiting quote depth
                       </span>
-                    </div>
+                    )}
                   </td>
 
                   <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-medium">
-                    ${(market.openInterestUsd / 1000).toFixed(1)}K
+                    {market.openInterestUsd && market.openInterestUsd > 0
+                      ? `$${(market.openInterestUsd / 1000).toFixed(1)}K`
+                      : "Unavailable"}
                   </td>
 
                   <td
                     className={`py-3.5 px-4 text-right tabular-nums font-medium ${
-                      momentum >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
+                      microDelta > 0
+                        ? "text-[#4DA3FF]"
+                        : microDelta < 0
+                        ? "text-[#E7A94B]"
+                        : "text-[#707070]"
                     }`}
                   >
-                    {momentum >= 0 ? `+${momentum}%` : `${momentum}%`}
+                    {microDelta !== 0
+                      ? `${microDelta >= 0 ? "+" : ""}${microDelta.toFixed(1)}pp`
+                      : "—"}
                   </td>
 
                   <td className="py-3.5 px-4 text-right font-mono text-[12px] tabular-nums text-[#A1A1A1]">

@@ -14,20 +14,21 @@ export async function GET() {
   if (db) {
     try {
       const rows = db.prepare(`
-        SELECT m.*, s.best_bid, s.best_ask, s.midpoint, s.spread, s.queue_imbalance, s.microprice, s.open_interest, s.trade_volume
+        SELECT m.*, l.best_bid, l.best_ask, l.midpoint, l.spread, l.relative_spread, l.bid_depth, l.ask_depth, l.queue_imbalance, l.microprice, l.open_interest, l.trade_count, l.trade_volume
         FROM markets m
-        LEFT JOIN (
-          SELECT market_id, best_bid, best_ask, midpoint, spread, queue_imbalance, microprice, open_interest, trade_volume,
-                 ROW_NUMBER() OVER (PARTITION BY market_id ORDER BY timestamp DESC) as rn
-          FROM market_snapshots
-        ) s ON m.market_id = s.market_id AND s.rn = 1
+        LEFT JOIN latest_market_state l ON m.market_id = l.market_id
         ORDER BY m.expiry ASC
       `).all();
 
       if (rows && rows.length > 0) {
         markets = rows.map((r: any): EventContractWindow => {
-          const mid = r.midpoint ?? 0.5;
-          const upProb = Number((mid * 100).toFixed(1));
+          const bestBid = r.best_bid !== null && r.best_bid !== undefined ? Number(r.best_bid) : undefined;
+          const bestAsk = r.best_ask !== null && r.best_ask !== undefined ? Number(r.best_ask) : undefined;
+          const mid = r.midpoint !== null && r.midpoint !== undefined
+            ? Number(r.midpoint)
+            : (bestBid !== undefined && bestAsk !== undefined ? (bestBid + bestAsk) / 2 : undefined);
+          const upProb = mid !== undefined ? Number((mid * 100).toFixed(1)) : 50;
+
           return {
             id: r.market_id,
             asset: r.asset as any,
@@ -36,16 +37,16 @@ export async function GET() {
             upProbability: upProb,
             downProbability: Number((100 - upProb).toFixed(1)),
             microPrice: r.microprice ? Number((r.microprice * 100).toFixed(1)) : upProb,
-            spread: r.spread ? Number(r.spread.toFixed(4)) : 0.01,
+            spread: r.spread ? Number(r.spread.toFixed(4)) : (bestAsk && bestBid ? Number((bestAsk - bestBid).toFixed(4)) : 0),
             queueImbalance: r.queue_imbalance ? Number(r.queue_imbalance.toFixed(2)) : 0,
             openInterestUsd: r.open_interest ? Number(r.open_interest) : 0,
             volumeUsd: r.trade_volume ? Number(r.trade_volume) : 0,
             secondsRemaining: Math.max(0, r.expiry - Math.floor(Date.now() / 1000)),
             status: r.status as any,
             openPrice: 0,
-            currentTouchBid: r.best_bid ?? 0.49,
-            currentTouchAsk: r.best_ask ?? 0.51,
-            poolAddress: r.pool_address || "0x3ecC694Cef705358864a646142ac17A90E29e388",
+            currentTouchBid: bestBid ?? 0,
+            currentTouchAsk: bestAsk ?? 0,
+            poolAddress: r.pool_address || "",
           };
         });
       }

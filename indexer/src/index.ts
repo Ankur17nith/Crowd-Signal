@@ -53,6 +53,7 @@ export class CrowdSignalIndexer {
     }
 
     this.isProcessing = true;
+    const cycleStartTime = Date.now();
     try {
       const now = Math.floor(Date.now() / 1000);
 
@@ -68,8 +69,9 @@ export class CrowdSignalIndexer {
         try {
           this.cachedMarkets = await this.marketsAdapter.getMarkets();
           this.lastMarketDiscoveryTime = now;
+          console.log(`[Indexer:Discovery] Discovered ${this.cachedMarkets.length} canonical DreamDEX markets.`);
         } catch (err) {
-          console.warn("[Indexer] Market discovery warning:", err);
+          console.warn("[Indexer:Discovery] Market discovery warning:", err);
         }
       }
 
@@ -100,7 +102,7 @@ export class CrowdSignalIndexer {
           asset: m.asset as AssetSymbol,
           symbol: m.symbol,
           intervalSec: m.intervalSec,
-          lastPrice: snap.midpoint ?? 0.5,
+          lastPrice: snap.midpoint ?? 0,
           openInterestUsd: openInterestUsd ?? undefined,
           status: m.status as any,
           expiry: m.expiry,
@@ -112,10 +114,12 @@ export class CrowdSignalIndexer {
       }
 
       // 3. Incremental on-chain trade ingestion & real prediction extraction
+      let newTradesCount = 0;
       let newSettlementsCount = 0;
       if (conn.connected && currentBlock && fromBlock <= toBlock) {
         try {
           const trades = await this.tradesAdapter.fetchTrades(fromBlock, toBlock);
+          newTradesCount = trades.length;
           for (const t of trades) {
             this.db.insertTrade({
               id: t.id,
@@ -195,6 +199,12 @@ export class CrowdSignalIndexer {
         // 8. Publish to on-chain oracle if configured
         await this.publisher.publishSignal(signal);
       }
+
+      const elapsed = Date.now() - cycleStartTime;
+      console.log(
+        `[Indexer:CycleDone] Elapsed: ${elapsed}ms | Block: ${currentBlock ?? "Offline"} | ` +
+        `Markets: ${this.cachedMarkets.length} | Fills: ${newTradesCount} | Settlements: ${newSettlementsCount} | Next in ${CONFIG.pollIntervalMs}ms`
+      );
     } finally {
       this.isProcessing = false;
     }

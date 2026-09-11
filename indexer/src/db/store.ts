@@ -124,19 +124,63 @@ export class DataStore {
       updated_at: market.timestamp,
     });
 
-    this.db.insertSnapshot({
+    const spread = market.bestAsk !== undefined && market.bestBid !== undefined ? market.bestAsk - market.bestBid : null;
+    const relSpread = spread !== null && market.lastPrice > 0 ? spread / market.lastPrice : null;
+    const totalDepth = (market.bidDepth || 0) + (market.askDepth || 0);
+    const qImbalance = totalDepth > 0 && market.bidDepth !== undefined && market.askDepth !== undefined
+      ? (market.bidDepth - market.askDepth) / totalDepth
+      : null;
+    const microprice = totalDepth > 0 && market.bestBid !== undefined && market.bestAsk !== undefined && market.bidDepth !== undefined && market.askDepth !== undefined
+      ? (market.bestAsk * market.bidDepth + market.bestBid * market.askDepth) / totalDepth
+      : null;
+
+    // Materialize latest state for O(1) reads by APIs
+    this.db.upsertLatestMarketState({
       market_id: market.marketId,
-      timestamp: market.timestamp,
+      asset: market.asset,
+      symbol: market.symbol,
+      interval_sec: market.intervalSec,
+      status: market.status,
+      expiry: market.expiry,
       best_bid: market.bestBid,
       best_ask: market.bestAsk,
       midpoint: market.lastPrice,
-      spread: market.bestAsk && market.bestBid ? market.bestAsk - market.bestBid : null,
+      spread,
+      relative_spread: relSpread,
       bid_depth: market.bidDepth,
       ask_depth: market.askDepth,
+      queue_imbalance: qImbalance,
+      microprice,
+      open_interest: market.openInterestUsd ?? null,
       trade_count: market.tradeCount,
       trade_volume: market.cumulativeQuoteVolume,
-      open_interest: market.openInterestUsd ?? null,
+      updated_at: market.timestamp,
     });
+
+    // Section 14: Stop empty snapshot explosion
+    // Only persist historical snapshots when real quotes, trades, or open interest are observed
+    const hasRealQuotes = market.bestBid !== undefined && market.bestAsk !== undefined;
+    const hasTrades = (market.tradeCount || 0) > 0;
+    const hasOpenInterest = (market.openInterestUsd || 0) > 0;
+
+    if (hasRealQuotes || hasTrades || hasOpenInterest) {
+      this.db.insertSnapshot({
+        market_id: market.marketId,
+        timestamp: market.timestamp,
+        best_bid: market.bestBid,
+        best_ask: market.bestAsk,
+        midpoint: market.lastPrice,
+        spread,
+        relative_spread: relSpread,
+        bid_depth: market.bidDepth,
+        ask_depth: market.askDepth,
+        trade_count: market.tradeCount,
+        trade_volume: market.cumulativeQuoteVolume,
+        open_interest: market.openInterestUsd ?? null,
+        queue_imbalance: qImbalance,
+        microprice,
+      });
+    }
   }
 
   public addSignalHistory(signal: CalculatedMarketSignal) {
@@ -175,12 +219,12 @@ export class DataStore {
     this.db.insertDivergence({
       asset: divergence.asset,
       timestamp: divergence.timestamp,
-      crowd_up_probability: divergence.crowdUpProbability,
-      top_predictor_consensus: divergence.topPredictorConsensus,
-      divergence_percent: divergence.divergencePercent,
-      effective_predictor_count: divergence.effectivePredictorCount,
-      persistence_score: divergence.persistenceScore,
-      interpretation: divergence.interpretation,
+      crowd_up_probability: typeof divergence.crowdUpProbabilityBps === "number" ? divergence.crowdUpProbabilityBps / 10000 : null,
+      top_predictor_consensus: typeof divergence.predictorConsensusBps === "number" ? divergence.predictorConsensusBps / 10000 : null,
+      divergence_percent: divergence.divergencePercent ?? null,
+      effective_predictor_count: divergence.effectivePredictorCount ?? 0,
+      persistence_score: divergence.persistenceScore ?? 0,
+      interpretation: divergence.interpretation ?? "Consensus aligned",
     });
   }
 

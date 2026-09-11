@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
               asset: rp.asset,
               window: `${Math.round(rp.interval_sec / 60)}m`,
               prediction: rp.direction,
-              confidence: rp.confidence ? Math.round(rp.confidence * 100) : 60,
+              confidence: rp.confidence ? Math.round(rp.confidence * 100) : Math.round(rp.market_probability_at_call * 100),
               marketProbabilityAtCall: Math.round(rp.market_probability_at_call * 100),
               brierSkillScore: rp.brier_skill_score ? Number(rp.brier_skill_score.toFixed(2)) : 0,
               outcome: rp.outcome,

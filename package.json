@@ -10,6 +10,7 @@
     "web:dev": "npm --prefix web run dev",
     "web:build": "npm --prefix web run build",
     "indexer:dev": "npm --prefix indexer run dev",
+    "indexer:start": "npm --prefix indexer run start",
     "indexer:build": "npm --prefix indexer run build",
     "indexer:test": "npm --prefix indexer test",
     "test": "npm --prefix indexer test"

@@ -207,6 +207,29 @@ CREATE TABLE IF NOT EXISTS indexer_cursors (
     updated_at INTEGER NOT NULL
 );
 
+-- 14. Latest Market State (Materialized current-state representation for O(1) reads)
+CREATE TABLE IF NOT EXISTS latest_market_state (
+    market_id TEXT PRIMARY KEY REFERENCES markets(market_id) ON DELETE CASCADE,
+    asset TEXT NOT NULL,
+    symbol TEXT NOT NULL,
+    interval_sec INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    expiry INTEGER NOT NULL,
+    best_bid REAL,
+    best_ask REAL,
+    midpoint REAL,
+    spread REAL,
+    relative_spread REAL,
+    bid_depth REAL,
+    ask_depth REAL,
+    queue_imbalance REAL,
+    microprice REAL,
+    open_interest REAL,
+    trade_count INTEGER DEFAULT 0,
+    trade_volume REAL DEFAULT 0,
+    updated_at INTEGER NOT NULL
+);
+
 -- Performance Indexes
 CREATE INDEX IF NOT EXISTS idx_snapshots_market_ts ON market_snapshots(market_id, timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_trades_trader_ts ON trades(trader, timestamp DESC);
@@ -216,3 +239,6 @@ CREATE INDEX IF NOT EXISTS idx_predictions_market ON predictions(market_id);
 CREATE INDEX IF NOT EXISTS idx_crowd_signals_asset_ts ON crowd_signals(asset, timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_reputation_rank ON reputation_scores(rank ASC);
 CREATE INDEX IF NOT EXISTS idx_reputation_verified ON reputation_scores(is_verified);
+CREATE INDEX IF NOT EXISTS idx_latest_market_asset ON latest_market_state(asset);
+CREATE INDEX IF NOT EXISTS idx_latest_market_expiry ON latest_market_state(expiry);
+
