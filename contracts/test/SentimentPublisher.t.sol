@@ -188,4 +188,19 @@ contract SentimentPublisherTest is Test {
         assertEq(result.capitalSkewBps, skew);
         assertEq(result.confidenceScore, confidence);
     }
+
+    function test_AnchorProvenance_Success() public {
+        bytes32 algoHash = keccak256("CS-PROB-2.0");
+        bytes32 snapshotHash = keccak256("snapshot_data");
+        bytes32 signalHash = keccak256("signal_output");
+
+        vm.prank(publisherAgent);
+        publisher.anchorProvenance(btcKey, algoHash, snapshotHash, signalHash);
+
+        ISentimentPublisher.ProvenanceRecord memory rec = publisher.getProvenance(btcKey);
+        assertEq(rec.algorithmVersionHash, algoHash);
+        assertEq(rec.inputSnapshotHash, snapshotHash);
+        assertEq(rec.signalHash, signalHash);
+        assertEq(rec.timestamp, uint64(block.timestamp));
+    }
 }

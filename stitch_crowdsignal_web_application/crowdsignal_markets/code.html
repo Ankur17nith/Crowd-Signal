@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"tertiary":"#ffffff","on-tertiary":"#00315b","surface-dim":"#131313","background":"#131313","on-primary-fixed-variant":"#454747","surface-variant":"#353534","on-background":"#e5e2e1","on-tertiary-fixed":"#001c38","surface-container-lowest":"#0e0e0e","on-tertiary-fixed-variant":"#004881","on-error":"#690005","outline":"#8e9192","secondary-fixed":"#e3e2e2","surface-tint":"#c6c6c7","surface-container":"#201f1f","primary":"#ffffff","secondary-fixed-dim":"#c7c6c6","inverse-on-surface":"#313030","on-error-container":"#ffdad6","on-primary":"#2f3131","secondary":"#c7c6c6","error":"#ffb4ab","on-secondary-container":"#b8b8b8","on-secondary":"#2f3131","tertiary-container":"#d3e4ff","on-secondary-fixed":"#1a1c1c","on-primary-fixed":"#1a1c1c","on-surface":"#e5e2e1","primary-fixed":"#e2e2e2","surface-container-highest":"#353534","surface-bright":"#3a3939","error-container":"#93000a","inverse-primary":"#5d5f5f","surface-container-high":"#2a2a2a","secondary-container":"#484949","on-tertiary-container":"#0066b3","on-secondary-fixed-variant":"#464747","on-primary-container":"#636565","surface":"#131313","tertiary-fixed-dim":"#a2c9ff","primary-fixed-dim":"#c6c6c7","inverse-surface":"#e5e2e1","on-surface-variant":"#c4c7c8","primary-container":"#e2e2e2","outline-variant":"#444748","surface-container-low":"#1c1b1b","tertiary-fixed":"#d3e4ff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-sm":"0.5rem","gutter-desktop":"1.5rem","margin":"1rem","space-md":"0.75rem","space-lg":"1rem","margin-desktop":"2rem","space-xl":"1.5rem","space-xs":"0.25rem","gutter":"1rem"},"fontFamily":{"label-xs":["Inter"],"headline-md":["Inter"],"body-lg":["Inter"],"headline-lg":["Inter"],"headline-xl":["Inter"],"headline-sm":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"headline-xl-mobile":["Inter"],"metric-md":["Inter"],"metric-lg":["Inter"]},"fontSize":{"label-xs":["11px",{"lineHeight":"14px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-md":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"24px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["15px",{"lineHeight":"22px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","letterSpacing":"0.005em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.01em","fontWeight":"500"}],"label-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.015em","fontWeight":"500"}],"headline-xl-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.015em","fontWeight":"600"}],"metric-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"500"}],"metric-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface-container-lowest font-body-md text-body-md text-on-surface min-h-screen"><aside class="fixed left-0 top-0 h-screen w-60 bg-surface-dim z-50 flex flex-col justify-between border-r border-outline-variant"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center gap-space-sm border-b border-outline-variant"><img alt="CrowdSignal Geometric Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XZPTa6a_2obLL-gvnznZz8Ga5UdW8mPRJ4MGrv1zrvtlWewEIerGyD6hRy1YFQEy_61IOZvtTK0LjdhLx3VJadRvkjm-E8WNq45FaqcuoN-JGzZNYvUQITF16xsY4udYmCMbAqs8l37akojTd9CZAoXrH5Y25vt4F_ppK-sygXIKd5yfiwLAx0m-dTT1nmLZ0gfv1y4bEg6lkWcPx7M_bBWSCHPM_lVeOPBVWHHd4_g6qZ0ggWl5RaNFCC"/><span class="font-headline-sm text-headline-sm text-primary tracking-tight">CrowdSignal</span></div><nav class="flex flex-col gap-space-xs p-space-sm" data-active-classes="bg-surface-container-high text-primary font-medium"><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg transition-colors bg-surface-container-high text-primary font-medium" data-path="overview" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span>Overview</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="markets" href="#"><span class="material-symbols-outlined text-[18px]">candlestick_chart</span><span>Markets</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="leaderboard" href="#"><span class="material-symbols-outlined text-[18px]">trophy</span><span>Leaderboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="developers" href="#"><span class="material-symbols-outlined text-[18px]">terminal</span><span>Developers</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="docs" href="#"><span class="material-symbols-outlined text-[18px]">description</span><span>Docs</span></a></nav></div><div class="p-space-sm border-t border-outline-variant flex flex-col gap-space-xs"><div class="flex items-center justify-between px-space-sm py-space-xs"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Somnia Shannon</span></div><span class="material-symbols-outlined text-[16px] text-on-surface-variant">sensors</span></div><div class="flex items-center justify-between px-space-sm py-space-xs rounded-lg bg-surface-container-low border border-outline-variant"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">account_balance_wallet</span><span class="font-label-xs text-label-xs text-on-surface">0x7F...3B21</span></div><span class="w-1.5 h-1.5 rounded-full bg-primary"></span></div></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-14 bg-surface-dim z-40 border-b border-outline-variant"><div class="h-14 px-gutter-desktop flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="CrowdSignal Geometric Logo" class="h-6 w-auto object-contain md:hidden" src="https://lh3.googleusercontent.com/aida/AEtjO1XZPTa6a_2obLL-gvnznZz8Ga5UdW8mPRJ4MGrv1zrvtlWewEIerGyD6hRy1YFQEy_61IOZvtTK0LjdhLx3VJadRvkjm-E8WNq45FaqcuoN-JGzZNYvUQITF16xsY4udYmCMbAqs8l37akojTd9CZAoXrH5Y25vt4F_ppK-sygXIKd5yfiwLAx0m-dTT1nmLZ0gfv1y4bEg6lkWcPx7M_bBWSCHPM_lVeOPBVWHHd4_g6qZ0ggWl5RaNFCC"/><div class="flex items-center gap-2"><span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant">Mainnet Alpha</span></div></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-2 px-space-sm py-1 rounded bg-surface-container border border-outline-variant"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-label-sm text-label-sm text-on-surface">Somnia Shannon</span></div><button class="h-8 px-space-md rounded bg-primary hover:bg-secondary-fixed text-surface-container-lowest font-label-md text-label-md transition-colors flex items-center gap-space-xs" type="button"><span>Connect Wallet</span></button><div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center"><span class="material-symbols-outlined text-on-surface text-[18px]">person</span></div></div></div></header><main class="pt-14 w-full"><div class="max-w-[1180px] mx-auto px-gutter-desktop py-space-xl"><div class="flex flex-col w-full">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-space-sm pb-space-lg">
+<div class="flex flex-col gap-1">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Markets</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live Event Contract intelligence derived from DreamDEX smart contracts on Somnia.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start sm:self-auto">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container text-on-surface-variant font-label-xs text-label-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+        Telemetry Synchronized
+      </span>
+<span class="font-label-xs text-label-xs text-outline tabular-nums">Pyth Block #24,918,402</span>
+</div>
+</div>
+<!-- Key Metrics Strip -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-sm mb-space-lg">
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Total Active Open Interest</span>
+<span class="material-symbols-outlined text-[16px] text-outline">pie_chart</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-metric-lg text-metric-lg text-primary tabular-nums">$742,890</span>
+<span class="font-label-xs text-label-xs text-[#4DA3FF] tabular-nums bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded">+4.2% 1h</span>
+</div>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">24h Signal Volume</span>
+<span class="material-symbols-outlined text-[16px] text-outline">stacked_bar_chart</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-metric-lg text-metric-lg text-primary tabular-nums">$3.84M</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant tabular-nums">41,208 executions</span>
+</div>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider">Active Contracts</span>
+<span class="material-symbols-outlined text-[16px] text-outline">tune</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-metric-lg text-metric-lg text-primary tabular-nums">18</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Across 3 major pairs</span>
+</div>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant mb-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-[#E7A94B]">Divergence Alert</span>
+<span class="material-symbols-outlined text-[16px] text-[#E7A94B]">warning</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-metric-lg text-metric-lg text-primary tabular-nums">2</span>
+<span class="font-label-xs text-label-xs text-[#E7A94B]">>12pp smart money delta</span>
+</div>
+</div>
+</div>
+<!-- Filter & Control Bar -->
+<div class="p-space-sm rounded-lg bg-surface-container-low mb-space-md flex flex-col lg:flex-row lg:items-center justify-between gap-space-sm">
+<div class="flex flex-wrap items-center gap-space-xs sm:gap-space-sm">
+<!-- Asset Selector -->
+<div class="inline-flex rounded bg-surface-container-lowest p-0.5">
+<button class="px-2.5 py-1 text-label-xs font-label-xs rounded bg-surface-container-high text-primary font-medium" type="button">All Assets</button>
+<button class="px-2.5 py-1 text-label-xs font-label-xs rounded text-on-surface-variant hover:text-primary transition-colors" type="button">BTC</button>
+<button class="px-2.5 py-1 text-label-xs font-label-xs rounded text-on-surface-variant hover:text-primary transition-colors" type="button">ETH</button>
+<button class="px-2.5 py-1 text-label-xs font-label-xs rounded text-on-surface-variant hover:text-primary transition-colors" type="button">SOL</button>
+</div>
+<div class="h-4 w-px bg-surface-variant hidden sm:block"></div>
+<!-- Lifecycle Toggle -->
+<div class="inline-flex rounded bg-surface-container-lowest p-0.5">
+<button class="px-2.5 py-1 text-label-xs font-label-xs rounded bg-surface-container-high text-primary font-medium flex items-center gap-1.5" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+          Live Events
+        </button>
+<button class="px-2.5 py-1 text-label-xs font-label-xs rounded text-on-surface-variant hover:text-primary transition-colors" type="button">Settled Contracts</button>
+</div>
+<div class="h-4 w-px bg-surface-variant hidden sm:block"></div>
+<!-- Timeframe Filter -->
+<div class="inline-flex rounded bg-surface-container-lowest p-0.5">
+<button class="px-2 py-1 text-label-xs font-label-xs rounded text-on-surface-variant hover:text-primary transition-colors" type="button">15m</button>
+<button class="px-2 py-1 text-label-xs font-label-xs rounded text-on-surface-variant hover:text-primary transition-colors" type="button">1h</button>
+<button class="px-2 py-1 text-label-xs font-label-xs rounded text-on-surface-variant hover:text-primary transition-colors" type="button">24h</button>
+</div>
+</div>
+<!-- Filter Input -->
+<div class="relative w-full lg:w-72">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-outline pointer-events-none">search</span>
+<input class="w-full h-8 pl-8 pr-3 text-body-sm font-body-sm bg-surface-container-lowest text-primary placeholder-outline rounded focus:outline-none focus:bg-surface-container-high" placeholder="Filter by contract or asset..." type="text"/>
+</div>
+</div>
+<!-- Primary Markets Table -->
+<div class="rounded-lg bg-surface-container-low overflow-hidden mb-space-xl">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest text-outline font-label-xs text-label-xs uppercase tracking-wider">
+<th class="py-2.5 px-space-md font-medium">Asset & Window</th>
+<th class="py-2.5 px-space-md font-medium min-w-[200px]">Direction & Probability</th>
+<th class="py-2.5 px-space-md font-medium">Consensus State</th>
+<th class="py-2.5 px-space-md font-medium text-right">Open Interest</th>
+<th class="py-2.5 px-space-md font-medium text-right">Capital Skew</th>
+<th class="py-2.5 px-space-md font-medium text-right">5m Mom.</th>
+<th class="py-2.5 px-space-md font-medium">Expiration</th>
+<th class="py-2.5 px-space-md font-medium text-right">Contract</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm divide-y divide-surface-container">
+<!-- Row 1: BTC 15m -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-surface-container-high flex items-center justify-center font-label-xs text-label-xs text-primary font-semibold">₿</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">BTC / USD</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">15 min window</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col gap-1 w-full max-w-[200px]">
+<div class="flex justify-between font-label-xs text-label-xs tabular-nums">
+<span class="text-[#4DA3FF] font-medium">UP 64.2%</span>
+<span class="text-[#E7A94B] font-medium">35.8% DOWN</span>
+</div>
+<div class="h-1.5 w-full rounded-sm bg-surface-container-lowest flex overflow-hidden">
+<div class="bg-[#4DA3FF] h-full" style="width: 64.2%;"></div>
+<div class="bg-[#E7A94B] h-full" style="width: 35.8%;"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-[#4DA3FF]/10 text-[#4DA3FF] font-label-xs text-label-xs">
+                Bullish Skew
+              </span>
+</td>
+<td class="py-3 px-space-md text-right tabular-nums text-primary font-medium">
+              $182,450
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#4DA3FF] font-medium">
+              +28.4%
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#4DA3FF]">
+              +7.2%
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+<span class="font-label-xs text-label-xs text-on-surface tabular-nums">08:42</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs transition-colors" type="button">
+                Inspect <span class="text-outline group-hover:text-primary">→</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: ETH 15m -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-surface-container-high flex items-center justify-center font-label-xs text-label-xs text-primary font-semibold">Ξ</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">ETH / USD</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">15 min window</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col gap-1 w-full max-w-[200px]">
+<div class="flex justify-between font-label-xs text-label-xs tabular-nums">
+<span class="text-[#4DA3FF] font-medium">UP 58.7%</span>
+<span class="text-[#E7A94B] font-medium">41.3% DOWN</span>
+</div>
+<div class="h-1.5 w-full rounded-sm bg-surface-container-lowest flex overflow-hidden">
+<div class="bg-[#4DA3FF] h-full" style="width: 58.7%;"></div>
+<div class="bg-[#E7A94B] h-full" style="width: 41.3%;"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface font-label-xs text-label-xs">
+                Moderate UP
+              </span>
+</td>
+<td class="py-3 px-space-md text-right tabular-nums text-primary font-medium">
+              $91,200
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#4DA3FF] font-medium">
+              +14.1%
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#4DA3FF]">
+              +3.1%
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+<span class="font-label-xs text-label-xs text-on-surface tabular-nums">11:15</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs transition-colors" type="button">
+                Inspect <span class="text-outline group-hover:text-primary">→</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: BTC 1h -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-surface-container-high flex items-center justify-center font-label-xs text-label-xs text-primary font-semibold">₿</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">BTC / USD</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">1 hour window</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col gap-1 w-full max-w-[200px]">
+<div class="flex justify-between font-label-xs text-label-xs tabular-nums">
+<span class="text-[#4DA3FF] font-medium">UP 46.6%</span>
+<span class="text-[#E7A94B] font-medium">53.4% DOWN</span>
+</div>
+<div class="h-1.5 w-full rounded-sm bg-surface-container-lowest flex overflow-hidden">
+<div class="bg-[#4DA3FF] h-full" style="width: 46.6%;"></div>
+<div class="bg-[#E7A94B] h-full" style="width: 53.4%;"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-[#E7A94B]/10 text-[#E7A94B] font-label-xs text-label-xs">
+                Bearish Skew
+              </span>
+</td>
+<td class="py-3 px-space-md text-right tabular-nums text-primary font-medium">
+              $340,800
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#E7A94B] font-medium">
+              -18.2%
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#E7A94B]">
+              -2.8%
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+<span class="font-label-xs text-label-xs text-on-surface tabular-nums">34:02</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs transition-colors" type="button">
+                Inspect <span class="text-outline group-hover:text-primary">→</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: SOL 15m -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-surface-container-high flex items-center justify-center font-label-xs text-label-xs text-primary font-semibold">◎</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">SOL / USD</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">15 min window</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col gap-1 w-full max-w-[200px]">
+<div class="flex justify-between font-label-xs text-label-xs tabular-nums">
+<span class="text-[#4DA3FF] font-medium">UP 71.0%</span>
+<span class="text-[#E7A94B] font-medium">29.0% DOWN</span>
+</div>
+<div class="h-1.5 w-full rounded-sm bg-surface-container-lowest flex overflow-hidden">
+<div class="bg-[#4DA3FF] h-full" style="width: 71%;"></div>
+<div class="bg-[#E7A94B] h-full" style="width: 29%;"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-[#4DA3FF]/10 text-[#4DA3FF] font-label-xs text-label-xs">
+                Strong Consensus
+              </span>
+</td>
+<td class="py-3 px-space-md text-right tabular-nums text-primary font-medium">
+              $64,500
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#4DA3FF] font-medium">
+              +38.9%
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#4DA3FF]">
+              +12.4%
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+<span class="font-label-xs text-label-xs text-on-surface tabular-nums">04:18</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs transition-colors" type="button">
+                Inspect <span class="text-outline group-hover:text-primary">→</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: ETH 1h -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-surface-container-high flex items-center justify-center font-label-xs text-label-xs text-primary font-semibold">Ξ</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">ETH / USD</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">1 hour window</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col gap-1 w-full max-w-[200px]">
+<div class="flex justify-between font-label-xs text-label-xs tabular-nums">
+<span class="text-[#4DA3FF] font-medium">UP 50.2%</span>
+<span class="text-[#E7A94B] font-medium">49.8% DOWN</span>
+</div>
+<div class="h-1.5 w-full rounded-sm bg-surface-container-lowest flex overflow-hidden">
+<div class="bg-[#4DA3FF] h-full" style="width: 50.2%;"></div>
+<div class="bg-[#E7A94B] h-full" style="width: 49.8%;"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs">
+                Neutral Equilibrium
+              </span>
+</td>
+<td class="py-3 px-space-md text-right tabular-nums text-primary font-medium">
+              $198,100
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-on-surface-variant font-medium">
+              +0.4%
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-on-surface-variant">
+              +0.1%
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+<span class="font-label-xs text-label-xs text-on-surface tabular-nums">42:50</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs transition-colors" type="button">
+                Inspect <span class="text-outline group-hover:text-primary">→</span>
+</button>
+</td>
+</tr>
+<!-- Row 6: BTC 24h -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-3 px-space-md">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded bg-surface-container-high flex items-center justify-center font-label-xs text-label-xs text-primary font-semibold">₿</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">BTC / USD</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">24 hour window</div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<div class="flex flex-col gap-1 w-full max-w-[200px]">
+<div class="flex justify-between font-label-xs text-label-xs tabular-nums">
+<span class="text-[#4DA3FF] font-medium">UP 61.5%</span>
+<span class="text-[#E7A94B] font-medium">38.5% DOWN</span>
+</div>
+<div class="h-1.5 w-full rounded-sm bg-surface-container-lowest flex overflow-hidden">
+<div class="bg-[#4DA3FF] h-full" style="width: 61.5%;"></div>
+<div class="bg-[#E7A94B] h-full" style="width: 38.5%;"></div>
+</div>
+</div>
+</td>
+<td class="py-3 px-space-md">
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-[#4DA3FF]/10 text-[#4DA3FF] font-label-xs text-label-xs">
+                Macro UP
+              </span>
+</td>
+<td class="py-3 px-space-md text-right tabular-nums text-primary font-medium">
+              $840,200
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#4DA3FF] font-medium">
+              +22.0%
+            </td>
+<td class="py-3 px-space-md text-right tabular-nums text-[#4DA3FF]">
+              +1.8%
+            </td>
+<td class="py-3 px-space-md whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+<span class="font-label-xs text-label-xs text-on-surface tabular-nums">14h 22m</span>
+</div>
+</td>
+<td class="py-3 px-space-md text-right">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs transition-colors" type="button">
+                Inspect <span class="text-outline group-hover:text-primary">→</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Settled Markets Mini-Audited Log -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-outline">verified_user</span>
+<h2 class="font-headline-sm text-headline-sm text-primary tracking-tight">Recent Pyth Oracle Settlement Verification</h2>
+</div>
+<span class="font-label-xs text-label-xs text-outline tabular-nums">Sub-second Block Determinism</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
+<!-- Settlement 1 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between gap-space-md">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-primary font-semibold">BTC / USD (15 min)</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-[#4DA3FF]/10 text-[#4DA3FF] font-label-xs text-label-xs font-semibold">UP RESOLVED</span>
+</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant tabular-nums">Settled Block #24,917,890</div>
+</div>
+<div class="flex flex-col gap-1 text-on-surface-variant font-label-xs text-label-xs border-t border-surface-container pt-space-xs">
+<div class="flex justify-between">
+<span>Pre-Close Consensus:</span>
+<span class="text-primary tabular-nums">67.8% UP</span>
+</div>
+<div class="flex justify-between">
+<span>Oracle Final Print:</span>
+<span class="text-primary tabular-nums font-mono">$64,182.40 (+$112.10)</span>
+</div>
+<div class="flex justify-between">
+<span>Brier Accuracy Score:</span>
+<span class="text-[#4DA3FF] tabular-nums font-mono">0.1037 (Optimal)</span>
+</div>
+</div>
+</div>
+<!-- Settlement 2 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between gap-space-md">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-primary font-semibold">ETH / USD (1 hour)</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-[#E7A94B]/10 text-[#E7A94B] font-label-xs text-label-xs font-semibold">DOWN RESOLVED</span>
+</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant tabular-nums">Settled Block #24,916,210</div>
+</div>
+<div class="flex flex-col gap-1 text-on-surface-variant font-label-xs text-label-xs border-t border-surface-container pt-space-xs">
+<div class="flex justify-between">
+<span>Pre-Close Consensus:</span>
+<span class="text-primary tabular-nums">54.1% DOWN</span>
+</div>
+<div class="flex justify-between">
+<span>Oracle Final Print:</span>
+<span class="text-primary tabular-nums font-mono">$3,421.15 (-$18.40)</span>
+</div>
+<div class="flex justify-between">
+<span>Brier Accuracy Score:</span>
+<span class="text-[#4DA3FF] tabular-nums font-mono">0.2107 (Verified)</span>
+</div>
+</div>
+</div>
+<!-- Settlement 3 -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col justify-between gap-space-md">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-primary font-semibold">SOL / USD (15 min)</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded bg-[#4DA3FF]/10 text-[#4DA3FF] font-label-xs text-label-xs font-semibold">UP RESOLVED</span>
+</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant tabular-nums">Settled Block #24,915,402</div>
+</div>
+<div class="flex flex-col gap-1 text-on-surface-variant font-label-xs text-label-xs border-t border-surface-container pt-space-xs">
+<div class="flex justify-between">
+<span>Pre-Close Consensus:</span>
+<span class="text-primary tabular-nums">78.4% UP</span>
+</div>
+<div class="flex justify-between">
+<span>Oracle Final Print:</span>
+<span class="text-primary tabular-nums font-mono">$152.88 (+$3.42)</span>
+</div>
+<div class="flex justify-between">
+<span>Brier Accuracy Score:</span>
+<span class="text-[#4DA3FF] tabular-nums font-mono">0.0466 (Exceptional)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div></main></div></body></html>

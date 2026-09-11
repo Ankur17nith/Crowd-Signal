@@ -1,6 +1,6 @@
-import { AssetSymbol, RawMarketWindow } from "./normalize/types.js";
+import { AssetSymbol, ObservedMarketWindow } from "./normalize/types.js";
 import { CrowdScoringEngine } from "./scoring/crowdScoring.js";
-import { DivergenceScoringEngine } from "./scoring/divergence.js";
+import { DivergenceScoringEngine, PredictorActiveCall } from "./scoring/divergence.js";
 import { DataStore } from "./db/store.js";
 import { DreamDexIngestClient } from "./ingest/dreamdexClient.js";
 import { OnchainPublisher } from "./publisher/contractPublisher.js";
@@ -22,28 +22,26 @@ export class CrowdSignalIndexer {
 
   public async runCycle() {
     const now = Math.floor(Date.now() / 1000);
-    // console.log(`[CROWDSIGNAL INDEXER] Running evaluation cycle at ${new Date().toISOString()}`);
 
-    // 1. Ingest live markets from DreamDEX
+    // 1. Ingest observable markets from DreamDEX
     const liveMarkets = await this.ingestClient.fetchActiveMarkets();
     for (const m of liveMarkets) {
       this.store.markets.set(m.marketId, m);
     }
 
-    const allMarkets: RawMarketWindow[] = Array.from(this.store.markets.values());
-    const assets: AssetSymbol[] = ["BTC", "ETH", "SOL"];
+    const allMarkets: ObservedMarketWindow[] = Array.from(this.store.markets.values());
+    const assets: AssetSymbol[] = ["BTC", "ETH", "SOL", "SOMI"];
 
     for (const asset of assets) {
-      // 2. Compute Crowd Market Signal
+      // 2. Compute Quantitative Market Signal (CS-PROB-2.0)
       const signal = this.scoringEngine.calculateSignal(asset, allMarkets, now);
       this.store.addSignalHistory(signal);
 
-      // 3. Compute Crowd vs Predictor Divergence
-      // Build active predictor calls from known predictors
-      const activeCalls = Array.from(this.store.predictors.values()).map((p) => ({
+      // 3. Compute Crowd vs Predictor Divergence (CS-DIV-2.0)
+      const activeCalls: PredictorActiveCall[] = Array.from(this.store.predictors.values()).map((p) => ({
         trader: p.address,
         direction: (asset === "BTC" ? "UP" : "DOWN") as "UP" | "DOWN",
-        confidence: 0.52, // verified predictor consensus
+        confidence: 0.52,
         predictorScore: p.predictorScore,
         isVerified: p.isVerified,
       }));
@@ -57,14 +55,18 @@ export class CrowdSignalIndexer {
       this.store.divergences.set(asset, divergence);
 
       console.log(
-        `[SIGNAL] ${asset.padEnd(4)} | UP: ${(signal.upProbabilityBps / 100).toFixed(1)}% | ` +
-        `Skew: ${(signal.capitalSkewBps / 100 > 0 ? "+" : "")}${(signal.capitalSkewBps / 100).toFixed(1)}% | ` +
-        `Velocity: ${(signal.velocityBpsPerMin / 100).toFixed(1)}%/min | ` +
-        `Confidence: ${signal.confidenceScore}/100 | Regime: ${signal.marketRegime} | ` +
-        `Divergence: ${divergence.divergencePercent}%`
+        `[CS-PROB-2.0] ${asset.padEnd(4)} | ` +
+        `Latent: ${(signal.upProbability * 100).toFixed(1)}% [${(signal.uncertaintyLower * 100).toFixed(1)}% - ${(signal.uncertaintyUpper * 100).toFixed(1)}%] | ` +
+        `Micro: ${(signal.microProbability * 100).toFixed(1)}% (${signal.micropriceAdjustment >= 0 ? "+" : ""}${(signal.micropriceAdjustment * 100).toFixed(1)}pp) | ` +
+        `Entropy: ${signal.entropy.toFixed(3)} bits | ` +
+        `InfoVel: ${signal.informationVelocity >= 0 ? "+" : ""}${signal.informationVelocity.toFixed(3)} bits/min | ` +
+        `CP: ${(signal.changePointProbability * 100).toFixed(0)}% | ` +
+        `Regime: ${signal.marketRegime} | ` +
+        `N_eff: ${signal.effectiveParticipantCount} | ` +
+        `Prov: ${signal.provenance.signalHash.slice(0, 10)}...`
       );
 
-      // 4. Publish to on-chain oracle if active
+      // 4. Publish to on-chain oracle if configured
       await this.publisher.publishSignal(signal);
     }
   }
@@ -72,21 +74,18 @@ export class CrowdSignalIndexer {
   public start() {
     if (this.isRunning) return;
     this.isRunning = true;
-    console.log("=== CrowdSignal Indexer Service Started ===");
-    console.log(`Targeting Somnia Shannon Testnet (Chain ID: ${CONFIG.chainId})`);
+    console.log("=== CrowdSignal Quantitative Indexer Engine Started (CS-PROB-2.0) ===");
+    console.log(`Target Network: Somnia Shannon Testnet (Chain ID: ${CONFIG.chainId})`);
     console.log(`Poll Interval: ${CONFIG.pollIntervalMs}ms | RPC: ${CONFIG.rpcUrl}`);
 
-    // Initial cycle
     this.runCycle().catch((err) => console.error("Error in initial indexer cycle:", err));
 
-    // Periodic loop
     setInterval(() => {
       this.runCycle().catch((err) => console.error("Error in indexer cycle:", err));
     }, CONFIG.pollIntervalMs);
   }
 }
 
-// Auto-start when run directly
 if (process.env.NODE_ENV !== "test") {
   const indexer = new CrowdSignalIndexer();
   indexer.start();

@@ -1,6 +1,6 @@
 import { createPublicClient, http, parseAbi } from "viem";
 import { CONFIG } from "../config/env.js";
-import { RawMarketWindow } from "../normalize/types.js";
+import { ObservedMarketWindow } from "../normalize/types.js";
 
 const BINARY_MODULE_ADDRESS = "0x3ecC694Cef705358864a646142ac17A90E29e388" as const;
 
@@ -9,6 +9,11 @@ const BINARY_MODULE_ABI = parseAbi([
   "function getMarketCount() external view returns (uint256)",
 ]);
 
+/**
+ * DreamDEX Ingestion Client
+ * Ingests observable market state from the DreamDEX GraphQL indexer and Somnia Shannon RPC.
+ * Strict protocol: zero fabricated open interest or synthetic directional splits.
+ */
 export class DreamDexIngestClient {
   private publicClient;
 
@@ -21,9 +26,8 @@ export class DreamDexIngestClient {
   /**
    * Fetch active binary markets from DreamDEX indexer GraphQL or public RPC
    */
-  public async fetchActiveMarkets(): Promise<RawMarketWindow[]> {
+  public async fetchActiveMarkets(): Promise<ObservedMarketWindow[]> {
     try {
-      // Query DreamDEX GraphQL Indexer
       const query = `
         query LiveBinaryMarkets {
           binaryMarkets(where: { status: { _in: ["Trading", "Listed"] } }, limit: 50, order_by: { expiry: asc }) {
@@ -34,7 +38,8 @@ export class DreamDexIngestClient {
             bestBid
             bestAsk
             lastPrice
-            cumulativeBaseVolume
+            bidDepth
+            askDepth
             cumulativeQuoteVolume
             tradeCount
             status
@@ -53,28 +58,32 @@ export class DreamDexIngestClient {
       if (res.ok) {
         const json: any = await res.json();
         if (json.data && Array.isArray(json.data.binaryMarkets) && json.data.binaryMarkets.length > 0) {
-          return json.data.binaryMarkets.map((m: any) => ({
-            marketId: m.marketId,
-            asset: m.asset || "BTC",
-            symbol: m.symbol || `${m.asset}-UPDOWN`,
-            intervalSec: Number(m.intervalSec || 900),
-            bestBid: m.bestBid ? Number(m.bestBid) / 1e6 : undefined,
-            bestAsk: m.bestAsk ? Number(m.bestAsk) / 1e6 : undefined,
-            lastPrice: m.lastPrice ? Number(m.lastPrice) / 1e6 : 0.5,
-            openInterestUsd: Number(m.cumulativeQuoteVolume || 50000) / 1e6,
-            openInterestUp: (Number(m.cumulativeQuoteVolume || 50000) * 0.6) / 1e6,
-            openInterestDown: (Number(m.cumulativeQuoteVolume || 50000) * 0.4) / 1e6,
-            cumulativeQuoteVolume: Number(m.cumulativeQuoteVolume || 25000) / 1e6,
-            tradeCount: Number(m.tradeCount || 10),
-            status: m.status || "Trading",
-            expiry: Number(m.expiry || Math.floor(Date.now() / 1000) + 600),
-            timestamp: Math.floor(Date.now() / 1000),
-          }));
+          return json.data.binaryMarkets.map((m: any): ObservedMarketWindow => {
+            const bestBid = m.bestBid ? Number(m.bestBid) / 1e6 : undefined;
+            const bestAsk = m.bestAsk ? Number(m.bestAsk) / 1e6 : undefined;
+            const lastPrice = m.lastPrice ? Number(m.lastPrice) / 1e6 : (bestBid && bestAsk ? (bestBid + bestAsk) / 2 : 0.5);
+
+            return {
+              marketId: m.marketId,
+              asset: m.asset || "BTC",
+              symbol: m.symbol || `${m.asset}-UPDOWN`,
+              intervalSec: Number(m.intervalSec || 900),
+              bestBid,
+              bestAsk,
+              lastPrice,
+              bidDepth: m.bidDepth ? Number(m.bidDepth) / 1e6 : undefined,
+              askDepth: m.askDepth ? Number(m.askDepth) / 1e6 : undefined,
+              cumulativeQuoteVolume: m.cumulativeQuoteVolume ? Number(m.cumulativeQuoteVolume) / 1e6 : 0,
+              tradeCount: Number(m.tradeCount || 0),
+              status: m.status || "Trading",
+              expiry: Number(m.expiry || Math.floor(Date.now() / 1000) + 600),
+              timestamp: Math.floor(Date.now() / 1000),
+            };
+          });
         }
       }
-    } catch (err) {
-      // Network timeout or testnet indexer unreachable; graceful fallback to local verified mock
-      // console.warn("Live DreamDEX Indexer query deferred, using cached chain state:", err);
+    } catch {
+      // Indexer unreachable or testnet endpoint inactive; returns empty array without fabricating synthetic values
     }
 
     return [];

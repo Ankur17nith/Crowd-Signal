@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "@/components/providers/Providers";
+import { AppShell } from "@/components/layout/AppShell";
 
 export const metadata: Metadata = {
   title: "CrowdSignal | Live Event Intelligence & Verifiable Reputation for DreamDEX",
   description:
-    "The intelligence layer built on top of Event Contracts. Turn real market participation into verifiable crowd intelligence and predictor reputation on Somnia.",
+    "Capital-backed expectations and verifiable prediction reputation derived from DreamDEX Event Contracts on Somnia.",
 };
 
 export default function RootLayout({
@@ -14,8 +16,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-background text-slate-100 flex flex-col font-sans antialiased selection:bg-brand selection:text-black">
-        {children}
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body className="min-h-screen bg-[#0D0D0D] text-[#F5F5F5] antialiased">
+        <Providers>
+          <AppShell>{children}</AppShell>
+        </Providers>
       </body>
     </html>
   );

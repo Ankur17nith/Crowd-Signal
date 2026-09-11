@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"tertiary":"#ffffff","on-tertiary":"#00315b","surface-dim":"#131313","background":"#131313","on-primary-fixed-variant":"#454747","surface-variant":"#353534","on-background":"#e5e2e1","on-tertiary-fixed":"#001c38","surface-container-lowest":"#0e0e0e","on-tertiary-fixed-variant":"#004881","on-error":"#690005","outline":"#8e9192","secondary-fixed":"#e3e2e2","surface-tint":"#c6c6c7","surface-container":"#201f1f","primary":"#ffffff","secondary-fixed-dim":"#c7c6c6","inverse-on-surface":"#313030","on-error-container":"#ffdad6","on-primary":"#2f3131","secondary":"#c7c6c6","error":"#ffb4ab","on-secondary-container":"#b8b8b8","on-secondary":"#2f3131","tertiary-container":"#d3e4ff","on-secondary-fixed":"#1a1c1c","on-primary-fixed":"#1a1c1c","on-surface":"#e5e2e1","primary-fixed":"#e2e2e2","surface-container-highest":"#353534","surface-bright":"#3a3939","error-container":"#93000a","inverse-primary":"#5d5f5f","surface-container-high":"#2a2a2a","secondary-container":"#484949","on-tertiary-container":"#0066b3","on-secondary-fixed-variant":"#464747","on-primary-container":"#636565","surface":"#131313","tertiary-fixed-dim":"#a2c9ff","primary-fixed-dim":"#c6c6c7","inverse-surface":"#e5e2e1","on-surface-variant":"#c4c7c8","primary-container":"#e2e2e2","outline-variant":"#444748","surface-container-low":"#1c1b1b","tertiary-fixed":"#d3e4ff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-sm":"0.5rem","gutter-desktop":"1.5rem","margin":"1rem","space-md":"0.75rem","space-lg":"1rem","margin-desktop":"2rem","space-xl":"1.5rem","space-xs":"0.25rem","gutter":"1rem"},"fontFamily":{"label-xs":["Inter"],"headline-md":["Inter"],"body-lg":["Inter"],"headline-lg":["Inter"],"headline-xl":["Inter"],"headline-sm":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"headline-xl-mobile":["Inter"],"metric-md":["Inter"],"metric-lg":["Inter"]},"fontSize":{"label-xs":["11px",{"lineHeight":"14px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-md":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"24px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["15px",{"lineHeight":"22px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","letterSpacing":"0.005em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.01em","fontWeight":"500"}],"label-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.015em","fontWeight":"500"}],"headline-xl-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.015em","fontWeight":"600"}],"metric-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"500"}],"metric-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface-container-lowest font-body-md text-body-md text-on-surface min-h-screen"><aside class="fixed left-0 top-0 h-screen w-60 bg-surface-dim z-50 flex flex-col justify-between border-r border-outline-variant"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center gap-space-sm border-b border-outline-variant"><img alt="CrowdSignal Geometric Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XZPTa6a_2obLL-gvnznZz8Ga5UdW8mPRJ4MGrv1zrvtlWewEIerGyD6hRy1YFQEy_61IOZvtTK0LjdhLx3VJadRvkjm-E8WNq45FaqcuoN-JGzZNYvUQITF16xsY4udYmCMbAqs8l37akojTd9CZAoXrH5Y25vt4F_ppK-sygXIKd5yfiwLAx0m-dTT1nmLZ0gfv1y4bEg6lkWcPx7M_bBWSCHPM_lVeOPBVWHHd4_g6qZ0ggWl5RaNFCC"/><span class="font-headline-sm text-headline-sm text-primary tracking-tight">CrowdSignal</span></div><nav class="flex flex-col gap-space-xs p-space-sm" data-active-classes="bg-surface-container-high text-primary font-medium"><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg transition-colors bg-surface-container-high text-primary font-medium" data-path="overview" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span>Overview</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="markets" href="#"><span class="material-symbols-outlined text-[18px]">candlestick_chart</span><span>Markets</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="leaderboard" href="#"><span class="material-symbols-outlined text-[18px]">trophy</span><span>Leaderboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="developers" href="#"><span class="material-symbols-outlined text-[18px]">terminal</span><span>Developers</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="docs" href="#"><span class="material-symbols-outlined text-[18px]">description</span><span>Docs</span></a></nav></div><div class="p-space-sm border-t border-outline-variant flex flex-col gap-space-xs"><div class="flex items-center justify-between px-space-sm py-space-xs"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Somnia Shannon</span></div><span class="material-symbols-outlined text-[16px] text-on-surface-variant">sensors</span></div><div class="flex items-center justify-between px-space-sm py-space-xs rounded-lg bg-surface-container-low border border-outline-variant"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">account_balance_wallet</span><span class="font-label-xs text-label-xs text-on-surface">0x7F...3B21</span></div><span class="w-1.5 h-1.5 rounded-full bg-primary"></span></div></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-14 bg-surface-dim z-40 border-b border-outline-variant"><div class="h-14 px-gutter-desktop flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="CrowdSignal Geometric Logo" class="h-6 w-auto object-contain md:hidden" src="https://lh3.googleusercontent.com/aida/AEtjO1XZPTa6a_2obLL-gvnznZz8Ga5UdW8mPRJ4MGrv1zrvtlWewEIerGyD6hRy1YFQEy_61IOZvtTK0LjdhLx3VJadRvkjm-E8WNq45FaqcuoN-JGzZNYvUQITF16xsY4udYmCMbAqs8l37akojTd9CZAoXrH5Y25vt4F_ppK-sygXIKd5yfiwLAx0m-dTT1nmLZ0gfv1y4bEg6lkWcPx7M_bBWSCHPM_lVeOPBVWHHd4_g6qZ0ggWl5RaNFCC"/><div class="flex items-center gap-2"><span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant">Mainnet Alpha</span></div></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-2 px-space-sm py-1 rounded bg-surface-container border border-outline-variant"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-label-sm text-label-sm text-on-surface">Somnia Shannon</span></div><button class="h-8 px-space-md rounded bg-primary hover:bg-secondary-fixed text-surface-container-lowest font-label-md text-label-md transition-colors flex items-center gap-space-xs" type="button"><span>Connect Wallet</span></button><div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center"><span class="material-symbols-outlined text-on-surface text-[18px]">person</span></div></div></div></header><main class="pt-14 w-full"><div class="max-w-[1180px] mx-auto px-gutter-desktop py-space-xl"><div class="flex flex-col w-full">
+<!-- Page Header -->
+<div class="flex flex-col gap-space-xs pb-space-lg">
+<div class="flex items-center gap-2">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Protocol Registry</span>
+<span class="text-outline-variant font-label-xs text-label-xs">/</span>
+<span class="font-label-xs text-label-xs text-primary font-medium">Predictor Ranking</span>
+</div>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div>
+<h1 class="font-headline-xl text-headline-xl text-primary tracking-tight">Verified Predictors</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mt-1">
+          Find wallets with demonstrated prediction skill. Ranking considers accuracy, calibration, consistency and sample size — never raw win rate alone.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto shrink-0">
+<div class="flex items-center gap-2 px-space-sm py-1 rounded bg-surface-container border border-outline-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]"></span>
+<span class="font-label-xs text-label-xs text-on-surface-variant tabular-nums">Block #18,942,014</span>
+</div>
+<button class="h-8 px-space-sm rounded bg-surface-container-high hover:bg-surface-variant text-on-surface border border-outline-variant font-label-sm text-label-sm transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[15px] text-on-surface-variant">download</span>
+<span>Export CSV</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Methodology Banner (Reputation Bar) -->
+<div class="mb-space-lg p-space-md bg-surface-container-low border border-outline-variant rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start md:items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5 md:mt-0">functions</span>
+<div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wide">Reputation Model:</span>
+<code class="px-1.5 py-0.5 rounded bg-surface-container-highest text-primary font-mono text-[12px]">Score = 0.35(Acc) + 0.35(Brier) + 0.20(Const) + 0.10(Vol)</code>
+<span class="hidden lg:inline text-outline-variant">•</span>
+<span class="hidden lg:inline">Strict quadratic penalty for overconfident mispredictions.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 font-label-sm text-label-sm">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+        Somnia Settlement Proof
+      </span>
+<a class="text-primary hover:text-secondary-fixed transition-colors flex items-center gap-0.5 underline decoration-outline-variant underline-offset-4" href="#">
+<span>Verify Spec</span>
+<span class="material-symbols-outlined text-[13px]">north_east</span>
+</a>
+</div>
+</div>
+<!-- Filter & Search Controls -->
+<div class="mb-space-lg p-space-sm bg-surface-container border border-outline-variant rounded-lg flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-space-sm">
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Timeframe Segment -->
+<div aria-label="Timeframe selection" class="flex items-center bg-surface-container-low p-0.5 rounded border border-outline-variant" role="tablist">
+<button class="px-space-sm py-1 rounded bg-primary text-surface-container-lowest font-label-sm text-label-sm font-medium" type="button">All Time</button>
+<button class="px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">90D</button>
+<button class="px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">30D</button>
+<button class="px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">7D</button>
+</div>
+<div class="h-4 w-px bg-outline-variant hidden sm:block"></div>
+<!-- Asset Filter -->
+<div class="flex items-center gap-1">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase px-1">Asset:</span>
+<div class="flex items-center bg-surface-container-low p-0.5 rounded border border-outline-variant">
+<button class="px-space-sm py-1 rounded bg-surface-container-high text-primary font-label-sm text-label-sm" type="button">All Assets</button>
+<button class="px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">BTC</button>
+<button class="px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">ETH</button>
+</div>
+</div>
+<div class="h-4 w-px bg-outline-variant hidden md:block"></div>
+<!-- Min Calls Filter -->
+<div class="flex items-center gap-1">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase px-1">Min Calls:</span>
+<div class="flex items-center bg-surface-container-low p-0.5 rounded border border-outline-variant">
+<button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">10+</button>
+<button class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-sm text-label-sm" type="button">25+</button>
+<button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">50+</button>
+<button class="px-2 py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">100+</button>
+</div>
+</div>
+</div>
+<!-- Understated Search Input -->
+<div class="relative w-full xl:w-72">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none">search</span>
+<input class="w-full h-8 pl-8 pr-space-sm bg-surface-container-low border border-outline-variant rounded font-body-sm text-body-sm text-primary placeholder:text-on-secondary-container focus:outline-none focus:border-primary transition-colors font-mono text-[12px]" placeholder="Search wallet 0x or ENS..." type="text"/>
+</div>
+</div>
+<!-- Leaderboard Table Container -->
+<div class="bg-surface-container border border-outline-variant rounded-lg overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[940px]">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="py-2.5 pl-space-md pr-2 font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider w-12 text-center" scope="col">#</th>
+<th class="py-2.5 px-space-md font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider" scope="col">Predictor</th>
+<th class="py-2.5 px-space-md font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider text-right" scope="col">
+<span class="inline-flex items-center gap-1 cursor-pointer hover:text-primary">
+                Score
+                <span class="material-symbols-outlined text-[13px] text-primary">arrow_downward</span>
+</span>
+</th>
+<th class="py-2.5 px-space-md font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider text-right" scope="col">Accuracy</th>
+<th class="py-2.5 px-space-md font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider text-right" scope="col">Calibration (Brier)</th>
+<th class="py-2.5 px-space-md font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider text-right" scope="col">Resolved Calls</th>
+<th class="py-2.5 px-space-md font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider text-right" scope="col">Consistency</th>
+<th class="py-2.5 px-space-md font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider text-center w-36" scope="col">30D Trend</th>
+<th class="py-2.5 pr-space-md pl-space-sm font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider text-right w-44" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-sm text-body-sm">
+<!-- Row #01 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3.5 pl-space-md pr-2 text-center tabular-nums font-mono text-[12px] text-primary font-medium">01</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-surface-container-highest border border-outline-variant flex items-center justify-center font-mono text-[11px] text-primary shrink-0">
+                  AS
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-primary group-hover:underline cursor-pointer">AlphaSkew</span>
+<span class="material-symbols-outlined text-[14px] text-primary" title="Verified Quantitative Model">verified</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant truncate">0x71e9...92Fa</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-metric-md text-metric-md text-primary font-semibold tabular-nums">91</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums">
+<span class="inline-flex items-center gap-1 text-[#4DA3FF] font-medium bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded text-[12px]">
+                71.4%
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              89<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              231
+            </td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              82<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<!-- Upward Sparkline -->
+<svg class="w-28 h-6 mx-auto text-[#4DA3FF] overflow-visible" fill="none" viewbox="0 0 100 24">
+<path d="M0,18 L16,16 L32,17 L48,11 L64,12 L80,7 L100,4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+<circle cx="100" cy="4" fill="currentColor" r="2"></circle>
+</svg>
+</td>
+<td class="py-3.5 pr-space-md pl-space-sm text-right">
+<div class="inline-flex items-center gap-1.5 justify-end">
+<button class="h-7 px-2.5 rounded bg-surface-container-highest text-primary border border-outline-variant font-label-xs text-label-xs hover:bg-surface-variant transition-colors" type="button">
+                  Following
+                </button>
+<button class="h-7 w-7 rounded bg-surface-container-low hover:bg-surface-container-high border border-outline-variant text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="View Profile" type="button">
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row #02 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3.5 pl-space-md pr-2 text-center tabular-nums font-mono text-[12px] text-on-surface-variant font-medium">02</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-surface-container-highest border border-outline-variant flex items-center justify-center font-mono text-[11px] text-primary shrink-0">
+                  SQ
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-primary group-hover:underline cursor-pointer">SomniaQuant</span>
+<span class="material-symbols-outlined text-[14px] text-primary" title="Verified Protocol Agent">verified</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant truncate">0x3b82...81aC</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-metric-md text-metric-md text-primary font-semibold tabular-nums">88</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums">
+<span class="inline-flex items-center gap-1 text-[#4DA3FF] font-medium bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded text-[12px]">
+                68.2%
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              92<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              412
+            </td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              86<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<!-- Steady Upward Sparkline -->
+<svg class="w-28 h-6 mx-auto text-[#4DA3FF] overflow-visible" fill="none" viewbox="0 0 100 24">
+<path d="M0,20 L20,17 L40,15 L60,11 L80,9 L100,5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+<circle cx="100" cy="5" fill="currentColor" r="2"></circle>
+</svg>
+</td>
+<td class="py-3.5 pr-space-md pl-space-sm text-right">
+<div class="inline-flex items-center gap-1.5 justify-end">
+<button class="h-7 px-2.5 rounded bg-primary text-surface-container-lowest font-label-xs text-label-xs font-medium hover:bg-secondary-fixed transition-colors" type="button">
+                  Follow
+                </button>
+<button class="h-7 w-7 rounded bg-surface-container-low hover:bg-surface-container-high border border-outline-variant text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="View Profile" type="button">
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row #03 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3.5 pl-space-md pr-2 text-center tabular-nums font-mono text-[12px] text-on-surface-variant font-medium">03</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-surface-container-highest border border-outline-variant flex items-center justify-center font-mono text-[11px] text-primary shrink-0">
+                  DN
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-primary group-hover:underline cursor-pointer">DeltaNeutral</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant truncate">0x9f18...44cB</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-metric-md text-metric-md text-primary font-semibold tabular-nums">85</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums">
+<span class="inline-flex items-center gap-1 text-[#4DA3FF] font-medium bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded text-[12px]">
+                66.8%
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              87<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              184
+            </td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              79<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<!-- Upward Sparkline -->
+<svg class="w-28 h-6 mx-auto text-[#4DA3FF] overflow-visible" fill="none" viewbox="0 0 100 24">
+<path d="M0,19 L20,20 L40,14 L60,16 L80,10 L100,6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+<circle cx="100" cy="6" fill="currentColor" r="2"></circle>
+</svg>
+</td>
+<td class="py-3.5 pr-space-md pl-space-sm text-right">
+<div class="inline-flex items-center gap-1.5 justify-end">
+<button class="h-7 px-2.5 rounded bg-primary text-surface-container-lowest font-label-xs text-label-xs font-medium hover:bg-secondary-fixed transition-colors" type="button">
+                  Follow
+                </button>
+<button class="h-7 w-7 rounded bg-surface-container-low hover:bg-surface-container-high border border-outline-variant text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="View Profile" type="button">
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row #04 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3.5 pl-space-md pr-2 text-center tabular-nums font-mono text-[12px] text-on-surface-variant font-medium">04</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-surface-container-highest border border-outline-variant flex items-center justify-center font-mono text-[11px] text-primary shrink-0">
+                  MO
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-primary group-hover:underline cursor-pointer">MacroOracle</span>
+<span class="material-symbols-outlined text-[14px] text-primary" title="Audited Institutional Node">verified</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant truncate">0x14a3...62e1</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-metric-md text-metric-md text-primary font-semibold tabular-nums">84</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums">
+<span class="inline-flex items-center gap-1 text-[#4DA3FF] font-medium bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded text-[12px]">
+                65.0%
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              85<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              520
+            </td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              88<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<!-- Balanced Sparkline -->
+<svg class="w-28 h-6 mx-auto text-on-surface-variant overflow-visible" fill="none" viewbox="0 0 100 24">
+<path d="M0,13 L20,10 L40,16 L60,11 L80,14 L100,12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+<circle cx="100" cy="12" fill="currentColor" r="2"></circle>
+</svg>
+</td>
+<td class="py-3.5 pr-space-md pl-space-sm text-right">
+<div class="inline-flex items-center gap-1.5 justify-end">
+<button class="h-7 px-2.5 rounded bg-primary text-surface-container-lowest font-label-xs text-label-xs font-medium hover:bg-secondary-fixed transition-colors" type="button">
+                  Follow
+                </button>
+<button class="h-7 w-7 rounded bg-surface-container-low hover:bg-surface-container-high border border-outline-variant text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="View Profile" type="button">
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row #05 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3.5 pl-space-md pr-2 text-center tabular-nums font-mono text-[12px] text-on-surface-variant font-medium">05</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-surface-container-highest border border-outline-variant flex items-center justify-center font-mono text-[11px] text-primary shrink-0">
+                  PB
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-primary group-hover:underline cursor-pointer">Probabilistic</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant truncate">0x8a70...09d7</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-metric-md text-metric-md text-primary font-semibold tabular-nums">82</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums">
+<span class="inline-flex items-center gap-1 text-[#4DA3FF] font-medium bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded text-[12px]">
+                63.9%
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              88<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              310
+            </td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              81<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<!-- Upward Sparkline -->
+<svg class="w-28 h-6 mx-auto text-[#4DA3FF] overflow-visible" fill="none" viewbox="0 0 100 24">
+<path d="M0,17 L25,18 L50,14 L75,11 L100,7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+<circle cx="100" cy="7" fill="currentColor" r="2"></circle>
+</svg>
+</td>
+<td class="py-3.5 pr-space-md pl-space-sm text-right">
+<div class="inline-flex items-center gap-1.5 justify-end">
+<button class="h-7 px-2.5 rounded bg-primary text-surface-container-lowest font-label-xs text-label-xs font-medium hover:bg-secondary-fixed transition-colors" type="button">
+                  Follow
+                </button>
+<button class="h-7 w-7 rounded bg-surface-container-low hover:bg-surface-container-high border border-outline-variant text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="View Profile" type="button">
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row #06 -->
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="py-3.5 pl-space-md pr-2 text-center tabular-nums font-mono text-[12px] text-on-surface-variant font-medium">06</td>
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-surface-container-highest border border-outline-variant flex items-center justify-center font-mono text-[11px] text-primary shrink-0">
+                  EV
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-primary group-hover:underline cursor-pointer">EventVector</span>
+</div>
+<span class="font-mono text-[11px] text-on-surface-variant truncate">0xd245...71b9</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<span class="font-metric-md text-metric-md text-primary font-semibold tabular-nums">80</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums">
+<span class="inline-flex items-center gap-1 text-[#E7A94B] font-medium bg-[#E7A94B]/10 px-1.5 py-0.5 rounded text-[12px]">
+                62.5%
+              </span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              84<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              149
+            </td>
+<td class="py-3.5 px-space-md text-right tabular-nums text-on-surface font-mono text-[13px]">
+              76<span class="text-on-surface-variant text-[11px]">/100</span>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<!-- Steady Sparkline -->
+<svg class="w-28 h-6 mx-auto text-on-surface-variant overflow-visible" fill="none" viewbox="0 0 100 24">
+<path d="M0,14 L20,13 L40,15 L60,14 L80,14 L100,14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+<circle cx="100" cy="14" fill="currentColor" r="2"></circle>
+</svg>
+</td>
+<td class="py-3.5 pr-space-md pl-space-sm text-right">
+<div class="inline-flex items-center gap-1.5 justify-end">
+<button class="h-7 px-2.5 rounded bg-primary text-surface-container-lowest font-label-xs text-label-xs font-medium hover:bg-secondary-fixed transition-colors" type="button">
+                  Follow
+                </button>
+<button class="h-7 w-7 rounded bg-surface-container-low hover:bg-surface-container-high border border-outline-variant text-on-surface-variant hover:text-primary flex items-center justify-center transition-colors" title="View Profile" type="button">
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Metadata Footer -->
+<div class="p-space-sm bg-surface-container-low border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span>Displaying <span class="text-primary font-mono">1-6</span> of <span class="text-primary font-mono">1,428</span> verified signal addresses</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface-container text-on-secondary-container opacity-50 cursor-not-allowed" disabled="" type="button">Previous</button>
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface-container-high text-primary font-mono" type="button">1</button>
+<button class="px-2.5 py-1 rounded border border-transparent hover:border-outline-variant text-on-surface-variant hover:text-primary font-mono transition-colors" type="button">2</button>
+<button class="px-2.5 py-1 rounded border border-transparent hover:border-outline-variant text-on-surface-variant hover:text-primary font-mono transition-colors" type="button">3</button>
+<span class="px-1 text-outline-variant">...</span>
+<button class="px-2.5 py-1 rounded border border-transparent hover:border-outline-variant text-on-surface-variant hover:text-primary font-mono transition-colors" type="button">238</button>
+<button class="px-2.5 py-1 rounded border border-outline-variant bg-surface-container-high hover:bg-surface-variant text-primary transition-colors" type="button">Next</button>
+</div>
+</div>
+</div>
+<!-- Educational Explanatory Callout (Why Calibration Matters) -->
+<div class="mt-space-lg p-space-md bg-surface-container-low border border-outline-variant rounded-lg flex flex-col sm:flex-row items-start gap-space-md">
+<div class="w-8 h-8 rounded bg-surface-container-high border border-outline-variant flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-[18px]">info</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-sm text-headline-sm text-primary">Why Calibration matters:</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        A predictor claiming 90% confidence should be correct 9 times out of 10. High confidence paired with low accuracy severely penalizes the calibration coefficient via proper Brier scoring rules. CrowdSignal ranks signal quality over vanity hit-rates to reward reliable probabilistic thinking.
+      </p>
+</div>
+</div>
+</div></div></main></div></body></html>

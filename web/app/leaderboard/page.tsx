@@ -1,211 +1,326 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { LiveTicker } from "@/components/dashboard/LiveTicker";
-import { INITIAL_PREDICTORS, PredictorProfile } from "@/lib/data";
+import { INITIAL_PREDICTORS } from "@/lib/data";
 
 export default function LeaderboardPage() {
-  const [activeTab, setActiveTab] = useState<"Overall" | "30 Days" | "7 Days" | "BTC" | "ETH">("Overall");
-  const [minPredictions, setMinPredictions] = useState<number>(0);
+  const [selectedTimeframe, setSelectedTimeframe] = useState<string>("All Time");
+  const [selectedAsset, setSelectedAsset] = useState<string>("All Assets");
+  const [minCalls, setMinCalls] = useState<number>(25);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [followingMap, setFollowingMap] = useState<Record<string, boolean>>({
+    "0x71A9908C8E645d9441faB8B33Af671239c36892F": true,
+  });
 
-  const tabs: ("Overall" | "30 Days" | "7 Days" | "BTC" | "ETH")[] = [
-    "Overall",
-    "30 Days",
-    "7 Days",
-    "BTC",
-    "ETH",
-  ];
+  const toggleFollow = (addr: string) => {
+    setFollowingMap((prev) => ({
+      ...prev,
+      [addr]: !prev[addr],
+    }));
+  };
 
-  // Sorted strictly by statistical Predictor Score (not raw win rate!)
-  const filtered = [...INITIAL_PREDICTORS]
-    .filter((p) => p.resolvedPredictions >= minPredictions)
-    .sort((a, b) => b.predictorScore - a.predictorScore);
+  const filteredPredictors = useMemo(() => {
+    return INITIAL_PREDICTORS.filter((p) => {
+      if (p.resolvedPredictions < minCalls) return false;
+      if (searchQuery.trim() !== "") {
+        const q = searchQuery.toLowerCase();
+        const matchAddr = p.address.toLowerCase().includes(q);
+        const matchEns = p.ensOrShort.toLowerCase().includes(q);
+        if (!matchAddr && !matchEns) return false;
+      }
+      return true;
+    });
+  }, [minCalls, searchQuery]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <LiveTicker />
-
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
-        {/* Header Block */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-surface-border pb-6">
+    <div className="flex flex-col w-full space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col gap-1 pb-4 border-b border-[#292929]">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-mono text-[#707070] uppercase tracking-wider">
+            Protocol Registry
+          </span>
+          <span className="text-[#292929] text-[11px]">/</span>
+          <span className="text-[11px] text-[#F5F5F5] font-medium">Predictor Ranking</span>
+        </div>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-1">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-brand"></span>
-              <span className="text-[10px] font-mono text-brand uppercase tracking-widest font-semibold">
-                REPUTATION REGISTRY
+            <h1 className="text-[28px] font-semibold text-[#F5F5F5] tracking-tight">
+              Verified Predictors
+            </h1>
+            <p className="text-[13px] text-[#A1A1A1] max-w-2xl mt-1">
+              Find wallets with demonstrated prediction skill. Ranking considers accuracy, calibration, consistency and sample size — never raw win rate alone.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2 px-3 py-1 rounded bg-[#141414] border border-[#292929]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
+              <span className="text-[11px] font-mono text-[#A1A1A1] tabular-nums">
+                Block #18,942,014
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-white mt-1">
-              VERIFIED PREDICTORS
-            </h1>
-            <p className="text-xs text-slate-400 font-sans mt-0.5 max-w-xl">
-              Find wallets with demonstrated Event Contract prediction skill. Ranked by Bayesian Wilson confidence, Brier
-              calibration, and streak consistency — never by raw win rate or luck alone.
-            </p>
-          </div>
-
-          {/* Methodology Callout Badge */}
-          <div className="p-3 bg-surface border border-surface-border rounded text-xs font-mono max-w-xs">
-            <span className="text-brand font-bold block text-[11px]">ANTI-GAMING RULE</span>
-            <p className="text-[11px] text-slate-400 font-sans mt-0.5">
-              A 2/2 lucky trader ranks below a 165/231 veteran predictor due to statistical sample size penalties.
-            </p>
+            <button
+              type="button"
+              onClick={() => alert("Exporting verified predictor registry CSV...")}
+              className="h-8 px-3 rounded bg-[#141414] hover:bg-[#202020] text-[#F5F5F5] border border-[#292929] text-[12px] transition-colors flex items-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[15px] text-[#707070]">download</span>
+              <span>Export CSV</span>
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Tab Strip & Filters */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          {/* Time & Asset Tabs */}
-          <div className="flex items-center bg-surface-subtle p-1 border border-surface-border rounded font-mono text-xs">
-            {tabs.map((tab) => (
+      {/* Methodology Banner */}
+      <div className="p-4 bg-[#141414] border border-[#292929] rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-start md:items-center gap-3">
+          <span className="material-symbols-outlined text-[#F5F5F5] text-[18px] shrink-0 mt-0.5 md:mt-0">
+            functions
+          </span>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-[#A1A1A1]">
+            <span className="text-[#F5F5F5] font-semibold uppercase tracking-wide text-[11px]">
+              Reputation Model:
+            </span>
+            <code className="px-2 py-0.5 rounded bg-[#0D0D0D] text-[#F5F5F5] font-mono text-[11px] border border-[#202020]">
+              Score = 0.35(Acc) + 0.35(Brier) + 0.20(Const) + 0.10(Vol)
+            </code>
+            <span className="hidden lg:inline text-[#292929]">•</span>
+            <span className="hidden lg:inline text-[#707070]">
+              Strict quadratic penalty for overconfident mispredictions.
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 shrink-0 text-[12px]">
+          <span className="text-[#707070] flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
+            Somnia Settlement Proof
+          </span>
+          <Link
+            href="/docs"
+            className="text-[#F5F5F5] hover:text-[#4DA3FF] transition-colors flex items-center gap-0.5 underline decoration-[#292929] underline-offset-4"
+          >
+            <span>Verify Spec</span>
+            <span className="material-symbols-outlined text-[13px]">north_east</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Filter & Search Controls */}
+      <div className="p-2.5 bg-[#141414] border border-[#292929] rounded-lg flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Timeframe Segment */}
+          <div className="flex items-center bg-[#0D0D0D] p-0.5 rounded border border-[#202020]">
+            {["All Time", "90D", "30D", "7D"].map((tf) => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-3 py-1.5 rounded transition-colors ${
-                  activeTab === tab
-                    ? "bg-surface-elevated text-brand font-bold border border-surface-border"
-                    : "text-slate-400 hover:text-slate-200"
+                key={tf}
+                type="button"
+                onClick={() => setSelectedTimeframe(tf)}
+                className={`px-3 py-1 rounded text-[11px] font-medium transition-colors ${
+                  selectedTimeframe === tf
+                    ? "bg-[#202020] text-white"
+                    : "text-[#707070] hover:text-[#F5F5F5]"
                 }`}
               >
-                {tab}
+                {tf}
               </button>
             ))}
           </div>
 
-          {/* Min Prediction Filter */}
-          <div className="flex items-center gap-2 font-mono text-xs">
-            <span className="text-slate-400">Min Predictions:</span>
-            <select
-              value={minPredictions}
-              onChange={(e) => setMinPredictions(Number(e.target.value))}
-              className="bg-surface-subtle border border-surface-border text-slate-200 py-1.5 px-3 rounded font-mono text-xs outline-none focus:border-brand"
-            >
-              <option value={0}>All Sample Sizes</option>
-              <option value={10}>&gt;= 10 Predictions (Verified only)</option>
-              <option value={50}>&gt;= 50 Predictions</option>
-              <option value={100}>&gt;= 100 Predictions</option>
-            </select>
+          <div className="h-4 w-px bg-[#292929] hidden sm:block" />
+
+          {/* Asset Filter */}
+          <div className="flex items-center gap-1">
+            <span className="text-[11px] font-mono text-[#707070] uppercase px-1">Asset:</span>
+            <div className="flex items-center bg-[#0D0D0D] p-0.5 rounded border border-[#202020]">
+              {["All Assets", "BTC", "ETH"].map((asset) => (
+                <button
+                  key={asset}
+                  type="button"
+                  onClick={() => setSelectedAsset(asset)}
+                  className={`px-2.5 py-1 rounded text-[11px] font-medium transition-colors ${
+                    selectedAsset === asset
+                      ? "bg-[#202020] text-white"
+                      : "text-[#707070] hover:text-[#F5F5F5]"
+                  }`}
+                >
+                  {asset}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="h-4 w-px bg-[#292929] hidden md:block" />
+
+          {/* Min Calls Filter */}
+          <div className="flex items-center gap-1">
+            <span className="text-[11px] font-mono text-[#707070] uppercase px-1">Min Calls:</span>
+            <div className="flex items-center bg-[#0D0D0D] p-0.5 rounded border border-[#202020]">
+              {[10, 25, 50, 100].map((calls) => (
+                <button
+                  key={calls}
+                  type="button"
+                  onClick={() => setMinCalls(calls)}
+                  className={`px-2 py-1 rounded text-[11px] font-medium transition-colors ${
+                    minCalls === calls
+                      ? "bg-[#202020] text-white"
+                      : "text-[#707070] hover:text-[#F5F5F5]"
+                  }`}
+                >
+                  {calls}+
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Predictors Table */}
-        <div className="bg-surface border border-surface-border rounded-lg shadow-terminal overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left font-mono text-xs">
-              <thead>
-                <tr className="border-b border-surface-border bg-surface-subtle/80 text-[11px] text-slate-400 uppercase tracking-wider">
-                  <th className="py-3.5 px-4 font-medium">Rank</th>
-                  <th className="py-3.5 px-4 font-medium">Wallet Address</th>
-                  <th className="py-3.5 px-4 font-medium">Predictor Score</th>
-                  <th className="py-3.5 px-4 font-medium">Directional Accuracy</th>
-                  <th className="py-3.5 px-4 font-medium">Calibration</th>
-                  <th className="py-3.5 px-4 font-medium">Predictions (Resolved)</th>
-                  <th className="py-3.5 px-4 font-medium">Consistency</th>
-                  <th className="py-3.5 px-4 font-medium text-right">Profile</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-border">
-                {filtered.map((p, index) => {
-                  return (
-                    <tr
-                      key={p.address}
-                      className={`hover:bg-surface-elevated/50 transition-colors ${
-                        !p.isVerified ? "opacity-60 bg-surface-subtle/30" : ""
-                      }`}
-                    >
-                      <td className="py-4 px-4 font-bold text-white">
-                        <span
-                          className={`inline-block w-6 text-center ${
-                            index === 0
-                              ? "text-brand"
-                              : index === 1
-                              ? "text-slate-200"
-                              : index === 2
-                              ? "text-amber-500"
-                              : "text-slate-400"
-                          }`}
-                        >
-                          #{index + 1}
-                        </span>
-                      </td>
+        {/* Search Input */}
+        <div className="relative w-full xl:w-72">
+          <span className="material-symbols-outlined text-[16px] text-[#707070] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+            search
+          </span>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search wallet 0x or ENS..."
+            className="w-full h-8 pl-8 pr-3 bg-[#0D0D0D] border border-[#202020] rounded text-[12px] font-mono text-[#F5F5F5] placeholder-[#707070] focus:outline-none focus:border-[#4DA3FF]"
+          />
+        </div>
+      </div>
 
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-2">
-                          <Link
-                            href={`/trader/${p.address}`}
-                            className="text-white hover:text-brand transition-colors font-medium"
-                          >
-                            {p.ensOrShort}
-                          </Link>
-                          {p.isVerified ? (
-                            <span className="px-1.5 py-0.5 text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded font-semibold">
-                              VERIFIED
-                            </span>
-                          ) : (
-                            <span className="px-1.5 py-0.5 text-[9px] bg-slate-500/10 text-slate-400 border border-slate-500/30 rounded" title="Sample size < 10 calls">
-                              LOW SAMPLE
-                            </span>
-                          )}
+      {/* Leaderboard Table */}
+      <div className="bg-[#141414] border border-[#292929] rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[940px]">
+            <thead>
+              <tr className="bg-[#0D0D0D] border-b border-[#202020] text-[#707070] font-mono text-[11px] uppercase tracking-wider">
+                <th className="py-3 pl-4 pr-2 w-12 text-center">#</th>
+                <th className="py-3 px-4">Predictor</th>
+                <th className="py-3 px-4 text-right">
+                  <span className="inline-flex items-center gap-1 cursor-pointer hover:text-[#F5F5F5]">
+                    Score
+                    <span className="material-symbols-outlined text-[13px] text-[#4DA3FF]">
+                      arrow_downward
+                    </span>
+                  </span>
+                </th>
+                <th className="py-3 px-4 text-right">Accuracy</th>
+                <th className="py-3 px-4 text-right">Calibration (Brier)</th>
+                <th className="py-3 px-4 text-right">Market Alpha (BSS)</th>
+                <th className="py-3 px-4 text-right">Resolved Calls</th>
+                <th className="py-3 px-4 text-right">Consistency</th>
+                <th className="py-3 px-4 text-center w-36">30D Trend</th>
+                <th className="py-3 pr-4 pl-2 text-right w-36">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#1A1A1A] text-[13px]">
+              {filteredPredictors.map((p, idx) => {
+                const isFollowing = !!followingMap[p.address];
+                return (
+                  <tr key={p.address} className="hover:bg-[#1A1A1A] transition-colors group">
+                    <td className="py-3.5 pl-4 pr-2 text-center tabular-nums font-mono text-[12px] text-[#F5F5F5] font-medium">
+                      {(idx + 1).toString().padStart(2, "0")}
+                    </td>
+
+                    <td className="py-3.5 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-7 h-7 rounded bg-[#202020] border border-[#292929] flex items-center justify-center font-mono text-[11px] text-[#F5F5F5] shrink-0 font-semibold">
+                          {p.address.slice(2, 4).toUpperCase()}
                         </div>
-                      </td>
-
-                      <td className="py-4 px-4">
-                        <div className="flex items-baseline gap-1">
-                          <span
-                            className={`text-base font-black ${
-                              p.predictorScore >= 80
-                                ? "text-brand"
-                                : p.predictorScore >= 60
-                                ? "text-emerald-400"
-                                : "text-slate-400"
-                            }`}
-                          >
-                            {p.predictorScore}
+                        <div className="flex flex-col min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <Link
+                              href={`/trader/${p.address}`}
+                              className="font-medium text-[#F5F5F5] group-hover:underline cursor-pointer"
+                            >
+                              {p.ensOrShort}
+                            </Link>
+                            {p.isVerified && (
+                              <span
+                                className="material-symbols-outlined text-[14px] text-[#4DA3FF]"
+                                title="Verified Quantitative Model"
+                              >
+                                verified
+                              </span>
+                            )}
+                          </div>
+                          <span className="font-mono text-[11px] text-[#707070] truncate">
+                            {p.address.slice(0, 8)}...{p.address.slice(-6)}
                           </span>
-                          <span className="text-[10px] text-slate-500">/ 100</span>
                         </div>
-                      </td>
+                      </div>
+                    </td>
 
-                      <td className="py-4 px-4 font-semibold text-emerald-400">
+                    <td className="py-3.5 px-4 text-right">
+                      <span className="text-[20px] text-[#F5F5F5] font-semibold tabular-nums">
+                        {p.predictorScore}
+                      </span>
+                    </td>
+
+                    <td className="py-3.5 px-4 text-right tabular-nums">
+                      <span className="inline-flex items-center gap-1 text-[#4DA3FF] font-medium bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded text-[12px]">
                         {p.accuracy.toFixed(1)}%
-                      </td>
+                      </span>
+                    </td>
 
-                      <td className="py-4 px-4">
-                        <span className="text-cyan-400 font-medium">{p.calibrationScore}</span>
-                        <span className="text-slate-500 text-[10px]"> / 100</span>
-                      </td>
+                    <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
+                      {p.calibrationScore}
+                      <span className="text-[#707070] text-[11px]">/100</span>
+                    </td>
 
-                      <td className="py-4 px-4 text-slate-300">
-                        {p.totalPredictions} ({p.resolvedPredictions})
-                      </td>
+                    <td className="py-3.5 px-4 text-right tabular-nums font-mono text-[13px]">
+                      <span className={`font-medium ${p.marketRelativeSkill >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"}`}>
+                        {p.marketRelativeSkill >= 0 ? `+${p.marketRelativeSkill.toFixed(3)}` : p.marketRelativeSkill.toFixed(3)}
+                      </span>
+                    </td>
 
-                      <td className="py-4 px-4">
-                        <span className="text-slate-200 font-medium">{p.consistencyScore}</span>
-                        <span className="text-slate-500 text-[10px]"> / 100</span>
-                      </td>
+                    <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
+                      {p.resolvedPredictions}
+                    </td>
 
-                      <td className="py-4 px-4 text-right">
-                        <Link
-                          href={`/trader/${p.address}`}
-                          className="py-1 px-3 bg-surface-subtle hover:bg-surface-border border border-surface-border rounded text-slate-200 transition-colors"
-                        >
-                          Dossier →
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                    <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
+                      {p.consistencyScore}
+                      <span className="text-[#707070] text-[11px]">/100</span>
+                    </td>
+
+                    <td className="py-3.5 px-4 text-center">
+                      <svg
+                        className="w-28 h-6 mx-auto text-[#4DA3FF] overflow-visible"
+                        fill="none"
+                        viewBox="0 0 100 24"
+                      >
+                        <path
+                          d="M0,18 L16,16 L32,17 L48,11 L64,12 L80,7 L100,4"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                        />
+                        <circle cx="100" cy="4" fill="currentColor" r="2" />
+                      </svg>
+                    </td>
+
+                    <td className="py-3.5 pr-4 pl-2 text-right">
+                      <button
+                        type="button"
+                        onClick={() => toggleFollow(p.address)}
+                        className={`h-7 px-3 rounded border text-[11px] font-medium transition-colors ${
+                          isFollowing
+                            ? "bg-[#202020] text-[#F5F5F5] border-[#292929] hover:bg-[#2A2A2A]"
+                            : "bg-[#0D0D0D] text-[#A1A1A1] border-[#202020] hover:bg-[#1A1A1A] hover:text-[#F5F5F5]"
+                        }`}
+                      >
+                        {isFollowing ? "Following" : "+ Follow"}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      </main>
-
-      <Footer />
+      </div>
     </div>
   );
 }

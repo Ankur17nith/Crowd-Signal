@@ -1,6 +1,5 @@
 import { defineChain } from "viem";
-import { http, createConfig } from "wagmi";
-import { injected } from "wagmi/connectors";
+import { http, createConfig, injected } from "wagmi";
 
 export const somniaShannon = defineChain({
   id: 50312,

@@ -1,126 +1,230 @@
 "use client";
 
 import React from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { LiveTicker } from "@/components/dashboard/LiveTicker";
 
 export default function DocsPage() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <LiveTicker />
-
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 space-y-10">
-        <div className="space-y-2 border-b border-surface-border pb-6">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-brand"></span>
-            <span className="text-[10px] font-mono text-brand uppercase tracking-widest font-semibold">
-              SPECIFICATION & FORMULAS
-            </span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-white uppercase">
-            CROWDSIGNAL DOCUMENTATION
-          </h1>
-          <p className="text-sm text-slate-300 font-sans max-w-2xl leading-relaxed">
-            Mathematical foundations, oracle data pipeline, and scoring algorithms powering CrowdSignal on Somnia Shannon.
-          </p>
+    <div className="flex flex-col w-full gap-8 max-w-[1080px] mx-auto">
+      {/* Header */}
+      <div className="space-y-2 border-b border-[#292929] pb-6">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
+          <span className="text-[11px] font-mono text-[#4DA3FF] uppercase tracking-wider">
+            Quantitative Research Specification
+          </span>
         </div>
+        <h1 className="text-[28px] font-semibold tracking-tight text-[#F5F5F5]">
+          CrowdSignal Methodology & Research Specification
+        </h1>
+        <p className="text-[13px] text-[#707070] max-w-3xl leading-relaxed">
+          Mathematical formulations, Bayesian state-space filtering, information theory, change-point detection,
+          market-relative scoring rules, and cryptographic provenance anchoring on Somnia Shannon.
+        </p>
+      </div>
 
-        {/* Article 1: Core Problem & Product Thesis */}
-        <article className="bg-surface border border-surface-border rounded-lg shadow-terminal p-6 space-y-4">
-          <h2 className="text-lg font-mono font-bold text-white border-b border-surface-border pb-3">
-            1. Core Problem & Product Thesis
-          </h2>
-          <p className="text-xs text-slate-300 font-sans leading-relaxed">
-            DreamDEX Event Contracts continuously create a capital-backed signal about what market participants expect to happen over short time windows (e.g. 5-minute or 15-minute UP/DOWN binary contracts). However, this valuable intelligence traditionally vanishes once the contract settles.
-          </p>
-          <div className="p-3 bg-surface-subtle border border-surface-border rounded font-mono text-xs text-brand">
-            &quot;DreamDEX generates valuable information through real capital and real predictions. CrowdSignal extracts that information, transforms it into structured intelligence, makes it verifiable, and exposes it to humans and other applications.&quot;
-          </div>
-        </article>
+      {/* 1. Core Positioning */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          1. The Foundational Thesis
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          CrowdSignal is not an autonomous trading bot or prediction-market clone. It is a real-time probabilistic intelligence layer for DreamDEX Event Contracts that filters noisy quotes into latent crowd belief, tracks information arrival, measures predictor skill relative to the market baseline, detects structural regime changes, and commits verifiable provenance anchors on-chain.
+        </p>
+        <div className="p-3.5 bg-[#0D0D0D] border border-[#202020] rounded text-[13px] text-[#F5F5F5] font-mono leading-relaxed">
+          &quot;Do not add features because they sound advanced. Add research-backed mechanisms that create measurable, reproducible, technically defensible differentiation.&quot;
+        </div>
+      </article>
 
-        {/* Article 2: Mathematical Algorithms & Formulas */}
-        <article className="bg-surface border border-surface-border rounded-lg shadow-terminal p-6 space-y-6">
-          <h2 className="text-lg font-mono font-bold text-white border-b border-surface-border pb-3">
-            2. Crowd Scoring Algorithms
-          </h2>
-
-          <div className="space-y-4 font-mono text-xs">
-            {/* Formula 1 */}
-            <div className="p-4 bg-surface-subtle border border-surface-border rounded space-y-2">
-              <h3 className="text-sm font-bold text-white">A. Capital Skew vs. Implied Probability</h3>
-              <p className="text-[11px] text-slate-400 font-sans">
-                Open interest is not confused with probability. Implied probability is derived from crossing order book prices, whereas capital skew measures directional capital exposure:
-              </p>
-              <pre className="p-3 bg-background border border-surface-border rounded text-cyan-300 overflow-x-auto">
-{`CapitalSkew = (OpenInterest_UP - OpenInterest_DOWN) / (TotalOpenInterest + ε)
-CapitalSkew_Bps = clamp(round(CapitalSkew * 10000), -10000, 10000)`}
-              </pre>
-            </div>
-
-            {/* Formula 2 */}
-            <div className="p-4 bg-surface-subtle border border-surface-border rounded space-y-2">
-              <h3 className="text-sm font-bold text-white">B. Probability Velocity & Acceleration</h3>
-              <p className="text-[11px] text-slate-400 font-sans">
-                Measures the rate of change of market expectations over rolling time windows:
-              </p>
-              <pre className="p-3 bg-background border border-surface-border rounded text-cyan-300 overflow-x-auto">
-{`Velocity = (P_current - P_previous) / Δt_minutes
-Acceleration = (Velocity_current - Velocity_previous) / Δt_minutes`}
-              </pre>
-            </div>
-
-            {/* Formula 3 */}
-            <div className="p-4 bg-surface-subtle border border-surface-border rounded space-y-2">
-              <h3 className="text-sm font-bold text-white">C. Market Confidence Score (0 - 100)</h3>
-              <p className="text-[11px] text-slate-400 font-sans">
-                Multi-factor composite scoring liquidity depth, bid-ask spread tightness, open interest magnitude, and update recency:
-              </p>
-              <pre className="p-3 bg-background border border-surface-border rounded text-cyan-300 overflow-x-auto">
-{`ConfidenceScore = min(100, Score_Liquidity + Score_Spread + Score_OpenInterest + Score_Freshness)`}
-              </pre>
-            </div>
-          </div>
-        </article>
-
-        {/* Article 3: Verifiable Reputation Scoring */}
-        <article className="bg-surface border border-surface-border rounded-lg shadow-terminal p-6 space-y-6">
-          <h2 className="text-lg font-mono font-bold text-white border-b border-surface-border pb-3">
-            3. Verifiable Predictor Reputation (Anti-Gaming)
-          </h2>
-
-          <div className="space-y-4 font-mono text-xs">
-            <p className="text-xs text-slate-300 font-sans leading-relaxed">
-              CrowdSignal never ranks participants solely by raw win rate or profit-and-loss (PnL), preventing lucky streaks from distorting the intelligence layer.
+      {/* 2. Microstructure & Microprice */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          2. Market Microstructure & Order-Book Microprice (CS-MICRO-1.0)
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          Midpoint prices are susceptible to bid-ask bounce and fail to reflect resting order depth imbalances. Following Stoikov (2018), CrowdSignal estimates an order-book-informed microprice:
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-[#0D0D0D] border border-[#202020] rounded space-y-2">
+            <h3 className="text-[12px] font-mono text-[#4DA3FF] uppercase">Queue Imbalance (I_Q)</h3>
+            <pre className="p-2.5 bg-[#141414] border border-[#202020] rounded text-[12px] text-[#F5F5F5] font-mono">
+{`I_Q = (Depth_bid - Depth_ask) / (Depth_bid + Depth_ask)
+I_Q ∈ [-1.0, +1.0]`}
+            </pre>
+            <p className="text-[11px] text-[#707070]">
+              Quantifies buy vs sell pressure resting at the best touch quotes.
             </p>
-
-            <div className="p-4 bg-surface-subtle border border-surface-border rounded space-y-2">
-              <h3 className="text-sm font-bold text-white">Wilson Score Confidence Interval Lower Bound</h3>
-              <p className="text-[11px] text-slate-400 font-sans">
-                For sample size n and win count w (with z = 1.96 for 95% statistical confidence):
-              </p>
-              <pre className="p-3 bg-background border border-surface-border rounded text-emerald-300 overflow-x-auto">
-{`p̂ = correct / total
-Wilson = (p̂ + z²/(2n) - z * sqrt((p̂(1 - p̂)/n) + z²/(4n²))) / (1 + z²/n)`}
-              </pre>
-            </div>
-
-            <div className="p-4 bg-surface-subtle border border-surface-border rounded space-y-2">
-              <h3 className="text-sm font-bold text-white">Brier Score Calibration</h3>
-              <p className="text-[11px] text-slate-400 font-sans">
-                Evaluates whether stated confidence corresponds to actual realized binary settlement:
-              </p>
-              <pre className="p-3 bg-background border border-surface-border rounded text-amber-300 overflow-x-auto">
-{`BrierScore = (1 / n) * Σ(confidence_i - actual_outcome_i)²
-CalibrationScore = round(max(0, (1 - BrierScore * 1.6) * 100))`}
-              </pre>
-            </div>
           </div>
-        </article>
-      </main>
+          <div className="p-4 bg-[#0D0D0D] border border-[#202020] rounded space-y-2">
+            <h3 className="text-[12px] font-mono text-[#4DA3FF] uppercase">Microprice Estimator</h3>
+            <pre className="p-2.5 bg-[#141414] border border-[#202020] rounded text-[12px] text-[#F5F5F5] font-mono">
+{`P_micro = P_mid + (I_Q * Spread) / 2
+Adjustment = P_micro - P_mid`}
+            </pre>
+            <p className="text-[11px] text-[#707070]">
+              Adjusts the midpoint towards the side of greater order absorption capacity.
+            </p>
+          </div>
+        </div>
+      </article>
 
-      <Footer />
+      {/* 3. Latent Bayesian Probability Engine */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          3. Latent Probability Filtering & Credible Intervals (CS-PROB-2.0)
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          Rather than treating observed touch quotes as ground truth, we model the order book as noisy observations of an unobserved latent event probability &theta;<sub>t</sub>. The filter operates in logit belief space to prevent boundary violations:
+        </p>
+        <pre className="p-3 bg-[#0D0D0D] border border-[#202020] rounded text-[12px] text-[#4DA3FF] font-mono overflow-x-auto">
+{`State Space Update (Logit Domain):
+x_t = ln(θ_t / (1 - θ_t))
+
+Time Update:
+x_{t|t-1} = x_{t-1|t-1}
+P_{t|t-1} = P_{t-1|t-1} + Q * Δt
+
+Observation Variance:
+R_t = max(R_min, 2 * RelativeSpread / sqrt(MarketDepth))
+
+Kalman Belief Gain:
+K_t = P_{t|t-1} / (P_{t|t-1} + R_t)
+x_{t|t} = x_{t|t-1} + K_t * (y_t - x_{t|t-1})
+P_{t|t} = (1 - K_t) * P_{t|t-1}
+
+Posterior 95% Credible Interval:
+θ_{lower} = σ(x_{t|t} - 1.96 * sqrt(P_{t|t}))
+θ_{upper} = σ(x_{t|t} + 1.96 * sqrt(P_{t|t}))`}
+        </pre>
+      </article>
+
+      {/* 4. Information Theory & Shannon Entropy */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          4. Shannon Entropy & Information Velocity (CS-INFO-1.0)
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          Probability shifts near 50% carry fundamentally different information content than shifts near 90%. CrowdSignal computes binary Shannon entropy and its time derivative to detect true uncertainty compression:
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-[#0D0D0D] border border-[#202020] rounded space-y-2">
+            <h3 className="text-[12px] font-mono text-[#4DA3FF] uppercase">Binary Shannon Entropy</h3>
+            <pre className="p-2.5 bg-[#141414] border border-[#202020] rounded text-[12px] text-[#F5F5F5] font-mono">
+{`H(p) = -p * log2(p) - (1 - p) * log2(1 - p)
+H(0.5) = 1.0 bit (Max Uncertainty)
+H(0.9) = 0.469 bits (High Certainty)`}
+            </pre>
+          </div>
+          <div className="p-4 bg-[#0D0D0D] border border-[#202020] rounded space-y-2">
+            <h3 className="text-[12px] font-mono text-[#4DA3FF] uppercase">Information Velocity (dH/dt)</h3>
+            <pre className="p-2.5 bg-[#141414] border border-[#202020] rounded text-[12px] text-[#F5F5F5] font-mono">
+{`dH/dt = [H(p_t) - H(p_{t-1})] / Δt (bits/min)
+dH/dt < 0  -> Uncertainty resolving
+dH/dt > 0  -> Information shock`}
+            </pre>
+          </div>
+        </div>
+      </article>
+
+      {/* 5. Change-Point Detection & Regimes */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          5. Bayesian Online Changepoint Detection (BOCPD) & Market Regimes
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          Based on Adams &amp; MacKay (2007), CrowdSignal tracks streaming run-length hazard probabilities to identify structural regime shifts from high-frequency market noise:
+        </p>
+        <div className="space-y-2 text-[12px] font-mono">
+          <div className="p-3 bg-[#0D0D0D] border border-[#202020] rounded flex items-center justify-between">
+            <span className="text-[#F5F5F5]">INFORMATION_SHOCK</span>
+            <span className="text-[#707070]">ChangePointProbability &ge; 70% or |velocity| &gt; 1200 bps/min</span>
+          </div>
+          <div className="p-3 bg-[#0D0D0D] border border-[#202020] rounded flex items-center justify-between">
+            <span className="text-[#F5F5F5]">LIQUIDITY_FRAGILE</span>
+            <span className="text-[#707070]">Relative spread &gt; 6% with shallow resting order book depth</span>
+          </div>
+          <div className="p-3 bg-[#0D0D0D] border border-[#202020] rounded flex items-center justify-between">
+            <span className="text-[#F5F5F5]">TRENDING</span>
+            <span className="text-[#707070]">Directional momentum |velocity| &ge; 300 bps/min under stable run length</span>
+          </div>
+          <div className="p-3 bg-[#0D0D0D] border border-[#202020] rounded flex items-center justify-between">
+            <span className="text-[#F5F5F5]">STABLE</span>
+            <span className="text-[#707070]">Tight spreads, low velocity, established continuous regime run-length</span>
+          </div>
+        </div>
+      </article>
+
+      {/* 6. Participant Concentration & Effective Sample Size */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          6. Participant Concentration & Effective Sample Size
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          A market with 1,000 trades placed by two colluding wallets is not a crowd. CrowdSignal computes the Herfindahl-Hirschman Index (HHI) to measure the true effective sample size without manipulating underlying prices:
+        </p>
+        <pre className="p-3 bg-[#0D0D0D] border border-[#202020] rounded text-[12px] text-[#4DA3FF] font-mono overflow-x-auto">
+{`Herfindahl-Hirschman Index:
+HHI = Σ (s_i)²  where s_i is wallet i's share of committed exposure
+
+Effective Participant Count:
+N_eff = 1 / HHI
+
+Signal Independence Score:
+Independence = min(1.0, N_eff / N_observed) * (1 - Top1Share)`}
+        </pre>
+      </article>
+
+      {/* 7. Reputation Engine V2 & Market-Relative Skill */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          7. Market-Relative Skill & Brier Decomposition (CS-REPUTATION-2.0)
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          Evaluating predictors by raw win-rate incentivizes cherry-picking heavy favorites. CrowdSignal benchmarks every resolved prediction against the prevailing market probability observed at the exact second the prediction was entered:
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-[#0D0D0D] border border-[#202020] rounded space-y-2">
+            <h3 className="text-[12px] font-mono text-[#4DA3FF] uppercase">Brier Skill Score vs Market</h3>
+            <pre className="p-2.5 bg-[#141414] border border-[#202020] rounded text-[12px] text-[#F5F5F5] font-mono">
+{`BS_pred = (Confidence_i - Outcome_i)²
+BS_market = (P_market_i - Outcome_i)²
+
+BSS_market = 1 - (BS_pred / BS_market)`}
+            </pre>
+            <p className="text-[11px] text-[#707070]">
+              Positive score proves true informational contribution over the crowd consensus.
+            </p>
+          </div>
+          <div className="p-4 bg-[#0D0D0D] border border-[#202020] rounded space-y-2">
+            <h3 className="text-[12px] font-mono text-[#4DA3FF] uppercase">Murphy 3-Part Decomposition</h3>
+            <pre className="p-2.5 bg-[#141414] border border-[#202020] rounded text-[12px] text-[#F5F5F5] font-mono">
+{`Brier = Reliability - Resolution + Uncertainty
+Reliability: Calibration error (0 is ideal)
+Resolution: Sorting capacity (higher is better)`}
+            </pre>
+          </div>
+        </div>
+      </article>
+
+      {/* 8. On-Chain Provenance & Verification */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          8. Cryptographic Signal Provenance & Verification Anchor
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          Every signal published by CrowdSignal includes cryptographic provenance hashes stored in <code>SentimentPublisher.sol</code>:
+        </p>
+        <pre className="p-3 bg-[#0D0D0D] border border-[#202020] rounded text-[12px] text-[#4DA3FF] font-mono overflow-x-auto">
+{`struct ProvenanceRecord {
+    bytes32 algorithmVersionHash; // e.g. keccak256("CS-PROB-2.0")
+    bytes32 inputSnapshotHash;    // keccak256 of order-book input quotes
+    bytes32 signalHash;           // keccak256 of published signal output
+    uint64 timestamp;             // on-chain block timestamp
+}`}
+        </pre>
+        <p className="text-[12px] text-[#707070]">
+          Given identical input quotes and algorithm version, any third party can independently recompute and verify the signal hash.
+        </p>
+      </article>
     </div>
   );
 }

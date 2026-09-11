@@ -24,6 +24,13 @@ export async function GET(request: Request) {
       address: predictor.address,
       predictorScore: predictor.predictorScore,
       accuracy: predictor.accuracy,
+      bayesianAccuracyMean: predictor.bayesianAccuracyMean,
+      credibleInterval: predictor.credibleInterval,
+      marketRelativeSkill: predictor.marketRelativeSkill,
+      meanBrierScore: predictor.meanBrierScore,
+      brierDecomposition: predictor.brierDecomposition,
+      recencyWeightedSkill: predictor.recencyWeightedSkill,
+      skillTrend: predictor.skillTrend,
       totalPredictions: predictor.totalPredictions,
       resolvedPredictions: predictor.resolvedPredictions,
       calibrationScore: predictor.calibrationScore,
@@ -33,12 +40,17 @@ export async function GET(request: Request) {
     });
   }
 
-  // Return all verified predictors
+  // Return all predictors with quantitative metrics
   return NextResponse.json({
     predictors: INITIAL_PREDICTORS.map((p) => ({
       address: p.address,
       predictorScore: p.predictorScore,
       accuracy: p.accuracy,
+      bayesianAccuracyMean: p.bayesianAccuracyMean,
+      credibleInterval: p.credibleInterval,
+      marketRelativeSkill: p.marketRelativeSkill,
+      recencyWeightedSkill: p.recencyWeightedSkill,
+      skillTrend: p.skillTrend,
       totalPredictions: p.totalPredictions,
       resolvedPredictions: p.resolvedPredictions,
       calibrationScore: p.calibrationScore,

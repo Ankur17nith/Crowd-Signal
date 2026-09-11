@@ -97,4 +97,13 @@ contract DemoConsumer {
         bool verified = reputation.isVerifiedPredictor(trader);
         return (verified && rep.accuracyBps >= 6500, rep.predictorScore);
     }
+
+    function verifySignalProvenance(
+        bytes32 assetKey,
+        bytes32 expectedAlgorithmHash
+    ) external view returns (bool isValid, uint64 anchoredTime) {
+        ISentimentPublisher.ProvenanceRecord memory rec = publisher.getProvenance(assetKey);
+        bool valid = rec.algorithmVersionHash == expectedAlgorithmHash && rec.signalHash != bytes32(0);
+        return (valid, rec.timestamp);
+    }
 }

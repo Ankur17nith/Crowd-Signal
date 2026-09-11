@@ -113,4 +113,33 @@ contract SentimentPublisher is ISentimentPublisher {
             signal.timestamp
         );
     }
+
+    mapping(bytes32 => ProvenanceRecord) private _provenance;
+
+    function getProvenance(bytes32 assetKey) external view override returns (ProvenanceRecord memory) {
+        return _provenance[assetKey];
+    }
+
+    function anchorProvenance(
+        bytes32 assetKey,
+        bytes32 algorithmVersionHash,
+        bytes32 inputSnapshotHash,
+        bytes32 signalHash
+    ) external override onlyPublisher {
+        ProvenanceRecord memory rec = ProvenanceRecord({
+            algorithmVersionHash: algorithmVersionHash,
+            inputSnapshotHash: inputSnapshotHash,
+            signalHash: signalHash,
+            timestamp: uint64(block.timestamp)
+        });
+        _provenance[assetKey] = rec;
+
+        emit ProvenanceAnchored(
+            assetKey,
+            algorithmVersionHash,
+            inputSnapshotHash,
+            signalHash,
+            uint64(block.timestamp)
+        );
+    }
 }

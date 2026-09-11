@@ -1,9 +1,9 @@
-import { MarketSignal, DivergenceData } from "./data";
+import { MarketSignal, DivergenceData, QuantitativeRegime } from "./data";
 
 export interface DemoState {
   step: number;
   prob: number;
-  sentiment: "BULLISH" | "BEARISH" | "NEUTRAL" | "HIGH_VOLATILITY";
+  sentiment: QuantitativeRegime;
   predictorConsensus: number;
   divergence: number;
   skew: number;
@@ -14,7 +14,7 @@ const DEMO_STEPS: DemoState[] = [
   {
     step: 0,
     prob: 42.0,
-    sentiment: "NEUTRAL",
+    sentiment: "HIGH_UNCERTAINTY",
     predictorConsensus: 44.0,
     divergence: 2.0,
     skew: -3.5,
@@ -23,7 +23,7 @@ const DEMO_STEPS: DemoState[] = [
   {
     step: 1,
     prob: 48.0,
-    sentiment: "NEUTRAL",
+    sentiment: "STABLE",
     predictorConsensus: 46.0,
     divergence: 2.0,
     skew: 5.2,
@@ -32,7 +32,7 @@ const DEMO_STEPS: DemoState[] = [
   {
     step: 2,
     prob: 57.0,
-    sentiment: "BULLISH",
+    sentiment: "TRENDING",
     predictorConsensus: 49.0,
     divergence: 8.0,
     skew: 18.4,
@@ -41,7 +41,7 @@ const DEMO_STEPS: DemoState[] = [
   {
     step: 3,
     prob: 64.2,
-    sentiment: "BULLISH",
+    sentiment: "TRENDING",
     predictorConsensus: 52.0,
     divergence: 12.2,
     skew: 28.4,

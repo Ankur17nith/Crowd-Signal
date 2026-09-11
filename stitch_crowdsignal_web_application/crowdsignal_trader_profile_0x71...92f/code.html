@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"tertiary":"#ffffff","on-tertiary":"#00315b","surface-dim":"#131313","background":"#131313","on-primary-fixed-variant":"#454747","surface-variant":"#353534","on-background":"#e5e2e1","on-tertiary-fixed":"#001c38","surface-container-lowest":"#0e0e0e","on-tertiary-fixed-variant":"#004881","on-error":"#690005","outline":"#8e9192","secondary-fixed":"#e3e2e2","surface-tint":"#c6c6c7","surface-container":"#201f1f","primary":"#ffffff","secondary-fixed-dim":"#c7c6c6","inverse-on-surface":"#313030","on-error-container":"#ffdad6","on-primary":"#2f3131","secondary":"#c7c6c6","error":"#ffb4ab","on-secondary-container":"#b8b8b8","on-secondary":"#2f3131","tertiary-container":"#d3e4ff","on-secondary-fixed":"#1a1c1c","on-primary-fixed":"#1a1c1c","on-surface":"#e5e2e1","primary-fixed":"#e2e2e2","surface-container-highest":"#353534","surface-bright":"#3a3939","error-container":"#93000a","inverse-primary":"#5d5f5f","surface-container-high":"#2a2a2a","secondary-container":"#484949","on-tertiary-container":"#0066b3","on-secondary-fixed-variant":"#464747","on-primary-container":"#636565","surface":"#131313","tertiary-fixed-dim":"#a2c9ff","primary-fixed-dim":"#c6c6c7","inverse-surface":"#e5e2e1","on-surface-variant":"#c4c7c8","primary-container":"#e2e2e2","outline-variant":"#444748","surface-container-low":"#1c1b1b","tertiary-fixed":"#d3e4ff"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-sm":"0.5rem","gutter-desktop":"1.5rem","margin":"1rem","space-md":"0.75rem","space-lg":"1rem","margin-desktop":"2rem","space-xl":"1.5rem","space-xs":"0.25rem","gutter":"1rem"},"fontFamily":{"label-xs":["Inter"],"headline-md":["Inter"],"body-lg":["Inter"],"headline-lg":["Inter"],"headline-xl":["Inter"],"headline-sm":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"headline-xl-mobile":["Inter"],"metric-md":["Inter"],"metric-lg":["Inter"]},"fontSize":{"label-xs":["11px",{"lineHeight":"14px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-md":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"24px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-sm":["15px",{"lineHeight":"22px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","letterSpacing":"0.005em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.01em","fontWeight":"500"}],"label-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.015em","fontWeight":"500"}],"headline-xl-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.015em","fontWeight":"600"}],"metric-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"500"}],"metric-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface-container-lowest font-body-md text-body-md text-on-surface min-h-screen"><aside class="fixed left-0 top-0 h-screen w-60 bg-surface-dim z-50 flex flex-col justify-between border-r border-outline-variant"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center gap-space-sm border-b border-outline-variant"><img alt="CrowdSignal Geometric Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XZPTa6a_2obLL-gvnznZz8Ga5UdW8mPRJ4MGrv1zrvtlWewEIerGyD6hRy1YFQEy_61IOZvtTK0LjdhLx3VJadRvkjm-E8WNq45FaqcuoN-JGzZNYvUQITF16xsY4udYmCMbAqs8l37akojTd9CZAoXrH5Y25vt4F_ppK-sygXIKd5yfiwLAx0m-dTT1nmLZ0gfv1y4bEg6lkWcPx7M_bBWSCHPM_lVeOPBVWHHd4_g6qZ0ggWl5RaNFCC"/><span class="font-headline-sm text-headline-sm text-primary tracking-tight">CrowdSignal</span></div><nav class="flex flex-col gap-space-xs p-space-sm" data-active-classes="bg-surface-container-high text-primary font-medium"><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg transition-colors bg-surface-container-high text-primary font-medium" data-path="overview" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span>Overview</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="markets" href="#"><span class="material-symbols-outlined text-[18px]">candlestick_chart</span><span>Markets</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="leaderboard" href="#"><span class="material-symbols-outlined text-[18px]">trophy</span><span>Leaderboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="developers" href="#"><span class="material-symbols-outlined text-[18px]">terminal</span><span>Developers</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="docs" href="#"><span class="material-symbols-outlined text-[18px]">description</span><span>Docs</span></a></nav></div><div class="p-space-sm border-t border-outline-variant flex flex-col gap-space-xs"><div class="flex items-center justify-between px-space-sm py-space-xs"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Somnia Shannon</span></div><span class="material-symbols-outlined text-[16px] text-on-surface-variant">sensors</span></div><div class="flex items-center justify-between px-space-sm py-space-xs rounded-lg bg-surface-container-low border border-outline-variant"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">account_balance_wallet</span><span class="font-label-xs text-label-xs text-on-surface">0x7F...3B21</span></div><span class="w-1.5 h-1.5 rounded-full bg-primary"></span></div></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-14 bg-surface-dim z-40 border-b border-outline-variant"><div class="h-14 px-gutter-desktop flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="CrowdSignal Geometric Logo" class="h-6 w-auto object-contain md:hidden" src="https://lh3.googleusercontent.com/aida/AEtjO1XZPTa6a_2obLL-gvnznZz8Ga5UdW8mPRJ4MGrv1zrvtlWewEIerGyD6hRy1YFQEy_61IOZvtTK0LjdhLx3VJadRvkjm-E8WNq45FaqcuoN-JGzZNYvUQITF16xsY4udYmCMbAqs8l37akojTd9CZAoXrH5Y25vt4F_ppK-sygXIKd5yfiwLAx0m-dTT1nmLZ0gfv1y4bEg6lkWcPx7M_bBWSCHPM_lVeOPBVWHHd4_g6qZ0ggWl5RaNFCC"/><div class="flex items-center gap-2"><span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant">Mainnet Alpha</span></div></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-2 px-space-sm py-1 rounded bg-surface-container border border-outline-variant"><span class="w-2 h-2 rounded-full bg-primary"></span><span class="font-label-sm text-label-sm text-on-surface">Somnia Shannon</span></div><button class="h-8 px-space-md rounded bg-primary hover:bg-secondary-fixed text-surface-container-lowest font-label-md text-label-md transition-colors flex items-center gap-space-xs" type="button"><span>Connect Wallet</span></button><div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center"><span class="material-symbols-outlined text-on-surface text-[18px]">person</span></div></div></div></header><main class="pt-14 w-full"><div class="max-w-[1180px] mx-auto px-gutter-desktop py-space-xl"><div class="flex flex-col w-full gap-space-xl">
+<!-- Top Breadcrumb & Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-sm border-b border-outline-variant">
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">arrow_back</span>
+<span>Verified Predictors</span>
+</a>
+<span>/</span>
+<span class="text-primary font-mono tabular-nums">0x71a9B...92F4</span>
+</div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-xs text-label-xs">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span>Oracle Sync: Real-time</span>
+<span class="text-outline">·</span>
+<span class="tabular-nums">Block #18,409,219</span>
+</div>
+</div>
+<!-- Profile Identity Header -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg">
+<div class="flex flex-col gap-space-sm">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-primary font-label-xs text-label-xs">Top 1% Calibrated</span>
+<span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-on-surface-variant font-label-xs text-label-xs">Somnia Mainnet</span>
+<span class="px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-on-surface-variant font-label-xs text-label-xs flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-primary">verified</span>
+          Verified On-Chain
+        </span>
+</div>
+<div class="flex items-center gap-space-md pt-1">
+<div class="w-12 h-12 rounded bg-surface-container-high border border-outline-variant flex items-center justify-center text-primary font-headline-sm text-headline-sm">
+          0x
+        </div>
+<div class="flex flex-col">
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-mono tabular-nums">
+            0x71a9B42...92F4
+          </h1>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-sm text-body-sm">
+<span><strong class="text-primary font-medium tabular-nums">1,420</strong> followers</span>
+<span class="text-outline">·</span>
+<span>Following <strong class="text-primary font-medium tabular-nums">14</strong></span>
+<span class="text-outline">·</span>
+<span class="tabular-nums">Joined Feb 2024</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center flex-wrap gap-2">
+<button class="h-9 px-space-md rounded bg-surface-container-high hover:bg-surface-variant border border-outline-variant text-primary font-label-md text-label-md transition-colors flex items-center gap-1.5" id="followBtn" onclick="toggleFollow()" type="button">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span id="followText">Following</span>
+</button>
+<button class="h-9 px-space-md rounded bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface hover:text-primary font-label-md text-label-md transition-colors flex items-center gap-1.5" onclick="copyAddress(this)" type="button">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span class="btn-copy-label">Copy Address</span>
+</button>
+<a class="h-9 px-space-md rounded bg-surface-container hover:bg-surface-container-high border border-outline-variant text-on-surface hover:text-primary font-label-md text-label-md transition-colors flex items-center gap-1.5" href="https://shannon-explorer.somnia.network" rel="noopener noreferrer" target="_blank">
+<span>Somnia Explorer</span>
+<span class="material-symbols-outlined text-[15px]">north_east</span>
+</a>
+</div>
+</div>
+<!-- Primary Score Showcase (Cardless, horizontal rhythm, high whitespace) -->
+<div class="pt-space-md pb-space-lg border-y border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-y-space-lg gap-x-gutter-desktop divide-y lg:divide-y-0 lg:divide-x divide-outline-variant">
+<!-- Big Score Metric -->
+<div class="flex flex-col gap-1 pr-4">
+<span class="font-label-xs text-label-xs text-on-surface-variant tracking-wider uppercase">Predictor Score</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-xl text-headline-xl text-primary font-mono tabular-nums leading-none">91</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-mono">/ 100</span>
+</div>
+<div class="flex items-center gap-1.5 mt-2">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-xs text-label-xs text-primary uppercase font-medium tracking-wide">Exceptional Tier</span>
+</div>
+</div>
+<!-- Accuracy Metric -->
+<div class="flex flex-col gap-1 pt-4 lg:pt-0 lg:px-4">
+<span class="font-label-xs text-label-xs text-on-surface-variant tracking-wider uppercase">Historical Accuracy</span>
+<div class="mt-1">
+<span class="font-metric-lg text-metric-lg text-primary font-mono tabular-nums">71.4%</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant tabular-nums mt-1">
+          165 correct / 231 total
+        </span>
+</div>
+<!-- Calibration Metric -->
+<div class="flex flex-col gap-1 pt-4 lg:pt-0 lg:px-4">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-on-surface-variant tracking-wider uppercase">Calibration</span>
+<span class="material-symbols-outlined text-[15px] text-on-surface-variant cursor-help" title="Measures match between subjective confidence and observed probability">info</span>
+</div>
+<div class="mt-1 flex items-baseline gap-2">
+<span class="font-metric-lg text-metric-lg text-primary font-mono tabular-nums">89</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-mono">/ 100</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant tabular-nums mt-1 font-mono">
+          Brier Score: 0.112
+        </span>
+</div>
+<!-- Consistency Metric -->
+<div class="flex flex-col gap-1 pt-4 lg:pt-0 lg:px-4">
+<span class="font-label-xs text-label-xs text-on-surface-variant tracking-wider uppercase">Consistency</span>
+<div class="mt-1 flex items-baseline gap-2">
+<span class="font-metric-lg text-metric-lg text-primary font-mono tabular-nums">82</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-mono">/ 100</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          30d Volatility: <span class="text-primary font-medium">Low</span>
+</span>
+</div>
+<!-- Volume Weighted Metric -->
+<div class="flex flex-col gap-1 pt-4 lg:pt-0 lg:pl-4">
+<span class="font-label-xs text-label-xs text-on-surface-variant tracking-wider uppercase">Volume Weighted</span>
+<div class="mt-1">
+<span class="font-metric-lg text-metric-lg text-primary font-mono tabular-nums">$482,900</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Settled Event Pools
+        </span>
+</div>
+</div>
+</div>
+<!-- Calculation Details Accordion -->
+<div class="rounded border border-outline-variant bg-surface-container-low overflow-hidden">
+<button class="w-full px-space-md py-space-sm flex items-center justify-between text-left hover:bg-surface-container transition-colors" onclick="toggleScoreAccordion()" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">functions</span>
+<span class="font-label-md text-label-md text-on-surface">How this Predictor Score is calculated</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-xs text-label-xs text-on-surface-variant">Algorithmic Weighting v2.1</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant transition-transform duration-150" id="accordionChevron">expand_more</span>
+</div>
+</button>
+<div class="hidden px-space-md py-space-md border-t border-outline-variant bg-surface-container-lowest" id="scoreAccordionContent">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md text-body-sm font-body-sm">
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs text-primary uppercase font-mono">1. Accuracy (35%)</span>
+<p class="text-on-surface-variant">Binary win-rate baseline across binary and interval prediction markets resolved via multi-oracle consensus.</p>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs text-primary uppercase font-mono">2. Calibration (35%)</span>
+<p class="text-on-surface-variant">Standard quadratic Brier scoring penalizing overconfident predictions that fail and rewarding proportional uncertainty.</p>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs text-primary uppercase font-mono">3. Consistency (20%)</span>
+<p class="text-on-surface-variant">Rolling 30-day Sharpe of prediction accuracy to guard against intermittent luck and single-event spikes.</p>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs text-primary uppercase font-mono">4. Sample Size (10%)</span>
+<p class="text-on-surface-variant">Bayesian Laplace smoothing scaling up as historical call count crosses critical confidence thresholds (>100 calls).</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Analytical Visualizations Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+<!-- Calibration Curve Chart -->
+<div class="lg:col-span-7 flex flex-col p-space-md rounded bg-surface-container border border-outline-variant gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">Accuracy & Calibration Curve</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Rolling cumulative accuracy benchmarked against 65% network mean</p>
+</div>
+<!-- Time Range Selector -->
+<div class="inline-flex rounded bg-surface-container-lowest p-0.5 border border-outline-variant self-start sm:self-auto font-label-xs text-label-xs font-mono">
+<button class="px-2 py-0.5 rounded text-on-surface-variant hover:text-on-surface" type="button">7D</button>
+<button class="px-2 py-0.5 rounded bg-surface-container-high text-primary font-medium" type="button">30D</button>
+<button class="px-2 py-0.5 rounded text-on-surface-variant hover:text-on-surface" type="button">90D</button>
+<button class="px-2 py-0.5 rounded text-on-surface-variant hover:text-on-surface" type="button">ALL</button>
+</div>
+</div>
+<!-- Clean SVG Line Chart -->
+<div class="w-full h-56 bg-surface-container-lowest rounded border border-outline-variant p-space-sm flex flex-col justify-between relative">
+<!-- Chart Legend / Readout -->
+<div class="flex items-center justify-between text-label-xs font-label-xs text-on-surface-variant font-mono">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 bg-primary"></span>
+<span>Predictor (71.4%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-0.5 border-b border-dashed border-outline"></span>
+<span>Network Baseline (64.8%)</span>
+</div>
+</div>
+<span class="tabular-nums">Peak: 76.2%</span>
+</div>
+<!-- Inline SVG Visualization -->
+<svg class="w-full h-40 overflow-visible" fill="none" preserveaspectratio="none" viewbox="0 0 540 140">
+<!-- Horizontal Grid Lines -->
+<line stroke="#292929" stroke-dasharray="2 2" stroke-width="1" x1="0" x2="540" y1="20" y2="20"></line>
+<line stroke="#292929" stroke-dasharray="2 2" stroke-width="1" x1="0" x2="540" y1="60" y2="60"></line>
+<line stroke="#292929" stroke-dasharray="2 2" stroke-width="1" x1="0" x2="540" y1="100" y2="100"></line>
+<!-- Network Baseline Line (Dashed) -->
+<path d="M0,88 L60,86 L120,84 L180,85 L240,82 L300,81 L360,80 L420,78 L480,79 L540,77" fill="none" stroke="#8E9192" stroke-dasharray="4 4" stroke-width="1.5"></path>
+<!-- Predictor Rolling Accuracy Trajectory -->
+<path d="M0,105 L45,98 L90,92 L135,78 L180,82 L225,64 L270,58 L315,62 L360,48 L405,52 L450,42 L495,38 L540,36" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<!-- Current Call Point Indicator -->
+<circle cx="540" cy="36" fill="#0D0D0D" r="3.5" stroke="#FFFFFF" stroke-width="2"></circle>
+<circle cx="450" cy="42" fill="#FFFFFF" r="2"></circle>
+<circle cx="270" cy="58" fill="#FFFFFF" r="2"></circle>
+</svg>
+<!-- X-Axis Timestamps -->
+<div class="flex items-center justify-between text-label-xs font-label-xs font-mono text-outline pt-1">
+<span>Day 1</span>
+<span>Day 8</span>
+<span>Day 15</span>
+<span>Day 22</span>
+<span>Today (Day 30)</span>
+</div>
+</div>
+</div>
+<!-- Calibration Matrix & Confidence vs Actual -->
+<div class="lg:col-span-5 flex flex-col p-space-md rounded bg-surface-container border border-outline-variant gap-space-md">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">Calibration Matrix</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Stated Confidence vs. Actual Realized Accuracy</p>
+</div>
+<!-- Matrix Breakdown Bars -->
+<div class="flex flex-col gap-space-md flex-1 justify-around py-1">
+<!-- Tier 1: 50% Confidence -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-body-sm text-body-sm font-mono">
+<span class="text-on-surface-variant">50% Confidence Bucket</span>
+<span class="text-primary tabular-nums font-medium">51.2% Actual</span>
+</div>
+<div class="w-full h-2 bg-surface-container-lowest rounded-sm overflow-hidden flex relative">
+<!-- Expected Mark -->
+<div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-outline z-10" title="Expected: 50%"></div>
+<div class="h-full bg-primary" style="width: 51.2%"></div>
+</div>
+<div class="flex justify-between font-label-xs text-label-xs text-outline tabular-nums font-mono">
+<span>Deviation: +1.2%</span>
+<span>n = 48 calls</span>
+</div>
+</div>
+<!-- Tier 2: 70% Confidence -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-body-sm text-body-sm font-mono">
+<span class="text-on-surface-variant">70% Confidence Bucket</span>
+<span class="text-primary tabular-nums font-medium">69.4% Actual</span>
+</div>
+<div class="w-full h-2 bg-surface-container-lowest rounded-sm overflow-hidden flex relative">
+<!-- Expected Mark -->
+<div class="absolute left-[70%] top-0 bottom-0 w-0.5 bg-outline z-10" title="Expected: 70%"></div>
+<div class="h-full bg-primary" style="width: 69.4%"></div>
+</div>
+<div class="flex justify-between font-label-xs text-label-xs text-outline tabular-nums font-mono">
+<span>Deviation: -0.6%</span>
+<span>n = 114 calls</span>
+</div>
+</div>
+<!-- Tier 3: 90% Confidence -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-body-sm text-body-sm font-mono">
+<span class="text-on-surface-variant">90% Confidence Bucket</span>
+<span class="text-primary tabular-nums font-medium">87.8% Actual</span>
+</div>
+<div class="w-full h-2 bg-surface-container-lowest rounded-sm overflow-hidden flex relative">
+<!-- Expected Mark -->
+<div class="absolute left-[90%] top-0 bottom-0 w-0.5 bg-outline z-10" title="Expected: 90%"></div>
+<div class="h-full bg-primary" style="width: 87.8%"></div>
+</div>
+<div class="flex justify-between font-label-xs text-label-xs text-outline tabular-nums font-mono">
+<span>Deviation: -2.2%</span>
+<span>n = 69 calls</span>
+</div>
+</div>
+</div>
+<div class="p-space-sm rounded bg-surface-container-lowest border border-outline-variant">
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+<strong class="text-on-surface font-medium">Strong calibration:</strong> Stated confidence matches historical outcomes with near-zero overconfidence bias across 230+ on-chain resolutions.
+        </p>
+</div>
+</div>
+</div>
+<!-- Prediction History Feed -->
+<div class="flex flex-col rounded border border-outline-variant bg-surface-container overflow-hidden">
+<!-- Header with Filter Tabs -->
+<div class="p-space-md border-b border-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-primary">Prediction History</h2>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest border border-outline-variant font-label-xs text-label-xs font-mono text-on-surface-variant tabular-nums">231 Total</span>
+</div>
+<!-- Tabs -->
+<div class="inline-flex rounded bg-surface-container-lowest p-0.5 border border-outline-variant font-label-xs text-label-xs font-mono">
+<button class="feed-tab px-3 py-1 rounded bg-surface-container-high text-primary font-medium" onclick="filterPredictions('all', this)" type="button">All Calls (231)</button>
+<button class="feed-tab px-3 py-1 rounded text-on-surface-variant hover:text-on-surface" onclick="filterPredictions('correct', this)" type="button">Correct (165)</button>
+<button class="feed-tab px-3 py-1 rounded text-on-surface-variant hover:text-on-surface" onclick="filterPredictions('incorrect', this)" type="button">Incorrect (66)</button>
+<button class="feed-tab px-3 py-1 rounded text-on-surface-variant hover:text-on-surface" onclick="filterPredictions('active', this)" type="button">Active (2)</button>
+</div>
+</div>
+<!-- Responsive Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="h-9 border-b border-outline-variant text-label-xs font-label-xs uppercase text-on-surface-variant tracking-wider bg-surface-container-low">
+<th class="px-space-md font-medium">Contract / Market</th>
+<th class="px-space-md font-medium">Signal</th>
+<th class="px-space-md font-medium text-right">Confidence</th>
+<th class="px-space-md font-medium">Outcome / Status</th>
+<th class="px-space-md font-medium text-right">Settlement</th>
+<th class="px-space-md font-medium text-right">Proof</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-body-sm text-body-sm font-mono" id="predictionTableBody">
+<!-- Row 1: Active BTC -->
+<tr class="hover:bg-surface-container-high transition-colors" data-status="active">
+<td class="px-space-md py-3">
+<div class="flex items-center gap-2">
+<span class="text-primary font-medium">BTC / USD</span>
+<span class="text-outline font-sans text-label-xs">15m Window</span>
+</div>
+</td>
+<td class="px-space-md py-3">
+<span class="inline-flex items-center gap-1 font-medium text-primary">
+<span class="material-symbols-outlined text-[15px]">arrow_upward</span>
+<span>UP</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right tabular-nums text-on-surface">68%</td>
+<td class="px-space-md py-3 font-sans">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-high text-primary border border-outline-variant font-label-xs text-label-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>Active (08:42 left)</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right text-on-surface-variant font-sans tabular-nums text-label-sm">In Progress</td>
+<td class="px-space-md py-3 text-right font-sans">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-xs" href="#">Tx ↗</a>
+</td>
+</tr>
+<!-- Row 2: Settled BTC (Correct) -->
+<tr class="hover:bg-surface-container-high transition-colors" data-status="correct">
+<td class="px-space-md py-3">
+<div class="flex items-center gap-2">
+<span class="text-primary font-medium">BTC / USD</span>
+<span class="text-outline font-sans text-label-xs">15m Window</span>
+</div>
+</td>
+<td class="px-space-md py-3">
+<span class="inline-flex items-center gap-1 font-medium text-primary">
+<span class="material-symbols-outlined text-[15px]">arrow_upward</span>
+<span>UP</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right tabular-nums text-on-surface">78%</td>
+<td class="px-space-md py-3 font-sans">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-low text-primary border border-outline-variant font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px]">check</span>
+<span>Correct</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right text-on-surface-variant font-sans tabular-nums text-label-sm">2h ago</td>
+<td class="px-space-md py-3 text-right font-sans">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-xs" href="#">0x4a...d9 ↗</a>
+</td>
+</tr>
+<!-- Row 3: Settled ETH (Incorrect) -->
+<tr class="hover:bg-surface-container-high transition-colors" data-status="incorrect">
+<td class="px-space-md py-3">
+<div class="flex items-center gap-2">
+<span class="text-primary font-medium">ETH / USD</span>
+<span class="text-outline font-sans text-label-xs">15m Window</span>
+</div>
+</td>
+<td class="px-space-md py-3">
+<span class="inline-flex items-center gap-1 font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px]">arrow_downward</span>
+<span>DOWN</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right tabular-nums text-on-surface">64%</td>
+<td class="px-space-md py-3 font-sans">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-lowest text-outline border border-outline-variant font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px]">close</span>
+<span>Incorrect</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right text-on-surface-variant font-sans tabular-nums text-label-sm">5h ago</td>
+<td class="px-space-md py-3 text-right font-sans">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-xs" href="#">0x9c...31 ↗</a>
+</td>
+</tr>
+<!-- Row 4: Settled BTC 1h (Correct) -->
+<tr class="hover:bg-surface-container-high transition-colors" data-status="correct">
+<td class="px-space-md py-3">
+<div class="flex items-center gap-2">
+<span class="text-primary font-medium">BTC / USD</span>
+<span class="text-outline font-sans text-label-xs">1h Window</span>
+</div>
+</td>
+<td class="px-space-md py-3">
+<span class="inline-flex items-center gap-1 font-medium text-primary">
+<span class="material-symbols-outlined text-[15px]">arrow_upward</span>
+<span>UP</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right tabular-nums text-on-surface">71%</td>
+<td class="px-space-md py-3 font-sans">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-low text-primary border border-outline-variant font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px]">check</span>
+<span>Correct</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right text-on-surface-variant font-sans tabular-nums text-label-sm">1d ago</td>
+<td class="px-space-md py-3 text-right font-sans">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-xs" href="#">0x21...e4 ↗</a>
+</td>
+</tr>
+<!-- Row 5: Settled SOL 15m (Correct) -->
+<tr class="hover:bg-surface-container-high transition-colors" data-status="correct">
+<td class="px-space-md py-3">
+<div class="flex items-center gap-2">
+<span class="text-primary font-medium">SOL / USD</span>
+<span class="text-outline font-sans text-label-xs">15m Window</span>
+</div>
+</td>
+<td class="px-space-md py-3">
+<span class="inline-flex items-center gap-1 font-medium text-primary">
+<span class="material-symbols-outlined text-[15px]">arrow_upward</span>
+<span>UP</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right tabular-nums text-on-surface">82%</td>
+<td class="px-space-md py-3 font-sans">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-low text-primary border border-outline-variant font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px]">check</span>
+<span>Correct</span>
+</span>
+</td>
+<td class="px-space-md py-3 text-right text-on-surface-variant font-sans tabular-nums text-label-sm">1d ago</td>
+<td class="px-space-md py-3 text-right font-sans">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-xs" href="#">0x88...fa ↗</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Navigation -->
+<div class="px-space-md py-space-sm border-t border-outline-variant bg-surface-container-low flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-mono text-label-xs text-label-xs tabular-nums">Showing 5 of 231 historical calls</span>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded bg-surface-container border border-outline-variant text-primary font-label-xs text-label-xs hover:bg-surface-variant disabled:opacity-40 transition-colors" disabled="" type="button">Previous</button>
+<button class="px-2.5 py-1 rounded bg-surface-container border border-outline-variant text-primary font-label-xs text-label-xs hover:bg-surface-variant transition-colors" type="button">Next Page</button>
+</div>
+</div>
+</div>
+<script>
+    function toggleScoreAccordion() {
+      var content = document.getElementById('scoreAccordionContent');
+      var chevron = document.getElementById('accordionChevron');
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        chevron.style.transform = 'rotate(180deg)';
+      } else {
+        content.classList.add('hidden');
+        chevron.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function toggleFollow() {
+      var btn = document.getElementById('followBtn');
+      var label = document.getElementById('followText');
+      if (label.innerText === 'Following') {
+        label.innerText = 'Follow';
+        btn.classList.remove('bg-surface-container-high', 'text-primary');
+        btn.classList.add('bg-primary', 'text-surface-container-lowest');
+      } else {
+        label.innerText = 'Following';
+        btn.classList.remove('bg-primary', 'text-surface-container-lowest');
+        btn.classList.add('bg-surface-container-high', 'text-primary');
+      }
+    }
+
+    function copyAddress(button) {
+      navigator.clipboard.writeText('0x71a9B426f8C51E2a0f8B6327e47137c8701B92F4').then(function() {
+        var label = button.querySelector('.btn-copy-label');
+        var original = label.innerText;
+        label.innerText = 'Copied!';
+        setTimeout(function() {
+          label.innerText = original;
+        }, 1500);
+      });
+    }
+
+    function filterPredictions(filter, tabElement) {
+      var tabs = document.querySelectorAll('.feed-tab');
+      tabs.forEach(function(t) {
+        t.classList.remove('bg-surface-container-high', 'text-primary', 'font-medium');
+        t.classList.add('text-on-surface-variant');
+      });
+      tabElement.classList.add('bg-surface-container-high', 'text-primary', 'font-medium');
+      tabElement.classList.remove('text-on-surface-variant');
+
+      var rows = document.querySelectorAll('#predictionTableBody tr');
+      rows.forEach(function(r) {
+        var status = r.getAttribute('data-status');
+        if (filter === 'all' || status === filter) {
+          r.style.display = '';
+        } else {
+          r.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</div></div></main></div></body></html>

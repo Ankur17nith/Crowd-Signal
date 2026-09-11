@@ -1,251 +1,463 @@
 "use client";
 
 import React, { useState } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { LiveTicker } from "@/components/dashboard/LiveTicker";
-import { ONCHAIN_FEED_STATUS } from "@/lib/data";
 
 export default function DevelopersPage() {
-  const [selectedAsset, setSelectedAsset] = useState<"BTC" | "ETH">("BTC");
-  const [copied, setCopied] = useState(false);
-  const [consumerExecuted, setConsumerExecuted] = useState(false);
+  const [activeTab, setActiveTab] = useState<"solidity" | "typescript" | "python">("solidity");
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedAddress, setCopiedAddress] = useState(false);
 
-  const sampleApiResponse = {
-    asset: selectedAsset,
-    upProbability: selectedAsset === "BTC" ? 0.642 : 0.587,
-    downProbability: selectedAsset === "BTC" ? 0.358 : 0.413,
-    openInterestUsd: selectedAsset === "BTC" ? 182430 : 95400,
-    capitalSkew: selectedAsset === "BTC" ? 0.284 : 0.161,
-    confidence: selectedAsset === "BTC" ? 87 : 82,
-    velocityPerMin: selectedAsset === "BTC" ? 7.2 : 3.1,
-    marketRegime: "BULLISH",
-    timestamp: Math.floor(Date.now() / 1000),
+  const oracleAddress = "0x7a29D4f39E79F1288B1824F9b418eE195fC23b21";
+
+  const handleCopyCode = () => {
+    let code = "";
+    if (activeTab === "solidity") code = SOLIDITY_CODE;
+    else if (activeTab === "typescript") code = TYPESCRIPT_CODE;
+    else code = PYTHON_CODE;
+
+    navigator.clipboard.writeText(code);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(ONCHAIN_FEED_STATUS.contractAddress);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyAddress = () => {
+    navigator.clipboard.writeText(oracleAddress);
+    setCopiedAddress(true);
+    setTimeout(() => setCopiedAddress(false), 2000);
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <LiveTicker />
+    <div className="flex flex-col w-full gap-8">
+      {/* Page Header */}
+      <section className="flex flex-col gap-2 pb-4 border-b border-[#292929]">
+        <div className="flex items-center gap-3">
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#141414] border border-[#292929] text-[#A1A1A1]">
+            API & Contract Infrastructure
+          </span>
+          <span className="text-[11px] font-mono text-[#707070] tabular-nums">
+            v1.2.4-shannon
+          </span>
+        </div>
+        <h1 className="text-[28px] font-semibold text-[#F5F5F5] tracking-tight">
+          Build on CrowdSignal
+        </h1>
+        <p className="text-[14px] text-[#A1A1A1] max-w-3xl">
+          Turn DreamDEX Event Contract activity into programmable, verifiable on-chain intelligence on Somnia.
+        </p>
+      </section>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-10">
-        {/* Page Title */}
-        <div className="space-y-2 border-b border-surface-border pb-6">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
-            <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest font-semibold">
-              DEVELOPER PROTOCOL INTEGRATION
-            </span>
+      {/* Capabilities Overview (Typographic 3-column layout) */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-[#141414] border border-[#292929] rounded-lg p-6 flex flex-col justify-between">
+          <div>
+            <div className="text-[11px] font-mono text-[#707070] uppercase tracking-wider mb-2">
+              01 // TELEMETRY
+            </div>
+            <h2 className="text-[18px] font-semibold text-[#F5F5F5] mb-2">
+              Crowd Probability
+            </h2>
+            <p className="text-[13px] text-[#707070] leading-relaxed">
+              Live market-implied directional probability feeds for DeFi, automated hedging, and synthetic indices.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-white uppercase">
-            BUILD WITH CROWDSIGNAL
-          </h1>
-          <p className="text-sm text-slate-300 font-sans max-w-2xl leading-relaxed">
-            Consume live Event Intelligence inside your decentralized application, DAO treasury engine, DeFi hedge protocol,
-            or autonomous on-chain AI agent on Somnia.
-          </p>
+          <div className="mt-6 pt-3 border-t border-[#202020] flex items-center justify-between text-[11px]">
+            <span className="text-[#707070]">Update Cycle</span>
+            <span className="text-[#F5F5F5] font-mono tabular-nums">Sub-block (~400ms)</span>
+          </div>
         </div>
 
-        {/* Live On-Chain Feed Inspector Card */}
-        <div className="bg-surface border border-surface-border rounded-lg shadow-terminal p-6 space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-surface-border pb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulseDot"></div>
-              <div>
-                <h3 className="text-sm font-mono font-bold text-white uppercase">
-                  CROWDSIGNAL ON-CHAIN FEED
-                </h3>
-                <span className="text-[11px] font-mono text-slate-400">
-                  Somnia Shannon Layer-1 Oracle Deployment
+        <div className="bg-[#141414] border border-[#292929] rounded-lg p-6 flex flex-col justify-between">
+          <div>
+            <div className="text-[11px] font-mono text-[#707070] uppercase tracking-wider mb-2">
+              02 // ATTESTATION
+            </div>
+            <h2 className="text-[18px] font-semibold text-[#F5F5F5] mb-2">
+              Predictor Reputation
+            </h2>
+            <p className="text-[13px] text-[#707070] leading-relaxed">
+              Query verified wallet scores, Brier calibration metrics, and accuracy records trustlessly on-chain.
+            </p>
+          </div>
+          <div className="mt-6 pt-3 border-t border-[#202020] flex items-center justify-between text-[11px]">
+            <span className="text-[#707070]">Verification</span>
+            <span className="text-[#F5F5F5] font-mono">Merkle Compact Proof</span>
+          </div>
+        </div>
+
+        <div className="bg-[#141414] border border-[#292929] rounded-lg p-6 flex flex-col justify-between">
+          <div>
+            <div className="text-[11px] font-mono text-[#707070] uppercase tracking-wider mb-2">
+              03 // ORACLE ENGINE
+            </div>
+            <h2 className="text-[18px] font-semibold text-[#F5F5F5] mb-2">
+              On-Chain Sentiment
+            </h2>
+            <p className="text-[13px] text-[#707070] leading-relaxed">
+              Direct sub-second oracle consumption via native Somnia Shannon smart contracts and zero-cost multicall.
+            </p>
+          </div>
+          <div className="mt-6 pt-3 border-t border-[#202020] flex items-center justify-between text-[11px]">
+            <span className="text-[#707070]">Execution Overhead</span>
+            <span className="text-[#F5F5F5] font-mono tabular-nums">&lt; 21,400 Gas</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Live On-Chain Sentiment Feed Card */}
+      <section className="bg-[#141414] border border-[#292929] rounded-lg p-6 flex flex-col gap-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-[#707070]">
+                Telemetry Feed
+              </span>
+              <span className="text-[#707070]">/</span>
+              <span className="text-[11px] text-[#F5F5F5] font-medium">Contract State</span>
+            </div>
+            <h2 className="text-[18px] font-semibold text-[#F5F5F5]">
+              CrowdSignal Feed — Live Contract State
+            </h2>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 bg-[#0D0D0D] border border-[#202020] px-3 py-1.5 rounded-lg text-[11px]">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#4DA3FF]" />
+              <span className="text-[#F5F5F5] font-medium">Active</span>
+            </div>
+            <span className="text-[#707070]">•</span>
+            <span className="text-[#707070]">
+              Network: <span className="text-[#F5F5F5]">Somnia Shannon</span>
+            </span>
+            <span className="text-[#707070]">•</span>
+            <span className="text-[#707070]">
+              Block: <span className="text-[#F5F5F5] font-mono tabular-nums">#18,492,084</span>
+            </span>
+            <span className="text-[#707070]">•</span>
+            <span className="text-[#707070]">
+              Latency: <span className="text-[#4DA3FF] font-mono tabular-nums">420ms</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Parameter Display Table */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* BTC / USD Feed Entry */}
+          <div className="bg-[#0D0D0D] border border-[#202020] rounded-lg p-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-[14px] font-semibold text-[#F5F5F5]">BTC / USD</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#1A1A1A] text-[#707070]">
+                  15m Window
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#707070] tabular-nums">
+                ID: 0x425443...
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-3 pt-1">
+              <div className="flex flex-col">
+                <span className="text-[11px] text-[#707070]">Probability</span>
+                <span className="text-[18px] text-[#F5F5F5] font-mono font-semibold tabular-nums">
+                  64.2% <span className="text-[11px] font-normal text-[#4DA3FF]">UP</span>
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[11px] text-[#707070]">Capital Skew</span>
+                <span className="text-[18px] text-[#4DA3FF] font-mono font-semibold tabular-nums">
+                  +28.4%
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[11px] text-[#707070]">Confidence</span>
+                <span className="text-[18px] text-[#F5F5F5] font-mono font-semibold tabular-nums">
+                  87 <span className="text-[11px] text-[#707070] font-normal">/ 100</span>
                 </span>
               </div>
             </div>
+          </div>
 
-            <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded text-xs font-mono font-bold">
-              STATUS: ACTIVE
+          {/* ETH / USD Feed Entry */}
+          <div className="bg-[#0D0D0D] border border-[#202020] rounded-lg p-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-[14px] font-semibold text-[#F5F5F5]">ETH / USD</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#1A1A1A] text-[#707070]">
+                  15m Window
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-[#707070] tabular-nums">
+                ID: 0x455448...
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-3 pt-1">
+              <div className="flex flex-col">
+                <span className="text-[11px] text-[#707070]">Probability</span>
+                <span className="text-[18px] text-[#F5F5F5] font-mono font-semibold tabular-nums">
+                  58.7% <span className="text-[11px] font-normal text-[#4DA3FF]">UP</span>
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[11px] text-[#707070]">Capital Skew</span>
+                <span className="text-[18px] text-[#4DA3FF] font-mono font-semibold tabular-nums">
+                  +14.1%
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[11px] text-[#707070]">Confidence</span>
+                <span className="text-[18px] text-[#F5F5F5] font-mono font-semibold tabular-nums">
+                  82 <span className="text-[11px] text-[#707070] font-normal">/ 100</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Contract Footer & Actions */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#0D0D0D] border border-[#202020] p-3.5 rounded-lg">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 min-w-0">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[#707070] whitespace-nowrap">
+              Core Oracle Contract
+            </span>
+            <code className="text-[12px] text-[#F5F5F5] font-mono truncate select-all bg-[#141414] px-2 py-0.5 rounded border border-[#202020]">
+              {oracleAddress}
+            </code>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={handleCopyAddress}
+              className="h-7 px-2.5 rounded bg-[#141414] hover:bg-[#202020] border border-[#202020] text-[#F5F5F5] text-[11px] transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[14px]">content_copy</span>
+              <span>{copiedAddress ? "Copied!" : "Copy Address"}</span>
+            </button>
+            <a
+              href="https://shannon-explorer.somnia.network"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="h-7 px-2.5 rounded bg-[#141414] hover:bg-[#202020] border border-[#202020] text-[#A1A1A1] hover:text-[#F5F5F5] text-[11px] transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+              <span>Explorer</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Code Panel & Integration Examples */}
+      <section className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-1 bg-[#141414] p-1 rounded-lg border border-[#292929]">
+            {(["solidity", "typescript", "python"] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`px-3 py-1 rounded text-[12px] font-medium transition-colors ${
+                  activeTab === tab
+                    ? "bg-[#202020] text-white"
+                    : "text-[#707070] hover:text-[#F5F5F5]"
+                }`}
+              >
+                {tab === "solidity"
+                  ? "Solidity"
+                  : tab === "typescript"
+                  ? "TypeScript / SDK"
+                  : "Python"}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3">
+            {copiedCode && (
+              <span className="text-[11px] text-[#4DA3FF] font-mono">
+                Copied to clipboard
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={handleCopyCode}
+              className="h-8 px-3 rounded bg-[#F5F5F5] hover:bg-[#E5E5E5] text-[#0D0D0D] text-[12px] font-medium transition-colors flex items-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[15px]">content_copy</span>
+              <span>Copy Code</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-[#141414] border border-[#292929] rounded-lg p-5 overflow-x-auto">
+          <pre className="font-mono text-[12px] leading-relaxed text-[#F5F5F5] m-0 select-text">
+            <code>
+              {activeTab === "solidity" && SOLIDITY_CODE}
+              {activeTab === "typescript" && TYPESCRIPT_CODE}
+              {activeTab === "python" && PYTHON_CODE}
+            </code>
+          </pre>
+        </div>
+      </section>
+
+      {/* External Consumer Demonstration Module (Live Simulation) */}
+      <section className="bg-[#141414] border border-[#292929] rounded-lg p-6 flex flex-col gap-6">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[16px] text-[#707070]">schema</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[#707070]">
+              External Application Consuming CrowdSignal Feed
             </span>
           </div>
-
-          {/* Telemetry Details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 font-mono text-xs">
-            <div className="p-3 bg-surface-subtle border border-surface-border rounded">
-              <span className="text-[10px] text-slate-500 uppercase block">Contract Address</span>
-              <span className="text-xs text-brand font-medium truncate block mt-0.5" title={ONCHAIN_FEED_STATUS.contractAddress}>
-                {ONCHAIN_FEED_STATUS.contractAddress}
-              </span>
-            </div>
-
-            <div className="p-3 bg-surface-subtle border border-surface-border rounded">
-              <span className="text-[10px] text-slate-500 uppercase block">Target Network</span>
-              <span className="text-xs text-white font-medium block mt-0.5">
-                {ONCHAIN_FEED_STATUS.network} ({ONCHAIN_FEED_STATUS.chainId})
-              </span>
-            </div>
-
-            <div className="p-3 bg-surface-subtle border border-surface-border rounded">
-              <span className="text-[10px] text-slate-500 uppercase block">Last Sync Block</span>
-              <span className="text-xs text-cyan-400 font-medium block mt-0.5">
-                #{ONCHAIN_FEED_STATUS.blockNumber.toLocaleString()}
-              </span>
-            </div>
-
-            <div className="p-3 bg-surface-subtle border border-surface-border rounded">
-              <span className="text-[10px] text-slate-500 uppercase block">Update Latency</span>
-              <span className="text-xs text-emerald-400 font-medium block mt-0.5">
-                {ONCHAIN_FEED_STATUS.lastUpdatedSecondsAgo}s ago
-              </span>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <a
-              href={ONCHAIN_FEED_STATUS.explorerUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="py-2 px-4 bg-brand hover:bg-brand-subtle text-black font-mono font-bold text-xs rounded uppercase tracking-wider transition-colors"
-            >
-              View Contract on Explorer ↗
-            </a>
-            <button
-              onClick={handleCopy}
-              className="py-2 px-4 bg-surface-subtle hover:bg-surface-elevated border border-surface-border font-mono text-xs text-slate-200 rounded transition-colors"
-            >
-              {copied ? "✓ Copied Address" : "Copy Address"}
-            </button>
-          </div>
+          <h2 className="text-[18px] font-semibold text-[#F5F5F5]">
+            Demonstration Consumer (Live Simulation)
+          </h2>
+          <p className="text-[13px] text-[#707070]">
+            Architectural simulation of an autonomous liquidity routing vault consuming CrowdSignal directional feeds on Somnia Shannon.
+          </p>
         </div>
 
-        {/* Live External Consumer Contract Demo (Requirement #59) */}
-        <div className="bg-surface border border-brand/30 rounded-lg shadow-terminal p-6 space-y-6">
-          <div className="flex items-center justify-between border-b border-surface-border pb-4">
-            <div>
-              <span className="text-[10px] font-mono text-brand uppercase tracking-widest font-semibold">
-                REQUIREMENT #59 DEMONSTRATION
+        {/* Execution Metric Flow Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="bg-[#0D0D0D] border border-[#202020] rounded p-4 flex flex-col justify-between gap-3">
+            <span className="text-[11px] text-[#707070] font-mono">Input Signal</span>
+            <div className="flex flex-col">
+              <span className="text-[20px] font-mono font-semibold text-[#F5F5F5] tabular-nums">
+                64.2%
               </span>
-              <h3 className="text-base font-mono font-bold text-white mt-0.5">
-                EXTERNAL CONSUMER DEMO CONTRACT (`DemoConsumer.sol`)
-              </h3>
-              <p className="text-xs text-slate-400 font-sans mt-0.5">
-                Live simulation proving the on-chain oracle is consumed by autonomous external contracts on Somnia.
-              </p>
+              <span className="text-[11px] text-[#707070]">BTC Directional Probability</span>
             </div>
-
-            <button
-              onClick={() => setConsumerExecuted(!consumerExecuted)}
-              className="py-2 px-4 bg-surface-elevated hover:bg-surface-border text-brand font-mono text-xs font-bold rounded border border-brand/40 transition-colors"
-            >
-              {consumerExecuted ? "Reset Simulation" : "Trigger External Consumer Read"}
-            </button>
+            <div className="h-1 bg-[#202020] rounded-full overflow-hidden">
+              <div className="h-full bg-[#4DA3FF]" style={{ width: "64.2%" }} />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
-            <div className="p-3 bg-surface-subtle border border-surface-border rounded">
-              <span className="text-[10px] text-slate-500 uppercase block">BTC Crowd Probability</span>
-              <span className="text-xl font-bold text-emerald-400 block mt-1">64.2%</span>
-              <span className="text-[10px] text-slate-400">Read from SentimentPublisher.sol</span>
-            </div>
-
-            <div className="p-3 bg-surface-subtle border border-surface-border rounded">
-              <span className="text-[10px] text-slate-500 uppercase block">Consumer Threshold Trigger</span>
-              <span className="text-xl font-bold text-cyan-400 block mt-1">60.0% UP</span>
-              <span className="text-[10px] text-slate-400">Governance risk trigger parameter</span>
-            </div>
-
-            <div className="p-3 bg-surface-subtle border border-surface-border rounded">
-              <span className="text-[10px] text-slate-500 uppercase block">Autonomous Contract Status</span>
-              <span className="text-xl font-bold text-emerald-400 block mt-1">
-                {consumerExecuted ? "BULLISH_SURGE ACTIVATED" : "SIGNAL DETECTED (READY)"}
+          <div className="bg-[#0D0D0D] border border-[#202020] rounded p-4 flex flex-col justify-between gap-3">
+            <span className="text-[11px] text-[#707070] font-mono">Configured Threshold</span>
+            <div className="flex flex-col">
+              <span className="text-[20px] font-mono font-semibold text-[#F5F5F5] tabular-nums">
+                60.0%
               </span>
-              <span className="text-[10px] text-slate-400">
-                {consumerExecuted ? "Automated allocation increased" : "Awaiting strategy execution"}
+              <span className="text-[11px] text-[#707070]">Trigger Gate [Delta &gt; 0]</span>
+            </div>
+            <div className="h-1 bg-[#202020] rounded-full overflow-hidden">
+              <div className="h-full bg-[#707070]" style={{ width: "60%" }} />
+            </div>
+          </div>
+
+          <div className="bg-[#0D0D0D] border border-[#202020] rounded p-4 flex flex-col justify-between gap-3">
+            <span className="text-[11px] text-[#707070] font-mono">Verified Divergence</span>
+            <div className="flex flex-col">
+              <span className="text-[20px] font-mono font-semibold text-[#E7A94B] tabular-nums">
+                15.1 pp
               </span>
+              <span className="text-[11px] text-[#707070]">Bearish Skew Offset</span>
+            </div>
+            <div className="h-1 bg-[#202020] rounded-full overflow-hidden">
+              <div className="h-full bg-[#E7A94B]" style={{ width: "38%" }} />
+            </div>
+          </div>
+
+          <div className="bg-[#0D0D0D] border border-[#202020] rounded p-4 flex flex-col justify-between gap-3">
+            <span className="text-[11px] text-[#707070] font-mono">Execution Status</span>
+            <div className="flex flex-col">
+              <span className="text-[20px] font-mono font-semibold text-[#4DA3FF] tabular-nums">
+                14ms
+              </span>
+              <span className="text-[11px] text-[#707070]">Somnia Shannon Mempool</span>
+            </div>
+            <div className="h-1 bg-[#202020] rounded-full overflow-hidden">
+              <div className="h-full bg-[#4DA3FF]" style={{ width: "100%" }} />
             </div>
           </div>
         </div>
 
-        {/* Solidity Smart Contract Snippet */}
-        <div className="bg-surface border border-surface-border rounded-lg shadow-terminal p-6 space-y-4 font-mono">
-          <div className="flex items-center justify-between border-b border-surface-border pb-3">
-            <div>
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider block">ON-CHAIN INTEGRATION</span>
-              <h3 className="text-sm font-bold text-white mt-0.5">SOLIDITY CONSUMPTION SNIPPET</h3>
+        {/* Action Confirmation Banner */}
+        <div className="bg-[#0D0D0D] border border-[#202020] rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-8 h-8 rounded bg-[#141414] border border-[#202020] flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-[#4DA3FF] text-[18px]">bolt</span>
             </div>
-            <span className="text-xs text-slate-400">Solidity ^0.8.24</span>
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#707070]">
+                Triggered Protocol Execution
+              </span>
+              <span className="text-[13px] text-[#F5F5F5] font-medium truncate">
+                AUTOMATED HEDGE REBALANCED — NO ORDERBOOK OVERPAY
+              </span>
+            </div>
           </div>
 
-          <pre className="p-4 bg-background border border-surface-border rounded text-xs text-slate-300 overflow-x-auto">
-{`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
-
-import { ISentimentPublisher } from "./ISentimentPublisher.sol";
-
-contract DaoTreasuryProtector {
-    ISentimentPublisher public immutable crowdSignal;
-
-    constructor(address _crowdSignal) {
-        crowdSignal = ISentimentPublisher(_crowdSignal);
-    }
-
-    function evaluateRisk(string calldata asset) external view returns (bool shouldHedge) {
-        // Read authoritative capital-weighted signal
-        ISentimentPublisher.MarketSignal memory signal = crowdSignal.getSignalBySymbol(asset);
-
-        // A DAO or DeFi protocol could use this value to:
-        // 1. Adjust treasury exposure
-        // 2. Trigger governance actions
-        // 3. Modify risk parameters
-        // 4. Activate automated defensive hedges
-        if (signal.upProbabilityBps < 4000 && signal.confidenceScore >= 75) {
-            shouldHedge = true;
-        }
-    }
-}`}
-          </pre>
+          <div className="flex items-center gap-3 shrink-0 text-[11px]">
+            <span className="text-[#707070] tabular-nums">Gas Spent: 19,420 Somnia GAS</span>
+            <span className="px-2 py-0.5 rounded bg-[#141414] text-[#A1A1A1] font-mono border border-[#202020]">
+              TX: 0x9e...2a11
+            </span>
+          </div>
         </div>
-
-        {/* REST API Sandbox */}
-        <div className="bg-surface border border-surface-border rounded-lg shadow-terminal p-6 space-y-4 font-mono">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-surface-border pb-3">
-            <div>
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider block">OFF-CHAIN INTEGRATION</span>
-              <h3 className="text-sm font-bold text-white mt-0.5">REST API ENDPOINT: `GET /api/probability`</h3>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setSelectedAsset("BTC")}
-                className={`px-3 py-1 text-xs rounded ${selectedAsset === "BTC" ? "bg-brand text-black font-bold" : "bg-surface-subtle text-slate-400"}`}
-              >
-                BTC
-              </button>
-              <button
-                onClick={() => setSelectedAsset("ETH")}
-                className={`px-3 py-1 text-xs rounded ${selectedAsset === "ETH" ? "bg-brand text-black font-bold" : "bg-surface-subtle text-slate-400"}`}
-              >
-                ETH
-              </button>
-            </div>
-          </div>
-
-          <div className="p-3 bg-surface-subtle border border-surface-border rounded text-xs flex items-center justify-between">
-            <span className="text-emerald-400 font-bold">GET /api/probability?asset={selectedAsset}</span>
-            <span className="text-slate-500 text-[11px]">200 OK • 12ms</span>
-          </div>
-
-          <pre className="p-4 bg-background border border-surface-border rounded text-xs text-slate-300 overflow-x-auto">
-{JSON.stringify(sampleApiResponse, null, 2)}
-          </pre>
-        </div>
-      </main>
-
-      <Footer />
+      </section>
     </div>
   );
 }
+
+const SOLIDITY_CODE = `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import { ISentimentPublisher } from "./interfaces/ISentimentPublisher.sol";
+
+contract LiquidatorVault {
+    ISentimentPublisher public immutable publisher;
+
+    constructor(address _publisher) {
+        publisher = ISentimentPublisher(_publisher);
+    }
+
+    function checkMarketHealth(bytes32 assetKey) external view returns (bool isStable) {
+        // Read authoritative crowd probability and market confidence from CrowdSignal
+        ISentimentPublisher.MarketSignal memory sig = publisher.getSignal(assetKey);
+
+        // Require fresh data (< 5 minutes) and high market confidence (>= 70/100)
+        require(block.timestamp - sig.timestamp <= 300, "STALE_SENTIMENT");
+        require(sig.confidenceScore >= 70, "LOW_MARKET_CONFIDENCE");
+
+        // Verify cryptographic provenance hash before executing high-capital vault decisions
+        ISentimentPublisher.ProvenanceRecord memory prov = publisher.getProvenance(assetKey);
+        require(prov.algorithmVersionHash == keccak256("CS-PROB-2.0"), "INVALID_ALGORITHM_PROVENANCE");
+
+        // Flag market as stable if capital skew is within balanced range
+        return (sig.capitalSkewBps > -5000 && sig.capitalSkewBps < 5000);
+    }
+}`;
+
+const TYPESCRIPT_CODE = `import { createPublicClient, http, parseAbi } from "viem";
+import { somniaShannon } from "./chains";
+
+const client = createPublicClient({
+  chain: somniaShannon,
+  transport: http("https://api.infra.testnet.somnia.network/"),
+});
+
+const SENTIMENT_PUBLISHER_ADDRESS = "0x7a29D4f39E79F1288B1824F9b418eE195fC23b21";
+
+const ABI = parseAbi([
+  "function getSignal(bytes32 assetKey) external view returns ((uint16 upProbabilityBps, int16 capitalSkewBps, uint16 confidenceScore, int16 velocityBpsPerMin, int16 accelerationBpsPerMin2, uint64 timestamp, uint64 openInterestUsd, uint64 totalVolumeUsd, uint32 activeWindowCount))",
+  "function getProvenance(bytes32 assetKey) external view returns ((bytes32 algorithmVersionHash, bytes32 inputSnapshotHash, bytes32 signalHash, uint64 timestamp))"
+]);
+
+export async function fetchMarketIntelligence(assetKey: \`0x\${string}\`) {
+  const signal = await client.readContract({
+    address: SENTIMENT_PUBLISHER_ADDRESS,
+    abi: ABI,
+    functionName: "getSignal",
+    args: [assetKey],
+  });
+
+  console.log(\`Implied Prob: \${signal.upProbabilityBps / 100}% | Confidence: \${signal.confidenceScore}/100\`);
+}`;
+
+const PYTHON_CODE = `from web3 import Web3
+
+w3 = Web3(Web3.HTTPProvider("https://api.infra.testnet.somnia.network/"))
+oracle_address = "0x7a29D4f39E79F1288B1824F9b418eE195fC23b21"
+
+def check_oracle_telemetry():
+    assert w3.is_connected(), "Failed to connect to Somnia Shannon"
+    # Query CrowdSignal REST API or RPC contract read
+    print(f"Connected to Somnia Shannon Testnet. Chain ID: {w3.eth.chain_id}")
+`;

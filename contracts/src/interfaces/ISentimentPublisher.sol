@@ -14,6 +14,13 @@ interface ISentimentPublisher {
         uint32 activeWindowCount;     // Active trading windows aggregated
     }
 
+    struct ProvenanceRecord {
+        bytes32 algorithmVersionHash;
+        bytes32 inputSnapshotHash;
+        bytes32 signalHash;
+        uint64 timestamp;
+    }
+
     event SignalPublished(
         bytes32 indexed assetKey,
         uint16 upProbabilityBps,
@@ -24,10 +31,25 @@ interface ISentimentPublisher {
         uint64 timestamp
     );
 
+    event ProvenanceAnchored(
+        bytes32 indexed assetKey,
+        bytes32 indexed algorithmVersionHash,
+        bytes32 inputSnapshotHash,
+        bytes32 signalHash,
+        uint64 timestamp
+    );
+
     event PublisherUpdated(address indexed previousPublisher, address indexed newPublisher);
 
     function getSignal(bytes32 assetKey) external view returns (MarketSignal memory);
     function getSignalBySymbol(string calldata symbol) external view returns (MarketSignal memory);
+    function getProvenance(bytes32 assetKey) external view returns (ProvenanceRecord memory);
     function publishSignal(bytes32 assetKey, MarketSignal calldata signal) external;
     function publishSignalBatch(bytes32[] calldata assetKeys, MarketSignal[] calldata signals) external;
+    function anchorProvenance(
+        bytes32 assetKey,
+        bytes32 algorithmVersionHash,
+        bytes32 inputSnapshotHash,
+        bytes32 signalHash
+    ) external;
 }
