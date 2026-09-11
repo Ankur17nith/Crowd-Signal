@@ -1,0 +1,88 @@
+1
+00:00:00,000 --> 00:00:07,041
+Prediction markets contain a valuable source of information: what people collectively believe will happen next.
+
+2
+00:00:07,041 --> 00:00:13,383
+But that information is fragmented across markets and difficult to use outside the market interface.
+
+3
+00:00:14,120 --> 00:00:20,075
+Developers, protocols, DAOs and AI agents need more than raw predictions.
+
+4
+00:00:20,075 --> 00:00:25,052
+They need structured, measurable and verifiable intelligence.
+
+5
+00:00:25,052 --> 00:00:26,683
+This is CrowdSignal.
+
+6
+00:00:26,683 --> 00:00:32,965
+CrowdSignal is the intelligence layer for DreamDEX Event Contracts on Somnia.
+
+7
+00:00:33,520 --> 00:00:43,593
+It transforms Event Contract activity into live crowd intelligence, predictor reputation, divergence signals and reusable developer infrastructure.
+
+8
+00:00:43,593 --> 00:00:46,951
+The first layer is the CrowdSignal market signal.
+
+9
+00:00:46,951 --> 00:00:55,037
+Instead of simply displaying a market, CrowdSignal processes market activity into an interpretable probability signal.
+
+10
+00:00:55,700 --> 00:00:58,364
+The second layer is prediction reputation.
+
+11
+00:00:58,364 --> 00:01:09,083
+CrowdSignal tracks prediction history and evaluates performance as markets resolve, allowing historically stronger predictors to be distinguished from the broader crowd.
+
+12
+00:01:09,820 --> 00:01:15,812
+This enables another important signal: crowd consensus versus verified predictor consensus.
+
+13
+00:01:15,812 --> 00:01:24,766
+Instead of asking only what the crowd believes, CrowdSignal can identify when historically stronger predictors disagree with that crowd.
+
+14
+00:01:25,500 --> 00:01:28,343
+But CrowdSignal is not only a dashboard.
+
+15
+00:01:28,343 --> 00:01:32,252
+Its real purpose is to make this intelligence reusable.
+
+16
+00:01:32,252 --> 00:01:46,112
+Developers can consume CrowdSignal through APIs and on-chain feeds instead of independently building market discovery, data processing, probability calculations, reputation systems and analytics.
+
+17
+00:01:46,770 --> 00:01:52,444
+The architecture is simple: DreamDEX Event Contracts generate activity.
+
+18
+00:01:52,444 --> 00:01:56,281
+CrowdSignal indexes and processes that activity.
+
+19
+00:01:56,281 --> 00:02:00,437
+The analytics layer transforms it into intelligence.
+
+20
+00:02:00,437 --> 00:02:07,390
+And that intelligence becomes available to applications, protocols, DAOs and AI agents.
+
+21
+00:02:07,950 --> 00:02:12,159
+Prediction markets already contain collective intelligence.
+
+22
+00:02:12,159 --> 00:02:18,151
+CrowdSignal makes that intelligence structured, measurable, verifiable and reusable.
+

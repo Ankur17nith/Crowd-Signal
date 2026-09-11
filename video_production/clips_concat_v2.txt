@@ -1,0 +1,8 @@
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/clips_v2/scene1_problem.mp4'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/clips_v2/scene2_solution.mp4'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/clips_v2/scene3_market_signal.mp4'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/clips_v2/scene4_reputation.mp4'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/clips_v2/scene5_divergence.mp4'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/clips_v2/scene6_developers.mp4'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/clips_v2/scene7_architecture.mp4'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/clips_v2/scene8_closing.mp4'

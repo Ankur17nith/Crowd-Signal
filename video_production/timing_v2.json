@@ -1,0 +1,98 @@
+[
+  {
+    "index": 1,
+    "id": "scene1_problem",
+    "display_text": "Prediction markets contain a valuable source of information: what people collectively believe will happen next. But that information is fragmented across markets and difficult to use outside the market interface.",
+    "spoken_text": "Prediction markets contain a valuable source of information: what people collectively believe will happen next.\n\nBut that information is fragmented across markets, and difficult to use outside the market interface.",
+    "audio_file": "video_production/audio_v2/scene1_problem.mp3",
+    "speech_start": 0.0,
+    "speech_end": 13.9,
+    "scene_duration": 14.950000000000001,
+    "scene_start": 0.0,
+    "scene_end": 14.950000000000001
+  },
+  {
+    "index": 2,
+    "id": "scene2_solution",
+    "display_text": "Developers, protocols, DAOs and AI agents need more than raw predictions. They need structured, measurable and verifiable intelligence. This is CrowdSignal. CrowdSignal is the intelligence layer for DreamDEX Event Contracts on Somnia.",
+    "spoken_text": "Developers, protocols, DAOs, and AI agents need more than raw predictions.\nThey need structured, measurable, and verifiable intelligence.\n\nThis is CrowdSignal.\n\nCrowdSignal is the intelligence layer for DreamDEX Event Contracts on Somnia.",
+    "audio_file": "video_production/audio_v2/scene2_solution.mp3",
+    "speech_start": 14.950000000000001,
+    "speech_end": 32.21,
+    "scene_duration": 18.310000000000002,
+    "scene_start": 14.950000000000001,
+    "scene_end": 33.26
+  },
+  {
+    "index": 3,
+    "id": "scene3_market_signal",
+    "display_text": "It transforms Event Contract activity into live crowd intelligence, predictor reputation, divergence signals and reusable developer infrastructure. The first layer is the CrowdSignal market signal. Instead of simply displaying a market, CrowdSignal processes market activity into an interpretable probability signal.",
+    "spoken_text": "It transforms Event Contract activity into live crowd intelligence, predictor reputation, divergence signals, and reusable developer infrastructure.\n\nThe first layer is the CrowdSignal market signal.\n\nInstead of simply displaying a market, CrowdSignal processes market activity into an interpretable probability signal.",
+    "audio_file": "video_production/audio_v2/scene3_market_signal.mp3",
+    "speech_start": 33.26,
+    "speech_end": 54.55,
+    "scene_duration": 22.34,
+    "scene_start": 33.26,
+    "scene_end": 55.599999999999994
+  },
+  {
+    "index": 4,
+    "id": "scene4_reputation",
+    "display_text": "The second layer is prediction reputation. CrowdSignal tracks prediction history and evaluates performance as markets resolve, allowing historically stronger predictors to be distinguished from the broader crowd.",
+    "spoken_text": "The second layer is prediction reputation.\n\nCrowdSignal tracks prediction history and evaluates performance as markets resolve, allowing historically stronger predictors to be distinguished from the broader crowd.",
+    "audio_file": "video_production/audio_v2/scene4_reputation.mp3",
+    "speech_start": 55.599999999999994,
+    "speech_end": 68.86999999999999,
+    "scene_duration": 14.32,
+    "scene_start": 55.599999999999994,
+    "scene_end": 69.91999999999999
+  },
+  {
+    "index": 5,
+    "id": "scene5_divergence",
+    "display_text": "This enables another important signal: crowd consensus versus verified predictor consensus. Instead of asking only what the crowd believes, CrowdSignal can identify when historically stronger predictors disagree with that crowd.",
+    "spoken_text": "This enables another important signal: crowd consensus versus verified predictor consensus.\n\nInstead of asking only what the crowd believes, CrowdSignal can identify when historically stronger predictors disagree with that crowd.",
+    "audio_file": "video_production/audio_v2/scene5_divergence.mp3",
+    "speech_start": 69.91999999999999,
+    "speech_end": 85.22999999999999,
+    "scene_duration": 16.36,
+    "scene_start": 69.91999999999999,
+    "scene_end": 86.27999999999999
+  },
+  {
+    "index": 6,
+    "id": "scene6_developers",
+    "display_text": "But CrowdSignal is not only a dashboard. Its real purpose is to make this intelligence reusable. Developers can consume CrowdSignal through APIs and on-chain feeds instead of independently building market discovery, data processing, probability calculations, reputation systems and analytics.",
+    "spoken_text": "But CrowdSignal is not only a dashboard.\n\nIts real purpose is to make this intelligence reusable.\n\nDevelopers can consume CrowdSignal through APIs and on-chain feeds, instead of independently building market discovery, data processing, probability calculations, reputation systems, and analytics.",
+    "audio_file": "video_production/audio_v2/scene6_developers.mp3",
+    "speech_start": 86.27999999999999,
+    "speech_end": 105.85999999999999,
+    "scene_duration": 20.63,
+    "scene_start": 86.27999999999999,
+    "scene_end": 106.90999999999998
+  },
+  {
+    "index": 7,
+    "id": "scene7_architecture",
+    "display_text": "The architecture is simple: DreamDEX Event Contracts generate activity. CrowdSignal indexes and processes that activity. The analytics layer transforms it into intelligence. And that intelligence becomes available to applications, protocols, DAOs and AI agents.",
+    "spoken_text": "The architecture is simple:\n\nDreamDEX Event Contracts generate activity.\nCrowdSignal indexes and processes that activity.\nThe analytics layer transforms it into intelligence.\n\nAnd that intelligence becomes available to applications, protocols, DAOs, and AI agents.",
+    "audio_file": "video_production/audio_v2/scene7_architecture.mp3",
+    "speech_start": 106.90999999999998,
+    "speech_end": 126.96999999999998,
+    "scene_duration": 21.11,
+    "scene_start": 106.90999999999998,
+    "scene_end": 128.01999999999998
+  },
+  {
+    "index": 8,
+    "id": "scene8_closing",
+    "display_text": "Prediction markets already contain collective intelligence. CrowdSignal makes that intelligence structured, measurable, verifiable and reusable.",
+    "spoken_text": "Prediction markets already contain collective intelligence.\n\nCrowdSignal makes that intelligence structured, measurable, verifiable, and reusable.",
+    "audio_file": "video_production/audio_v2/scene8_closing.mp3",
+    "speech_start": 128.01999999999998,
+    "speech_end": 138.48,
+    "scene_duration": 11.510000000000002,
+    "scene_start": 128.01999999999998,
+    "scene_end": 139.53
+  }
+]

@@ -1,0 +1,8 @@
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/audio/scene1_problem_padded.wav'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/audio/scene2_solution_padded.wav'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/audio/scene3_market_signal_padded.wav'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/audio/scene4_reputation_padded.wav'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/audio/scene5_divergence_padded.wav'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/audio/scene6_developers_padded.wav'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/audio/scene7_architecture_padded.wav'
+file 'C:/Users/ankur/OneDrive/Desktop/Crowd Signal/video_production/audio/scene8_closing_padded.wav'
