@@ -10,17 +10,28 @@ export class MicrostructureEngine {
    * Calculate microstructure metrics for a single market window with depth information
    */
   public static calculateWindowMicrostructure(window: ObservedMarketWindow): MicrostructureMetrics {
-    const bid = window.bestBid ?? window.lastPrice ?? 0.5;
-    const ask = window.bestAsk ?? window.lastPrice ?? 0.5;
+    const bid = window.bestBid ?? window.lastPrice;
+    const ask = window.bestAsk ?? window.lastPrice;
     
+    if (bid === undefined || ask === undefined) {
+      return {
+        midPrice: 0,
+        spread: 0,
+        relativeSpread: 0,
+        queueImbalance: 0,
+        microPrice: 0,
+        micropriceAdjustment: 0,
+      };
+    }
+
     // Midpoint
     const midPrice = (bid + ask) / 2;
     const spread = Math.max(0, ask - bid);
     const relativeSpread = midPrice > 0 ? spread / midPrice : 0;
 
     // Queue depth imbalance
-    const bidDepth = window.bidDepth ?? 100;
-    const askDepth = window.askDepth ?? 100;
+    const bidDepth = window.bidDepth ?? 0;
+    const askDepth = window.askDepth ?? 0;
     const totalDepth = bidDepth + askDepth;
     
     // Imbalance in [-1, +1]: positive means excess bid demand, negative means excess ask supply
@@ -29,7 +40,7 @@ export class MicrostructureEngine {
     // Microprice: order-book informed fair estimator
     // P_micro = P_mid + (QueueImbalance * spread / 2)
     const rawMicroPrice = midPrice + (queueImbalance * spread) / 2;
-    const microPrice = Math.max(0.01, Math.min(0.99, rawMicroPrice));
+    const microPrice = Math.max(0.001, Math.min(0.999, rawMicroPrice));
     const micropriceAdjustment = microPrice - midPrice;
 
     return {
@@ -46,13 +57,17 @@ export class MicrostructureEngine {
    * Aggregate microstructure across multiple active windows for an asset
    */
   public static aggregateMicrostructure(windows: ObservedMarketWindow[]): MicrostructureMetrics {
-    if (windows.length === 0) {
+    const validWindows = windows.filter(
+      (w) => (w.bestBid !== undefined && w.bestAsk !== undefined) || (w.lastPrice !== undefined && w.lastPrice > 0)
+    );
+
+    if (validWindows.length === 0) {
       return {
-        midPrice: 0.5,
-        spread: 0.02,
-        relativeSpread: 0.04,
+        midPrice: 0,
+        spread: 0,
+        relativeSpread: 0,
         queueImbalance: 0,
-        microPrice: 0.5,
+        microPrice: 0,
         micropriceAdjustment: 0,
       };
     }
@@ -63,9 +78,9 @@ export class MicrostructureEngine {
     let weightedSpread = 0;
     let weightedImbalance = 0;
 
-    for (const w of windows) {
+    for (const w of validWindows) {
       const metrics = this.calculateWindowMicrostructure(w);
-      const weight = Math.max(1, Math.sqrt((w.cumulativeQuoteVolume || 10) + 1));
+      const weight = Math.max(1, Math.sqrt((w.cumulativeQuoteVolume || 1) + 1));
 
       weightedMid += metrics.midPrice * weight;
       weightedMicro += metrics.microPrice * weight;
@@ -74,10 +89,10 @@ export class MicrostructureEngine {
       totalWeight += weight;
     }
 
-    const midPrice = totalWeight > 0 ? weightedMid / totalWeight : 0.5;
-    const microPrice = totalWeight > 0 ? weightedMicro / totalWeight : 0.5;
-    const spread = totalWeight > 0 ? weightedSpread / totalWeight : 0.02;
-    const relativeSpread = midPrice > 0 ? spread / midPrice : 0.04;
+    const midPrice = totalWeight > 0 ? weightedMid / totalWeight : 0;
+    const microPrice = totalWeight > 0 ? weightedMicro / totalWeight : 0;
+    const spread = totalWeight > 0 ? weightedSpread / totalWeight : 0;
+    const relativeSpread = midPrice > 0 ? spread / midPrice : 0;
     const queueImbalance = totalWeight > 0 ? weightedImbalance / totalWeight : 0;
 
     return {

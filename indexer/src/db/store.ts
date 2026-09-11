@@ -65,15 +65,16 @@ export class DataStore {
       for (const asset of assets) {
         const row = this.db.getLatestSignal(asset);
         if (row) {
+          const upBps = Math.round(row.latent_probability * 10000);
           const sig: CalculatedMarketSignal = {
             asset: row.asset as AssetSymbol,
+            assetKey: `0x${row.asset}` as `0x${string}`,
             upProbability: row.latent_probability,
-            upProbabilityBps: Math.round(row.latent_probability * 10000),
-            downProbability: 1 - row.latent_probability,
-            downProbabilityBps: Math.round((1 - row.latent_probability) * 10000),
+            upProbabilityBps: upBps,
+            downProbabilityBps: 10000 - upBps,
             uncertaintyLower: row.uncertainty_lower,
             uncertaintyUpper: row.uncertainty_upper,
-            uncertaintyWidth: row.uncertainty_upper - row.uncertainty_lower,
+            uncertaintyWidthBps: Math.round((row.uncertainty_upper - row.uncertainty_lower) * 10000),
             midProbability: row.mid_probability ?? row.latent_probability,
             microProbability: row.micro_probability ?? row.latent_probability,
             micropriceAdjustment: (row.micro_probability ?? row.latent_probability) - (row.mid_probability ?? row.latent_probability),
@@ -86,19 +87,22 @@ export class DataStore {
             marketRegime: row.market_regime as any,
             effectiveParticipantCount: row.effective_participants,
             concentrationHhi: row.concentration_hhi,
-            signalIndependence: 1 - Math.min(1, row.concentration_hhi * 10),
+            signalIndependenceScore: 1 - Math.min(1, row.concentration_hhi * 10),
             openInterestUsd: row.open_interest ?? 0,
             capitalSkew: row.capital_skew,
-            velocity: row.information_velocity,
-            acceleration: 0,
-            sampleSize: 10,
-            windowCount: 1,
+            capitalSkewBps: Math.round(row.capital_skew * 10000),
+            confidenceScore: Math.round((1 - (row.uncertainty_upper - row.uncertainty_lower)) * 100),
+            velocityBpsPerMin: Math.round(row.information_velocity * 100),
+            accelerationBpsPerMin2: 0,
+            totalVolumeUsd: 0,
+            activeWindowCount: 1,
             provenance: {
               algorithmVersion: row.algorithm_version,
-              inputSnapshotHash: row.input_snapshot_hash,
-              signalHash: row.provenance_hash,
+              inputSnapshotHash: row.input_snapshot_hash as `0x${string}`,
+              signalHash: row.provenance_hash as `0x${string}`,
               timestamp: row.timestamp,
             },
+            timestamp: row.timestamp,
           };
           this.signals.set(asset, sig);
         }
@@ -125,7 +129,7 @@ export class DataStore {
     });
 
     const spread = market.bestAsk !== undefined && market.bestBid !== undefined ? market.bestAsk - market.bestBid : null;
-    const relSpread = spread !== null && market.lastPrice > 0 ? spread / market.lastPrice : null;
+    const relSpread = spread !== null && market.lastPrice !== undefined && market.lastPrice > 0 ? spread / market.lastPrice : null;
     const totalDepth = (market.bidDepth || 0) + (market.askDepth || 0);
     const qImbalance = totalDepth > 0 && market.bidDepth !== undefined && market.askDepth !== undefined
       ? (market.bidDepth - market.askDepth) / totalDepth

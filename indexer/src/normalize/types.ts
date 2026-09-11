@@ -7,7 +7,8 @@ export type QuantitativeMarketRegime =
   | "TRENDING"
   | "INFORMATION_SHOCK"
   | "HIGH_UNCERTAINTY"
-  | "LIQUIDITY_FRAGILE";
+  | "LIQUIDITY_FRAGILE"
+  | "UNAVAILABLE";
 
 /**
  * Raw observed market state directly from touch book, order depth, or events.

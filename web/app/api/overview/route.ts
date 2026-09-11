@@ -31,7 +31,12 @@ export async function GET(req: NextRequest) {
         SELECT * FROM crowd_signals WHERE asset = ? ORDER BY timestamp DESC LIMIT 1
       `).get(asset);
 
-      if (signalRow) {
+      if (signalRow && signalRow.market_regime !== "UNAVAILABLE" && signalRow.latent_probability > 0) {
+        const uncertaintyWidth = signalRow.uncertainty_upper - signalRow.uncertainty_lower;
+        const confidenceVal = uncertaintyWidth < 0.99
+          ? Math.max(0, Math.min(100, Math.round((1 - uncertaintyWidth) * 100)))
+          : 0;
+
         const signalData: MarketSignal = {
           asset: signalRow.asset as any,
           symbol: `${signalRow.asset} / USDso`,
@@ -58,7 +63,7 @@ export async function GET(req: NextRequest) {
           signalIndependence: Number((1 - Math.min(1, signalRow.concentration_hhi * 10)).toFixed(2)),
           change24h: 0,
           velocityPerMin: Number(signalRow.information_velocity.toFixed(2)),
-          confidence: Math.round((1 - (signalRow.uncertainty_upper - signalRow.uncertainty_lower)) * 100),
+          confidence: confidenceVal,
           marketRegime: signalRow.market_regime as any,
           activeWindowCount: 1,
           totalVolumeUsd: 0,
@@ -90,7 +95,7 @@ export async function GET(req: NextRequest) {
         signalResponse = {
           status: "unavailable",
           asset,
-          message: "No live trade executions or orderbook observations recorded on Somnia Shannon for this asset yet.",
+          message: `Awaiting active orderbook quotes on Somnia Shannon for ${asset}.`,
           elapsedMs: Date.now() - startTime,
         };
       }
@@ -143,10 +148,11 @@ export async function GET(req: NextRequest) {
         marketList = marketRows.map((r: any): EventContractWindow => {
           const bestBid = r.best_bid !== null && r.best_bid !== undefined ? Number(r.best_bid) : undefined;
           const bestAsk = r.best_ask !== null && r.best_ask !== undefined ? Number(r.best_ask) : undefined;
-          const mid = r.midpoint !== null && r.midpoint !== undefined
+          const mid = r.midpoint !== null && r.midpoint !== undefined && Number(r.midpoint) > 0
             ? Number(r.midpoint)
             : (bestBid !== undefined && bestAsk !== undefined ? (bestBid + bestAsk) / 2 : undefined);
-          const upProb = mid !== undefined ? Number((mid * 100).toFixed(1)) : 50;
+          const upProb = mid !== undefined ? Number((mid * 100).toFixed(1)) : undefined;
+          const downProb = upProb !== undefined ? Number((100 - upProb).toFixed(1)) : undefined;
 
           return {
             id: r.market_id,
@@ -154,7 +160,7 @@ export async function GET(req: NextRequest) {
             title: `${r.asset} ${Math.round(r.interval_sec / 60)} MIN EVENT`,
             interval: `${Math.round(r.interval_sec / 60)}m`,
             upProbability: upProb,
-            downProbability: Number((100 - upProb).toFixed(1)),
+            downProbability: downProb,
             microPrice: r.microprice ? Number((r.microprice * 100).toFixed(1)) : upProb,
             spread: r.spread ? Number(r.spread.toFixed(4)) : (bestAsk && bestBid ? Number((bestAsk - bestBid).toFixed(4)) : 0),
             queueImbalance: r.queue_imbalance ? Number(r.queue_imbalance.toFixed(2)) : 0,

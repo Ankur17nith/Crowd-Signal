@@ -54,7 +54,7 @@ export class OnchainPublisher {
     }
 
     try {
-      const hash = await this.walletClient.writeContract({
+      const hash = await (this.walletClient as any).writeContract({
         address: CONFIG.sentimentPublisherAddress,
         abi: SENTIMENT_PUBLISHER_ABI,
         functionName: "publishSignal",
@@ -106,7 +106,7 @@ export class OnchainPublisher {
         lastActiveTimestamp: BigInt(r.lastActiveTimestamp),
       }));
 
-      const hash = await this.walletClient.writeContract({
+      const hash = await (this.walletClient as any).writeContract({
         address: CONFIG.reputationRegistryAddress,
         abi: REPUTATION_REGISTRY_ABI,
         functionName: "updateReputationBatch",

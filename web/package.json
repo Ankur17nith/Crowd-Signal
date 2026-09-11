@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){}\"",
     "dev": "next dev -p 3000",
+    "prebuild": "node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){}\"",
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "next lint"

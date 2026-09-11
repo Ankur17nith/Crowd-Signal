@@ -88,12 +88,14 @@ export function ActiveMarketsTable({
           <tbody className="text-[13px] divide-y divide-[#1A1A1A]">
             {markets.map((market) => {
               const hasProb = typeof market.upProbability === "number" && !isNaN(market.upProbability);
-              const upVal = hasProb ? market.upProbability : 50;
-              const downVal = hasProb ? market.downProbability : 50;
+              const upVal: number = hasProb ? (market.upProbability as number) : 50;
+              const downVal: number = typeof market.downProbability === "number" && !isNaN(market.downProbability)
+                ? (market.downProbability as number)
+                : 100 - upVal;
 
               // Derive real price adjustment if available (microprice delta), otherwise neutral
               const microDelta = typeof market.microPrice === "number" && hasProb
-                ? market.microPrice - market.upProbability
+                ? market.microPrice - upVal
                 : 0;
 
               return (

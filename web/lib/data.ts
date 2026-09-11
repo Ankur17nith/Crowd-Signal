@@ -3,7 +3,8 @@ export type QuantitativeRegime =
   | "TRENDING"
   | "INFORMATION_SHOCK"
   | "HIGH_UNCERTAINTY"
-  | "LIQUIDITY_FRAGILE";
+  | "LIQUIDITY_FRAGILE"
+  | "UNAVAILABLE";
 
 export interface MarketSignal {
   asset: "BTC" | "ETH" | "SOL" | "SOMI";
@@ -58,9 +59,9 @@ export interface EventContractWindow {
   asset: "BTC" | "ETH" | "SOL" | "SOMI";
   title: string;
   interval: string;
-  upProbability: number;
-  downProbability: number;
-  microPrice: number;
+  upProbability?: number;
+  downProbability?: number;
+  microPrice?: number;
   spread: number;
   queueImbalance: number;
   openInterestUsd: number;

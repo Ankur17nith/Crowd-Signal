@@ -43,45 +43,44 @@ export class CrowdScoringEngine {
         (w.timestamp === undefined || w.timestamp <= nowSeconds)
     );
 
-    // Initial state if no active markets are available
-    if (active.length === 0) {
-      const defaultFilter = this.latentFilters.get(asset) || new LatentProbabilityFilter(0.5);
-      const latentState = defaultFilter.update(0.5, 0.05, 0, nowSeconds);
-      const infoEngine = this.infoEngines.get(asset) || new InformationTheoryEngine();
-      const info = infoEngine.update(0.5, nowSeconds);
+    const hasQuotes = active.some(
+      (w) => (w.bestBid !== undefined && w.bestAsk !== undefined) || (w.lastPrice !== undefined && w.lastPrice > 0)
+    );
 
-      const nullHash = keccak256(toHex(`CS-PROB-2.0_${asset}_EMPTY_${nowSeconds}`));
+    // Honest state when no active markets or empirical quotes are available
+    if (active.length === 0 || !hasQuotes) {
+      const nullHash = keccak256(toHex(`CS-PROB-2.0_${asset}_UNAVAILABLE_${nowSeconds}`));
 
       return {
         asset,
         assetKey,
-        midProbability: 0.5,
-        microProbability: 0.5,
+        midProbability: 0,
+        microProbability: 0,
         micropriceAdjustment: 0,
-        spread: 0.02,
-        relativeSpread: 0.04,
+        spread: 0,
+        relativeSpread: 0,
         queueImbalance: 0,
-        upProbability: 0.5,
-        upProbabilityBps: 5000,
-        downProbabilityBps: 5000,
-        uncertaintyLower: 0.45,
-        uncertaintyUpper: 0.55,
-        uncertaintyWidthBps: 1000,
-        entropy: 1.0,
+        upProbability: 0,
+        upProbabilityBps: 0,
+        downProbabilityBps: 0,
+        uncertaintyLower: 0,
+        uncertaintyUpper: 1,
+        uncertaintyWidthBps: 10000,
+        entropy: 0,
         informationVelocity: 0,
-        changePointProbability: 0.05,
+        changePointProbability: 0,
         capitalSkew: 0,
         capitalSkewBps: 0,
         effectiveParticipantCount: 0,
         concentrationHhi: 0,
-        signalIndependenceScore: 0.5,
+        signalIndependenceScore: 0,
         confidenceScore: 0,
         velocityBpsPerMin: 0,
         accelerationBpsPerMin2: 0,
         openInterestUsd: 0,
         totalVolumeUsd: 0,
-        activeWindowCount: 0,
-        marketRegime: "STABLE",
+        activeWindowCount: active.length,
+        marketRegime: "UNAVAILABLE",
         provenance: {
           algorithmVersion: CrowdScoringEngine.ALGORITHM_VERSION,
           inputSnapshotHash: nullHash,
@@ -98,7 +97,7 @@ export class CrowdScoringEngine {
     // 3. Latent Probability Filtering in Logit Space
     let filter = this.latentFilters.get(asset);
     if (!filter) {
-      filter = new LatentProbabilityFilter(micro.microPrice);
+      filter = new LatentProbabilityFilter(micro.microPrice > 0 ? micro.microPrice : 0.5);
       this.latentFilters.set(asset, filter);
     }
     const totalVolume = active.reduce((sum, w) => sum + (w.cumulativeQuoteVolume || 0), 0);
@@ -154,7 +153,7 @@ export class CrowdScoringEngine {
     const certaintyScore = Math.min(15, Math.max(0, Math.round((1 - latent.uncertaintyWidth / 0.15) * 15)));
     const windowScore = Math.min(10, active.length * 3);
 
-    const confidenceScore = Math.max(10, Math.min(100, spreadScore + volumeScore + independenceScore + certaintyScore + windowScore));
+    const confidenceScore = Math.min(100, spreadScore + volumeScore + independenceScore + certaintyScore + windowScore);
 
     // 8. Cryptographic Provenance Commitment
     const snapshotData = active.map((w) => `${w.marketId}:${w.bestBid}:${w.bestAsk}:${w.tradeCount}`).join("|");

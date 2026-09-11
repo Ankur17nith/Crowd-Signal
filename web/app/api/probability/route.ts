@@ -20,7 +20,12 @@ export async function GET(req: NextRequest) {
         SELECT * FROM crowd_signals WHERE asset = ? ORDER BY timestamp DESC LIMIT 1
       `).get(asset);
 
-      if (row) {
+      if (row && row.market_regime !== "UNAVAILABLE" && row.latent_probability > 0) {
+        const uncertaintyWidth = row.uncertainty_upper - row.uncertainty_lower;
+        const confidenceVal = uncertaintyWidth < 0.99
+          ? Math.max(0, Math.min(100, Math.round((1 - uncertaintyWidth) * 100)))
+          : 0;
+
         signal = {
           asset: row.asset as any,
           symbol: `${row.asset} / USDso`,
@@ -47,7 +52,7 @@ export async function GET(req: NextRequest) {
           signalIndependence: Number((1 - Math.min(1, row.concentration_hhi * 10)).toFixed(2)),
           change24h: 0,
           velocityPerMin: Number(row.information_velocity.toFixed(2)),
-          confidence: Math.round((1 - (row.uncertainty_upper - row.uncertainty_lower)) * 100),
+          confidence: confidenceVal,
           marketRegime: row.market_regime as any,
           activeWindowCount: 1,
           totalVolumeUsd: 0,

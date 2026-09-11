@@ -217,108 +217,115 @@ export default function LeaderboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1A1A1A] text-[13px]">
-              {filteredPredictors.map((p, idx) => {
-                const isFollowing = !!followingMap[p.address];
-                return (
-                  <tr key={p.address} className="hover:bg-[#1A1A1A] transition-colors group">
-                    <td className="py-3.5 pl-4 pr-2 text-center tabular-nums font-mono text-[12px] text-[#F5F5F5] font-medium">
-                      {(idx + 1).toString().padStart(2, "0")}
-                    </td>
+              {filteredPredictors.length === 0 ? (
+                <tr>
+                  <td colSpan={9} className="py-16 text-center">
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-[14px] font-mono font-medium text-[#F5F5F5]">
+                        No verified predictors yet.
+                      </span>
+                      <p className="text-[12px] text-[#707070] max-w-md">
+                        Requires audited resolutions on Somnia testnet Event Contracts to calculate empirical Brier scores and calibration rankings. Zero synthetic wallets or trades are fabricated.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredPredictors.map((p, idx) => {
+                  const isFollowing = !!followingMap[p.address];
+                  return (
+                    <tr key={p.address} className="hover:bg-[#1A1A1A] transition-colors group">
+                      <td className="py-3.5 pl-4 pr-2 text-center tabular-nums font-mono text-[12px] text-[#F5F5F5] font-medium">
+                        {(idx + 1).toString().padStart(2, "0")}
+                      </td>
 
-                    <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-7 h-7 rounded bg-[#202020] border border-[#292929] flex items-center justify-center font-mono text-[11px] text-[#F5F5F5] shrink-0 font-semibold">
-                          {p.address.slice(2, 4).toUpperCase()}
-                        </div>
-                        <div className="flex flex-col min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <Link
-                              href={`/trader/${p.address}`}
-                              className="font-medium text-[#F5F5F5] group-hover:underline cursor-pointer"
-                            >
-                              {p.ensOrShort}
-                            </Link>
-                            {p.isVerified && (
-                              <span
-                                className="material-symbols-outlined text-[14px] text-[#4DA3FF]"
-                                title="Verified Quantitative Model"
-                              >
-                                verified
-                              </span>
-                            )}
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-7 h-7 rounded bg-[#202020] border border-[#292929] flex items-center justify-center font-mono text-[11px] text-[#F5F5F5] shrink-0 font-semibold">
+                            {p.address.slice(2, 4).toUpperCase()}
                           </div>
-                          <span className="font-mono text-[11px] text-[#707070] truncate">
-                            {p.address.slice(0, 8)}...{p.address.slice(-6)}
-                          </span>
+                          <div className="flex flex-col min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <Link
+                                href={`/trader/${p.address}`}
+                                className="font-medium text-[#F5F5F5] group-hover:underline cursor-pointer"
+                              >
+                                {p.ensOrShort}
+                              </Link>
+                            </div>
+                            <div className="text-[11px] text-[#707070] font-mono truncate">
+                              {p.address}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right">
-                      <span className="text-[20px] text-[#F5F5F5] font-semibold tabular-nums">
-                        {p.predictorScore}
-                      </span>
-                    </td>
+                      <td className="py-3.5 px-4 text-right tabular-nums">
+                        <span className="font-mono text-[13px] text-[#F5F5F5] font-semibold">
+                          {p.predictorScore}
+                        </span>
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right tabular-nums">
-                      <span className="inline-flex items-center gap-1 text-[#4DA3FF] font-medium bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded text-[12px]">
-                        {p.accuracy.toFixed(1)}%
-                      </span>
-                    </td>
+                      <td className="py-3.5 px-4 text-right tabular-nums">
+                        <span className="inline-flex items-center gap-1 text-[#4DA3FF] font-medium bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded text-[12px]">
+                          {p.accuracy.toFixed(1)}%
+                        </span>
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
-                      {p.calibrationScore}
-                      <span className="text-[#707070] text-[11px]">/100</span>
-                    </td>
+                      <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
+                        {p.calibrationScore}
+                        <span className="text-[#707070] text-[11px]">/100</span>
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right tabular-nums font-mono text-[13px]">
-                      <span className={`font-medium ${p.marketRelativeSkill >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"}`}>
-                        {p.marketRelativeSkill >= 0 ? `+${p.marketRelativeSkill.toFixed(3)}` : p.marketRelativeSkill.toFixed(3)}
-                      </span>
-                    </td>
+                      <td className="py-3.5 px-4 text-right tabular-nums font-mono text-[13px]">
+                        <span className={`font-medium ${p.marketRelativeSkill >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"}`}>
+                          {p.marketRelativeSkill >= 0 ? `+${p.marketRelativeSkill.toFixed(3)}` : p.marketRelativeSkill.toFixed(3)}
+                        </span>
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
-                      {p.resolvedPredictions}
-                    </td>
+                      <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
+                        {p.resolvedPredictions}
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
-                      {p.consistencyScore}
-                      <span className="text-[#707070] text-[11px]">/100</span>
-                    </td>
+                      <td className="py-3.5 px-4 text-right tabular-nums text-[#F5F5F5] font-mono text-[13px]">
+                        {p.consistencyScore}
+                        <span className="text-[#707070] text-[11px]">/100</span>
+                      </td>
 
-                    <td className="py-3.5 px-4 text-center">
-                      <svg
-                        className="w-28 h-6 mx-auto text-[#4DA3FF] overflow-visible"
-                        fill="none"
-                        viewBox="0 0 100 24"
-                      >
-                        <path
-                          d="M0,18 L16,16 L32,17 L48,11 L64,12 L80,7 L100,4"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.5"
-                        />
-                        <circle cx="100" cy="4" fill="currentColor" r="2" />
-                      </svg>
-                    </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <svg
+                          className="w-28 h-6 mx-auto text-[#4DA3FF] overflow-visible"
+                          fill="none"
+                          viewBox="0 0 100 24"
+                        >
+                          <path
+                            d="M0,18 L16,16 L32,17 L48,11 L64,12 L80,7 L100,4"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                          />
+                          <circle cx="100" cy="4" fill="currentColor" r="2" />
+                        </svg>
+                      </td>
 
-                    <td className="py-3.5 pr-4 pl-2 text-right">
-                      <button
-                        type="button"
-                        onClick={() => toggleFollow(p.address)}
-                        className={`h-7 px-3 rounded border text-[11px] font-medium transition-colors ${
-                          isFollowing
-                            ? "bg-[#202020] text-[#F5F5F5] border-[#292929] hover:bg-[#2A2A2A]"
-                            : "bg-[#0D0D0D] text-[#A1A1A1] border-[#202020] hover:bg-[#1A1A1A] hover:text-[#F5F5F5]"
-                        }`}
-                      >
-                        {isFollowing ? "Following" : "+ Follow"}
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+                      <td className="py-3.5 pr-4 pl-2 text-right">
+                        <button
+                          type="button"
+                          onClick={() => toggleFollow(p.address)}
+                          className={`h-7 px-3 rounded border text-[11px] font-medium transition-colors ${
+                            isFollowing
+                              ? "bg-[#202020] text-[#F5F5F5] border-[#292929] hover:bg-[#2A2A2A]"
+                              : "bg-[#0D0D0D] text-[#A1A1A1] border-[#202020] hover:bg-[#1A1A1A] hover:text-[#F5F5F5]"
+                          }`}
+                        >
+                          {isFollowing ? "Following" : "+ Follow"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

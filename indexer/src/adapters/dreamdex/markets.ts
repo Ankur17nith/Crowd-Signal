@@ -1,4 +1,5 @@
-import { ABIS, DREAMDEX_CONTRACTS, DreamDexClient } from "./client.js";
+import { SomniaMarkets, SOMNIA_TESTNET_ADDRESSES } from "@somnia-chain/markets-sdk";
+import { somniaShannon } from "@somnia-chain/markets-sdk/chains";
 import { CONFIG } from "../../config/env.js";
 
 export type MarketStatus = "Listed" | "Trading" | "Locked" | "Resolved" | "Voided" | "Unknown";
@@ -12,149 +13,83 @@ export interface CanonicalMarket {
   expiry: number;
   poolAddress: string;
   collateralAddress: string;
-  source: "ONCHAIN" | "GRAPHQL";
+  yesTokenId?: string;
+  noTokenId?: string;
+  yesSymbol?: string;
+  noSymbol?: string;
+  source: "ONCHAIN" | "SDK";
 }
 
-const STATUS_MAP: Record<number, MarketStatus> = {
-  0: "Listed",
-  1: "Trading",
-  2: "Locked",
-  4: "Resolved",
-  5: "Voided",
-};
-
 export class DreamDexMarketsAdapter {
-  private client: DreamDexClient;
+  private exchange: SomniaMarkets;
 
-  constructor(client?: DreamDexClient) {
-    this.client = client || new DreamDexClient();
+  constructor() {
+    this.exchange = new SomniaMarkets({
+      chain: somniaShannon,
+      indexerUrl: CONFIG.indexerUrl,
+      wsRpcUrl: CONFIG.wsRpcUrl,
+      addresses: SOMNIA_TESTNET_ADDRESSES,
+    });
+  }
+
+  public getExchange(): SomniaMarkets {
+    return this.exchange;
   }
 
   /**
-   * Fetch active binary markets using canonical Somnia contracts and GraphQL fallback
+   * Fetch active binary event contract markets using the official Somnia Markets / DreamDEX SDK
    */
   public async getMarkets(): Promise<CanonicalMarket[]> {
-    // 1. Prefer GraphQL indexer as primary discovery because it contains rich asset metadata
-    const graphQLMarkets = await this.fetchGraphQLMarkets();
-    if (graphQLMarkets.length > 0) {
-      return graphQLMarkets;
-    }
-    // 2. Fallback to on-chain registry
-    return this.fetchOnchainMarkets();
-  }
-
-  /**
-   * Read markets directly from BinaryMarketsModule on Somnia Shannon
-   */
-  public async fetchOnchainMarkets(): Promise<CanonicalMarket[]> {
-    const pc = this.client.getClient();
-    const markets: CanonicalMarket[] = [];
-
     try {
-      const count = await pc.readContract({
-        address: DREAMDEX_CONTRACTS.binaryMarketsModule,
-        abi: ABIS.binaryMarketsModule,
-        functionName: "getMarketCount",
-      });
+      const raw = await this.exchange.loadMarkets(true);
+      const markets: CanonicalMarket[] = [];
 
-      const total = Math.min(Number(count), 50);
-      for (let i = 0; i < total; i++) {
-        try {
-          const marketId = (await pc.readContract({
-            address: DREAMDEX_CONTRACTS.binaryMarketsModule,
-            abi: ABIS.binaryMarketsModule,
-            functionName: "getMarketId",
-            args: [BigInt(i)],
-          })) as `0x${string}`;
+      for (const m of Object.values(raw)) {
+        // Filter to binary event contracts
+        if (m.type !== "binary" && m.info?.marketType !== "BINARY") continue;
 
-          const data = (await pc.readContract({
-            address: DREAMDEX_CONTRACTS.binaryMarketsModule,
-            abi: ABIS.binaryMarketsModule,
-            functionName: "markets",
-            args: [marketId],
-          })) as [string, string, number, bigint, string, bigint];
+        const info = m.info as any;
+        const marketId = (info?.id || info?.marketId || m.id) as `0x${string}`;
+        const rawAsset = (info?.asset || m.base || "").trim().toUpperCase();
+        
+        // Canonical asset symbol extraction: e.g. "ETH-0-11SEP26..." -> "ETH", "BTC-..." -> "BTC"
+        let asset = rawAsset;
+        if (asset.includes("ETH")) asset = "ETH";
+        else if (asset.includes("BTC")) asset = "BTC";
+        else if (asset.includes("SOL")) asset = "SOL";
+        else if (asset.includes("BOTNAV")) asset = "BOTNAV";
+        else if (!asset) asset = "UNKNOWN";
 
-          const status = STATUS_MAP[Number(data[2])] || "Unknown";
-          const expiry = Number(data[3]);
-          const poolAddress = data[1];
-          const collateralAddress = data[4];
+        const yesOutcome = m.outcomes?.find((o: any) => o.label === "YES" || o.index === 0);
+        const noOutcome = m.outcomes?.find((o: any) => o.label === "NO" || o.index === 1);
 
-          // Never infer asset from array position index % 4.
-          // If contract metadata does not expose asset symbol, designate as UNKNOWN.
-          const asset = "UNKNOWN";
+        const statusRaw = info?.status || (m.active ? "Trading" : "Locked");
+        const status: MarketStatus =
+          statusRaw === "Trading" || statusRaw === "Listed" || statusRaw === "Locked" || statusRaw === "Resolved" || statusRaw === "Voided"
+            ? statusRaw
+            : "Unknown";
 
-          markets.push({
-            marketId,
-            asset,
-            symbol: `${asset}-UPDOWN`,
-            intervalSec: 900,
-            status,
-            expiry,
-            poolAddress,
-            collateralAddress,
-            source: "ONCHAIN",
-          });
-        } catch {
-          // Continue loop
-        }
+        markets.push({
+          marketId,
+          asset,
+          symbol: m.symbol,
+          intervalSec: Number(info?.intervalSec || 900),
+          status,
+          expiry: Number(info?.expiry || 0),
+          poolAddress: info?.poolAddress || (m as any).pool || "",
+          collateralAddress: info?.collateral || SOMNIA_TESTNET_ADDRESSES.collateral,
+          yesTokenId: info?.yesTokenId ? String(info.yesTokenId) : undefined,
+          noTokenId: info?.noTokenId ? String(info.noTokenId) : undefined,
+          yesSymbol: yesOutcome?.symbol || `${m.symbol}#YES`,
+          noSymbol: noOutcome?.symbol || `${m.symbol}#NO`,
+          source: "SDK",
+        });
       }
-    } catch {
-      // Contract count read failed or contracts awaiting initialization
+
+      return markets;
+    } catch (err) {
+      console.error("[DreamDexMarketsAdapter] Error loading markets from SomniaMarkets SDK:", err);
+      return [];
     }
-
-    return markets;
-  }
-
-  /**
-   * Query DreamDEX GraphQL Indexer
-   */
-  public async fetchGraphQLMarkets(): Promise<CanonicalMarket[]> {
-    try {
-      const query = `
-        query LiveBinaryMarkets {
-          binaryMarkets(where: { status: { _in: ["Trading", "Listed"] } }, limit: 50, order_by: { expiry: asc }) {
-            marketId
-            asset
-            symbol
-            intervalSec
-            status
-            expiry
-            poolAddress
-            collateralAddress
-          }
-        }
-      `;
-
-      const res = await fetch(CONFIG.indexerUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-        signal: AbortSignal.timeout(3000),
-      });
-
-      if (res.ok) {
-        const json: any = await res.json();
-        if (json.data && Array.isArray(json.data.binaryMarkets)) {
-          return json.data.binaryMarkets.map((m: any): CanonicalMarket => {
-            const rawAsset = (m.asset || "").trim().toUpperCase();
-            const asset = rawAsset || "UNKNOWN";
-            return {
-              marketId: m.marketId,
-              asset,
-              symbol: m.symbol || (asset !== "UNKNOWN" ? `${asset}-UPDOWN` : "UNKNOWN-UPDOWN"),
-              intervalSec: Number(m.intervalSec || 900),
-              status: m.status || "Trading",
-              expiry: Number(m.expiry || 0),
-              poolAddress: m.poolAddress || DREAMDEX_CONTRACTS.binaryMarketsModule,
-              collateralAddress: m.collateralAddress || DREAMDEX_CONTRACTS.testnetCollateral,
-              source: "GRAPHQL",
-            };
-          });
-        }
-      }
-    } catch {
-      // GraphQL offline or inactive
-    }
-    return [];
   }
 }

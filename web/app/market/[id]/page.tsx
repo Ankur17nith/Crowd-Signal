@@ -34,8 +34,10 @@ export default function MarketDetailPage({
       </div>
     );
   }
-
-  const isUp = market.upProbability >= 50;
+  const hasProb = typeof market.upProbability === "number" && !isNaN(market.upProbability);
+  const upProb = hasProb ? market.upProbability! : 50;
+  const downProb = typeof market.downProbability === "number" ? market.downProbability! : 100 - upProb;
+  const isUp = upProb >= 50;
   const mins = Math.floor(market.secondsRemaining / 60);
   const secs = market.secondsRemaining % 60;
 
@@ -59,62 +61,71 @@ export default function MarketDetailPage({
             <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
             LIVE FEED
           </span>
-          <span className="text-[#707070] text-[11px] font-mono">
-            ID: {market.id.slice(0, 8)}...
-          </span>
+          <button
+            type="button"
+            onClick={() => alert(`Subscribing to real-time events for ${market.id}...`)}
+            className="h-7 px-2.5 rounded bg-[#202020] hover:bg-[#2A2A2A] text-[#F5F5F5] text-[12px] border border-[#292929] transition-colors"
+          >
+            Watch Contract
+          </button>
         </div>
       </nav>
 
-      {/* Section 2: Market Detail Header */}
-      <header className="bg-[#141414] border border-[#292929] rounded-lg p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+      {/* Section 2: Market Header Banner */}
+      <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-2">
         <div className="flex flex-col gap-1.5">
-          <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-[24px] font-semibold text-[#F5F5F5] tracking-tight">
-              {market.asset} / USD
+          <div className="flex items-center gap-3">
+            <h1 className="text-[28px] font-semibold text-[#F5F5F5] tracking-tight">
+              {market.title}
             </h1>
-            <span className="px-2 py-0.5 rounded bg-[#202020] text-[#A1A1A1] text-[11px] tracking-wider uppercase font-mono">
-              {market.interval} EVENT
+            <span
+              className={`px-2.5 py-0.5 rounded text-[11px] font-mono uppercase font-semibold ${
+                market.status === "Trading"
+                  ? "bg-[#101F2E] text-[#4DA3FF] border border-[#1C3652]"
+                  : "bg-[#2A2314] text-[#E7A94B] border border-[#4A3A1A]"
+              }`}
+            >
+              {market.status}
             </span>
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#202020] text-[11px] text-[#F5F5F5]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
-              <span className="font-mono tabular-nums">
-                {`${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`} remaining
-              </span>
-            </div>
           </div>
           <p className="text-[13px] text-[#707070]">
-            Baseline Strike:{" "}
-            <span className="text-[#F5F5F5] font-mono font-medium">
-              ${market.openPrice.toLocaleString()} USD
-            </span>{" "}
+            Predict whether {market.asset}/USD will close above or below the baseline strike set
             at contract inception
           </p>
         </div>
 
         {/* Sentiment Split Indicator */}
         <div className="flex flex-col gap-2 min-w-[280px]">
-          <div className="flex items-center justify-between text-[13px]">
-            <span className="text-[#4DA3FF] font-mono font-semibold flex items-center gap-1">
-              {market.upProbability.toFixed(1)}% UP
-            </span>
-            <span className="text-[#E7A94B] font-mono font-semibold flex items-center gap-1">
-              {market.downProbability.toFixed(1)}% DOWN
-            </span>
-          </div>
-          <div className="w-full h-2 rounded bg-[#222222] overflow-hidden flex">
-            <div
-              className="h-full bg-[#4DA3FF] transition-all duration-300"
-              style={{ width: `${market.upProbability}%` }}
-            />
-            <div
-              className="h-full bg-[#E7A94B] transition-all duration-300"
-              style={{ width: `${market.downProbability}%` }}
-            />
-          </div>
-          <div className="flex items-center justify-between text-[#707070] text-[11px]">
-            <span>${((market.openInterestUsd * market.upProbability) / 100).toLocaleString(undefined, { maximumFractionDigits: 0 })} Allocated</span>
-            <span>${((market.openInterestUsd * market.downProbability) / 100).toLocaleString(undefined, { maximumFractionDigits: 0 })} Allocated</span>
-          </div>
+          {hasProb ? (
+            <>
+              <div className="flex items-center justify-between text-[13px]">
+                <span className="text-[#4DA3FF] font-mono font-semibold flex items-center gap-1">
+                  {upProb.toFixed(1)}% UP
+                </span>
+                <span className="text-[#E7A94B] font-mono font-semibold flex items-center gap-1">
+                  {downProb.toFixed(1)}% DOWN
+                </span>
+              </div>
+              <div className="w-full h-2 rounded bg-[#222222] overflow-hidden flex">
+                <div
+                  className="h-full bg-[#4DA3FF] transition-all duration-300"
+                  style={{ width: `${upProb}%` }}
+                />
+                <div
+                  className="h-full bg-[#E7A94B] transition-all duration-300"
+                  style={{ width: `${downProb}%` }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[#707070] text-[11px]">
+                <span>${((market.openInterestUsd * upProb) / 100).toLocaleString(undefined, { maximumFractionDigits: 0 })} Allocated</span>
+                <span>${((market.openInterestUsd * downProb) / 100).toLocaleString(undefined, { maximumFractionDigits: 0 })} Allocated</span>
+              </div>
+            </>
+          ) : (
+            <div className="p-3 bg-[#111] border border-[#222] rounded text-center font-mono text-[12px] text-[#707070]">
+              Awaiting quote depth
+            </div>
+          )}
         </div>
       </header>
 
@@ -276,7 +287,7 @@ export default function MarketDetailPage({
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[14px] font-mono font-semibold text-[#4DA3FF]">
-                {market.upProbability.toFixed(1)}% UP
+                {hasProb ? `${upProb.toFixed(1)}% UP` : "Awaiting depth"}
               </span>
               <span className="text-[#707070] text-[11px] font-mono">
                 Vol: ${(market.volumeUsd).toLocaleString()}

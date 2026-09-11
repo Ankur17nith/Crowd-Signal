@@ -211,7 +211,7 @@ export default function MarketsPage() {
         <div className="overflow-x-auto">
           {filteredMarkets.length === 0 ? (
             <div className="p-12 text-center text-[#707070] font-mono text-[13px]">
-              {isLoading ? "Synchronizing active contracts from Somnia Shannon..." : "No active event contracts matching query."}
+              {isLoading ? "Synchronizing active contracts from Somnia Shannon..." : markets.length === 0 ? "No active Event Contracts available" : "No active event contracts matching query."}
             </div>
           ) : (
             <table className="w-full text-left border-collapse min-w-[820px]">
@@ -228,7 +228,10 @@ export default function MarketsPage() {
               </thead>
               <tbody className="text-[13px] divide-y divide-[#1A1A1A]">
                 {filteredMarkets.map((market) => {
-                  const isUp = market.upProbability >= 50;
+                  const hasProb = typeof market.upProbability === "number" && !isNaN(market.upProbability);
+                  const upProb = hasProb ? market.upProbability! : 50;
+                  const downProb = typeof market.downProbability === "number" ? market.downProbability! : 100 - upProb;
+                  const isUp = upProb >= 50;
                   const mins = Math.floor(market.secondsRemaining / 60);
                   const secs = market.secondsRemaining % 60;
 
@@ -247,26 +250,32 @@ export default function MarketsPage() {
                       </td>
 
                       <td className="py-3 px-4">
-                        <div className="flex flex-col gap-1 w-full max-w-[200px]">
-                          <div className="flex justify-between font-mono text-[11px] tabular-nums">
-                            <span className="text-[#4DA3FF] font-medium">
-                              UP {market.upProbability.toFixed(1)}%
-                            </span>
-                            <span className="text-[#E7A94B] font-medium">
-                              {market.downProbability.toFixed(1)}% DOWN
-                            </span>
+                        {hasProb ? (
+                          <div className="flex flex-col gap-1 w-full max-w-[200px]">
+                            <div className="flex justify-between font-mono text-[11px] tabular-nums">
+                              <span className="text-[#4DA3FF] font-medium">
+                                UP {upProb.toFixed(1)}%
+                              </span>
+                              <span className="text-[#E7A94B] font-medium">
+                                {downProb.toFixed(1)}% DOWN
+                              </span>
+                            </div>
+                            <div className="h-1.5 w-full rounded-full bg-[#222222] flex overflow-hidden">
+                              <div
+                                className="bg-[#4DA3FF] h-full"
+                                style={{ width: `${upProb}%` }}
+                              />
+                              <div
+                                className="bg-[#E7A94B] h-full"
+                                style={{ width: `${downProb}%` }}
+                              />
+                            </div>
                           </div>
-                          <div className="h-1.5 w-full rounded-full bg-[#222222] flex overflow-hidden">
-                            <div
-                              className="bg-[#4DA3FF] h-full"
-                              style={{ width: `${market.upProbability}%` }}
-                            />
-                            <div
-                              className="bg-[#E7A94B] h-full"
-                              style={{ width: `${market.downProbability}%` }}
-                            />
-                          </div>
-                        </div>
+                        ) : (
+                          <span className="font-mono text-[11px] text-[#707070]">
+                            Awaiting quote depth
+                          </span>
+                        )}
                       </td>
 
                       <td className="py-3 px-4">

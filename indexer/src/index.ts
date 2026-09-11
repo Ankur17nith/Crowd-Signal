@@ -35,7 +35,7 @@ export class CrowdSignalIndexer {
     this.db = this.store.getDatabaseManager();
     this.scoringEngine = new CrowdScoringEngine();
     this.dreamdexClient = new DreamDexClient();
-    this.marketsAdapter = new DreamDexMarketsAdapter(this.dreamdexClient);
+    this.marketsAdapter = new DreamDexMarketsAdapter();
     this.tradesAdapter = new DreamDexTradesAdapter(this.dreamdexClient);
     this.settlementsAdapter = new DreamDexSettlementsAdapter(this.dreamdexClient);
     this.positionsAdapter = new DreamDexPositionsAdapter(this.dreamdexClient);
@@ -76,42 +76,73 @@ export class CrowdSignalIndexer {
       }
 
       // Fast loop: live market state updates for cached active markets
-      for (const m of this.cachedMarkets) {
-        // Derive real protocol open interest from ERC6909 singleton
-        let openInterestUsd: number | null = null;
-        try {
-          const oi = await this.positionsAdapter.getOpenInterest(m.marketId as `0x${string}`);
-          if (oi.isAvailable && oi.openInterestUsd !== null) {
-            openInterestUsd = oi.openInterestUsd;
+      await Promise.all(
+        this.cachedMarkets.map(async (m) => {
+          // Derive real protocol open interest from ERC6909 singleton
+          let openInterestUsd: number | null = null;
+          try {
+            const upTokenId = m.yesTokenId ? BigInt(m.yesTokenId) : undefined;
+            const downTokenId = m.noTokenId ? BigInt(m.noTokenId) : undefined;
+            const oi = await this.positionsAdapter.getOpenInterest(m.marketId as `0x${string}`, upTokenId, downTokenId);
+            if (oi.isAvailable && oi.openInterestUsd !== null) {
+              openInterestUsd = oi.openInterestUsd;
+            }
+          } catch {
+            openInterestUsd = null;
           }
-        } catch {
-          openInterestUsd = null;
-        }
 
-        const snap = DreamDexOrderbookAdapter.computeMicrostructure(
-          m.marketId,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          now
-        );
+          let bestBid: number | undefined = undefined;
+          let bestAsk: number | undefined = undefined;
+          let bidDepth: number | undefined = undefined;
+          let askDepth: number | undefined = undefined;
 
-        const observed: ObservedMarketWindow = {
-          marketId: m.marketId,
-          asset: m.asset as AssetSymbol,
-          symbol: m.symbol,
-          intervalSec: m.intervalSec,
-          lastPrice: snap.midpoint ?? 0,
-          openInterestUsd: openInterestUsd ?? undefined,
-          status: m.status as any,
-          expiry: m.expiry,
-          timestamp: now,
-          cumulativeQuoteVolume: 0,
-          tradeCount: 0,
-        };
-        this.store.upsertMarket(observed);
-      }
+          if (m.yesSymbol) {
+            try {
+              const ob = await this.marketsAdapter.getExchange().fetchOrderBook(m.yesSymbol, 5);
+              if (ob) {
+                if (ob.bids && ob.bids.length > 0) {
+                  bestBid = Number(ob.bids[0][0]);
+                  bidDepth = ob.bids.reduce((sum: number, b: any) => sum + Number(b[1]), 0);
+                }
+                if (ob.asks && ob.asks.length > 0) {
+                  bestAsk = Number(ob.asks[0][0]);
+                  askDepth = ob.asks.reduce((sum: number, a: any) => sum + Number(a[1]), 0);
+                }
+              }
+            } catch {
+              // Orderbook fetch non-fatal for individual market
+            }
+          }
+
+          const snap = DreamDexOrderbookAdapter.computeMicrostructure(
+            m.marketId,
+            bestBid,
+            bestAsk,
+            bidDepth,
+            askDepth,
+            now
+          );
+
+          const observed: ObservedMarketWindow = {
+            marketId: m.marketId,
+            asset: m.asset as AssetSymbol,
+            symbol: m.symbol,
+            intervalSec: m.intervalSec,
+            bestBid: snap.bestBid,
+            bestAsk: snap.bestAsk,
+            lastPrice: snap.midpoint,
+            bidDepth: snap.bidDepth,
+            askDepth: snap.askDepth,
+            openInterestUsd: openInterestUsd ?? undefined,
+            status: m.status as any,
+            expiry: m.expiry,
+            timestamp: now,
+            cumulativeQuoteVolume: 0,
+            tradeCount: 0,
+          };
+          this.store.upsertMarket(observed);
+        })
+      );
 
       // 3. Incremental on-chain trade ingestion & real prediction extraction
       let newTradesCount = 0;

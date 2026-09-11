@@ -24,10 +24,11 @@ export async function GET() {
         markets = rows.map((r: any): EventContractWindow => {
           const bestBid = r.best_bid !== null && r.best_bid !== undefined ? Number(r.best_bid) : undefined;
           const bestAsk = r.best_ask !== null && r.best_ask !== undefined ? Number(r.best_ask) : undefined;
-          const mid = r.midpoint !== null && r.midpoint !== undefined
+          const mid = r.midpoint !== null && r.midpoint !== undefined && Number(r.midpoint) > 0
             ? Number(r.midpoint)
             : (bestBid !== undefined && bestAsk !== undefined ? (bestBid + bestAsk) / 2 : undefined);
-          const upProb = mid !== undefined ? Number((mid * 100).toFixed(1)) : 50;
+          const upProb = mid !== undefined ? Number((mid * 100).toFixed(1)) : undefined;
+          const downProb = upProb !== undefined ? Number((100 - upProb).toFixed(1)) : undefined;
 
           return {
             id: r.market_id,
@@ -35,7 +36,7 @@ export async function GET() {
             title: `${r.asset} ${Math.round(r.interval_sec / 60)} MIN EVENT`,
             interval: `${Math.round(r.interval_sec / 60)}m`,
             upProbability: upProb,
-            downProbability: Number((100 - upProb).toFixed(1)),
+            downProbability: downProb,
             microPrice: r.microprice ? Number((r.microprice * 100).toFixed(1)) : upProb,
             spread: r.spread ? Number(r.spread.toFixed(4)) : (bestAsk && bestBid ? Number((bestAsk - bestBid).toFixed(4)) : 0),
             queueImbalance: r.queue_imbalance ? Number(r.queue_imbalance.toFixed(2)) : 0,
