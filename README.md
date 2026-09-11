@@ -200,10 +200,13 @@ DREAMDEX_API_URL=https://stg.api.dreamdex.io/v0
 
 # Published Contract Addresses on Somnia Shannon
 SENTIMENT_CONTRACT_ADDRESS=0xC526aB481079549320e8549e390C8B1D471804E1
-REPUTATION_CONTRACT_ADDRESS=0x9B14E92837492819E01849182374918237491823
+REPUTATION_CONTRACT_ADDRESS=0x71AeD4810965319804e84381C489110B529048E2
 
 # Publisher Private Key (Required for on-chain anchoring)
 PUBLISHER_PRIVATE_KEY=
+
+# Authoritative SQLite WAL Database Path
+DATABASE_PATH=c:/Users/ankur/OneDrive/Desktop/Crowd Signal/data/crowdsignal.db
 
 # Offline Demo Toggle (Set to "false" for strict live on-chain production mode)
 NEXT_PUBLIC_DEMO_MODE=false

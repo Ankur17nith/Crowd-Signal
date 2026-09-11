@@ -225,6 +225,43 @@ Resolution: Sorting capacity (higher is better)`}
           Given identical input quotes and algorithm version, any third party can independently recompute and verify the signal hash.
         </p>
       </article>
+
+      {/* 9. End-to-End Data Pipeline Flow */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          9. Ingestion Pipeline &amp; SQLite WAL Persistence Model
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          The CrowdSignal indexing daemon runs single-flight batch cycles (~3.4 seconds) with zero overlapping requests. The pipeline executes:
+        </p>
+        <div className="p-3.5 bg-[#0D0D0D] border border-[#202020] rounded font-mono text-[12px] text-[#4DA3FF] space-y-1">
+          <p>1. Discover all active DreamDEX Event Contracts on Somnia Shannon via @somnia-chain/markets-sdk.</p>
+          <p>2. Query top-of-book resting liquidity in parallel for all discovered contracts.</p>
+          <p>3. Compute Stoikov microprice, queue imbalance, logit Kalman state updates, and Shannon entropy.</p>
+          <p>4. Persist only populated market snapshots (zero empty snapshot inflation) and update materialized latest_market_state.</p>
+          <p>5. Serve REST queries from Next.js with O(1) query complexity (&lt;20ms warm latency).</p>
+        </div>
+      </article>
+
+      {/* 10. Smart Contract Specification */}
+      <article className="bg-[#141414] border border-[#292929] rounded-lg p-6 space-y-4">
+        <h2 className="text-[16px] font-semibold text-[#F5F5F5] border-b border-[#202020] pb-3">
+          10. Somnia Smart Contract Verification Reference
+        </h2>
+        <p className="text-[13px] text-[#A1A1A1] leading-relaxed">
+          Deployed smart contracts on Somnia Shannon Testnet (Chain ID 50312):
+        </p>
+        <div className="space-y-2 text-[12px] font-mono">
+          <div className="p-3 bg-[#0D0D0D] border border-[#202020] rounded flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <span className="text-[#F5F5F5]">SentimentPublisher.sol</span>
+            <code className="text-[#4DA3FF]">0xC526aB481079549320e8549e390C8B1D471804E1</code>
+          </div>
+          <div className="p-3 bg-[#0D0D0D] border border-[#202020] rounded flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <span className="text-[#F5F5F5]">ReputationRegistry.sol</span>
+            <code className="text-[#4DA3FF]">0x71AeD4810965319804e84381C489110B529048E2</code>
+          </div>
+        </div>
+      </article>
     </div>
   );
 }
