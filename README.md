@@ -132,6 +132,16 @@ forge script script/Deploy.s.sol:DeployScript \
   --broadcast
 ```
 
+### Quick Run (From Project Root)
+
+```bash
+# Run web terminal directly from root
+npm run dev
+
+# Run indexer tests from root
+npm test
+```
+
 ### 2. Indexer & Scoring Engine
 
 ```bash

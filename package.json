@@ -1,0 +1,26 @@
+{
+  "name": "crowd-signal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Live Event Intelligence Oracle + Verifiable Prediction Reputation Layer for DreamDEX on Somnia",
+  "scripts": {
+    "dev": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "start": "npm --prefix web run start",
+    "web:dev": "npm --prefix web run dev",
+    "web:build": "npm --prefix web run build",
+    "indexer:dev": "npm --prefix indexer run dev",
+    "indexer:build": "npm --prefix indexer run build",
+    "indexer:test": "npm --prefix indexer test",
+    "test": "npm --prefix indexer test"
+  },
+  "keywords": [
+    "somnia",
+    "dreamdex",
+    "oracle",
+    "reputation",
+    "prediction-market",
+    "event-contracts"
+  ],
+  "license": "MIT"
+}
