@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 8 9 13;
+    --foreground: 248 250 252;
+  }
+
+  body {
+    color: #f8fafc;
+    background: #08090d;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
+    letter-spacing: -0.01em;
+  }
+
+  /* Custom subtle terminal scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #08090d;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #232838;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #323b52;
+  }
+}
+
+@layer utilities {
+  .text-glow-cyan {
+    text-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+  }
+  .text-glow-bull {
+    text-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+  }
+  .text-glow-bear {
+    text-shadow: 0 0 12px rgba(244, 63, 94, 0.4);
+  }
+}
