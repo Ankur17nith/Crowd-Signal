@@ -2,7 +2,8 @@
 
 import React, { useState, use } from "react";
 import Link from "next/link";
-import { INITIAL_PREDICTORS } from "@/lib/data";
+import { useTraderProfile } from "@/lib/queries";
+import { PredictorProfile } from "@/lib/data";
 
 export default function TraderProfilePage({
   params,
@@ -12,22 +13,32 @@ export default function TraderProfilePage({
   const resolvedParams = use(params);
   const targetAddress = resolvedParams.address;
 
-  // Find predictor or default to rank 1
-  const predictor =
-    INITIAL_PREDICTORS.find(
-      (p) => p.address.toLowerCase() === targetAddress.toLowerCase()
-    ) || INITIAL_PREDICTORS[0];
+  const { data: predictor, isLoading } = useTraderProfile(targetAddress);
 
-  const [isFollowing, setIsFollowing] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [accordionOpen, setAccordionOpen] = useState(false);
   const [activeChartRange, setActiveChartRange] = useState<"7D" | "30D" | "90D" | "ALL">("30D");
 
   const handleCopy = () => {
+    if (!predictor) return;
     navigator.clipboard.writeText(predictor.address);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  if (isLoading || !predictor) {
+    return (
+      <div className="flex flex-col w-full gap-6 p-12 text-center border border-[#292929] rounded bg-[#141414]">
+        <div className="text-[#A1A1A1] font-mono text-[14px]">
+          {isLoading ? "Fetching trader reputation and calibration records..." : `No prediction history or reputation observations recorded for ${targetAddress} on Somnia Shannon.`}
+        </div>
+        <Link href="/leaderboard" className="text-[#4DA3FF] text-[13px] hover:underline">
+          ← Return to Leaderboard
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full gap-8">

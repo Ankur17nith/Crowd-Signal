@@ -2,16 +2,18 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { INITIAL_PREDICTORS } from "@/lib/data";
+import { useLeaderboard } from "@/lib/queries";
+import { PredictorProfile } from "@/lib/data";
 
 export default function LeaderboardPage() {
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>("All Time");
   const [selectedAsset, setSelectedAsset] = useState<string>("All Assets");
-  const [minCalls, setMinCalls] = useState<number>(25);
+  const [minCalls, setMinCalls] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [followingMap, setFollowingMap] = useState<Record<string, boolean>>({
-    "0x71A9908C8E645d9441faB8B33Af671239c36892F": true,
-  });
+  const [followingMap, setFollowingMap] = useState<Record<string, boolean>>({});
+
+  const { data: leaderboardData, isLoading } = useLeaderboard();
+  const predictors = leaderboardData?.predictors || [];
 
   const toggleFollow = (addr: string) => {
     setFollowingMap((prev) => ({
@@ -21,7 +23,7 @@ export default function LeaderboardPage() {
   };
 
   const filteredPredictors = useMemo(() => {
-    return INITIAL_PREDICTORS.filter((p) => {
+    return predictors.filter((p) => {
       if (p.resolvedPredictions < minCalls) return false;
       if (searchQuery.trim() !== "") {
         const q = searchQuery.toLowerCase();
@@ -31,7 +33,7 @@ export default function LeaderboardPage() {
       }
       return true;
     });
-  }, [minCalls, searchQuery]);
+  }, [predictors, minCalls, searchQuery]);
 
   return (
     <div className="flex flex-col w-full space-y-6">

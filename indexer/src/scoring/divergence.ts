@@ -65,15 +65,31 @@ export class DivergenceScoringEngine {
     const hhi = normalizedWeights.reduce((sum, p) => sum + p * p, 0);
     const effectivePredictorCount = hhi > 0 ? Number((1 / hhi).toFixed(1)) : qualified.length;
 
-    // Track historical divergence persistence
+    // Track historical divergence persistence with timestamps
     const hist = this.divergenceHistory.get(asset) || [];
     hist.push({ divergenceBps, timestamp: nowSeconds });
-    if (hist.length > 50) hist.shift();
+    if (hist.length > 60) hist.shift();
     this.divergenceHistory.set(asset, hist);
 
-    // Persistence score measures whether divergence has persisted over recent evaluation cycles
-    const recentConsistent = hist.filter((h) => Math.abs(h.divergenceBps) > 400).length;
-    const persistenceScore = Math.min(100, Math.round((recentConsistent / Math.max(1, hist.length)) * 100));
+    // Time-weighted directional persistence:
+    // w_k = exp(-0.005 * (now - t_k))
+    // Checks both duration and directional continuity
+    const HALF_LIFE_SEC = 300; // 5 minutes half-life
+    const lambda = Math.LN2 / HALF_LIFE_SEC;
+    let weightedPersistentScore = 0;
+    let totalTimeWeight = 0;
+
+    for (const h of hist) {
+      const dt = Math.max(0, nowSeconds - h.timestamp);
+      const w = Math.exp(-lambda * dt);
+      totalTimeWeight += w;
+      if (Math.abs(h.divergenceBps) > 300) {
+        weightedPersistentScore += w;
+      }
+    }
+
+    const persistenceRatio = totalTimeWeight > 0 ? weightedPersistentScore / totalTimeWeight : 0;
+    const persistenceScore = Math.min(100, Math.round(persistenceRatio * 100));
 
     let interpretation = "High consensus: Crowd and verified predictors are aligned.";
     if (deltaBps >= 1000) {

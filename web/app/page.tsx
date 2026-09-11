@@ -6,14 +6,14 @@ import { CrowdVsPredictors } from "@/components/dashboard/CrowdVsPredictors";
 import { ActiveMarketsTable } from "@/components/markets/ActiveMarketsTable";
 import { SettlementFeed } from "@/components/sentiment/SettlementFeed";
 import { HowItWorks } from "@/components/dashboard/HowItWorks";
-import { INITIAL_WINDOWS, INITIAL_SIGNALS } from "@/lib/data";
+import { useMarketSignal, useActiveMarkets, useDivergence } from "@/lib/queries";
 
 export default function OverviewPage() {
   const [selectedAsset, setSelectedAsset] = useState<"BTC" | "ETH">("BTC");
 
-  // Get current market signal for chosen asset
-  const activeSignal =
-    INITIAL_SIGNALS[selectedAsset] || INITIAL_SIGNALS["BTC"];
+  const { data: signal, isLoading: signalLoading } = useMarketSignal(selectedAsset);
+  const { data: divergence } = useDivergence(selectedAsset);
+  const { data: marketsData, isLoading: marketsLoading } = useActiveMarkets();
 
   return (
     <div className="max-w-[1080px] w-full mx-auto space-y-10">
@@ -67,44 +67,60 @@ export default function OverviewPage() {
       </header>
 
       {/* 2. Primary Sentiment Centerpiece (The Sentiment Gauge) */}
-      <SentimentGauge
-        asset={activeSignal.asset}
-        interval="15 MIN"
-        upProbability={activeSignal.upProbability}
-        downProbability={activeSignal.downProbability}
-        openInterestUsd={activeSignal.openInterestUsd}
-        capitalSkew={activeSignal.capitalSkew}
-        velocityPerMin={activeSignal.velocityPerMin}
-        confidence={activeSignal.confidence}
-        marketRegime={activeSignal.marketRegime}
-        uncertaintyInterval={activeSignal.uncertaintyInterval}
-        uncertaintyWidth={activeSignal.uncertaintyWidth}
-        midProbability={activeSignal.midProbability}
-        microProbability={activeSignal.microProbability}
-        micropriceAdjustment={activeSignal.micropriceAdjustment}
-        entropy={activeSignal.entropy}
-        informationVelocity={activeSignal.informationVelocity}
-        changePointProbability={activeSignal.changePointProbability}
-        effectiveParticipants={activeSignal.effectiveParticipants}
-        concentrationHhi={activeSignal.concentrationHhi}
-        signalIndependence={activeSignal.signalIndependence}
-      />
+      {signal ? (
+        <SentimentGauge
+          asset={signal.asset}
+          interval="15 MIN"
+          upProbability={signal.upProbability}
+          downProbability={signal.downProbability}
+          openInterestUsd={signal.openInterestUsd}
+          capitalSkew={signal.capitalSkew}
+          velocityPerMin={signal.velocityPerMin}
+          confidence={signal.confidence}
+          marketRegime={signal.marketRegime}
+          uncertaintyInterval={signal.uncertaintyInterval}
+          uncertaintyWidth={signal.uncertaintyWidth}
+          midProbability={signal.midProbability}
+          microProbability={signal.microProbability}
+          micropriceAdjustment={signal.micropriceAdjustment}
+          entropy={signal.entropy}
+          informationVelocity={signal.informationVelocity}
+          changePointProbability={signal.changePointProbability}
+          effectiveParticipants={signal.effectiveParticipants}
+          concentrationHhi={signal.concentrationHhi}
+          signalIndependence={signal.signalIndependence}
+        />
+      ) : (
+        <div className="p-12 text-center border border-[#292929] rounded bg-[#141414]">
+          <div className="text-[#A1A1A1] font-mono text-[14px]">
+            {signalLoading ? "Loading real-time market probability..." : "Awaiting active DreamDEX market observations"}
+          </div>
+        </div>
+      )}
 
       {/* 3. Crowd vs. Verified Predictors (Signature Divergence Feature) */}
-      <CrowdVsPredictors
-        crowdUpProbability={activeSignal.upProbability}
-        crowdVolumeUsd={activeSignal.totalVolumeUsd}
-        crowdWalletsCount={1420}
-        verifiedUpProbability={49.1}
-        verifiedVolumeUsd={84120}
-        verifiedWalletsCount={48}
-        divergencePp={Math.abs(activeSignal.upProbability - 49.1)}
-        divergenceDirection="BEARISH_SKEW"
-        commentary="Smart money holds contrarian bias against general retail optimism."
-      />
+      {signal && (
+        <CrowdVsPredictors
+          crowdUpProbability={signal.upProbability}
+          crowdVolumeUsd={signal.totalVolumeUsd}
+          crowdWalletsCount={Math.round(signal.effectiveParticipants || 0)}
+          verifiedUpProbability={divergence?.topPredictorConsensus ?? signal.upProbability}
+          verifiedVolumeUsd={signal.openInterestUsd}
+          verifiedWalletsCount={divergence?.topPredictorCount ?? 0}
+          divergencePp={divergence?.divergencePercent ?? 0}
+          divergenceDirection={
+            (divergence?.divergencePercent ?? 0) === 0
+              ? "CONSENSUS_ALIGNED"
+              : signal.upProbability > (divergence?.topPredictorConsensus ?? signal.upProbability)
+              ? "BULLISH_SKEW"
+              : "BEARISH_SKEW"
+          }
+          commentary={divergence?.interpretation || "Aligning signals across market observations."}
+        />
+      )}
 
       {/* 4. Active Event Markets */}
-      <ActiveMarketsTable markets={INITIAL_WINDOWS} />
+      <ActiveMarketsTable markets={marketsData?.markets || []} />
 
       {/* 5. Recent Settlements */}
       <SettlementFeed />

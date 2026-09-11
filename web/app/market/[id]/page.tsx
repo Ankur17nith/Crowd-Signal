@@ -2,7 +2,8 @@
 
 import React, { useState, use } from "react";
 import Link from "next/link";
-import { INITIAL_WINDOWS } from "@/lib/data";
+import { useActiveMarkets } from "@/lib/queries";
+import { EventContractWindow } from "@/lib/data";
 
 export default function MarketDetailPage({
   params,
@@ -12,14 +13,27 @@ export default function MarketDetailPage({
   const resolvedParams = use(params);
   const marketId = resolvedParams.id;
 
-  // Find market or fallback to first
-  const market =
-    INITIAL_WINDOWS.find((m) => m.id === marketId) || INITIAL_WINDOWS[0];
+  const { data: marketsData, isLoading } = useActiveMarkets();
+  const markets = marketsData?.markets || [];
+  const market = markets.find((m) => m.id === marketId) || markets[0];
 
   const [activeChartTab, setActiveChartTab] = useState<
     "probability" | "openInterest" | "skew"
   >("probability");
   const [activeTimeRange, setActiveTimeRange] = useState<"1m" | "5m" | "all">("5m");
+
+  if (isLoading || !market) {
+    return (
+      <div className="flex flex-col w-full gap-6 p-12 text-center border border-[#292929] rounded bg-[#141414]">
+        <div className="text-[#A1A1A1] font-mono text-[14px]">
+          {isLoading ? "Loading contract telemetry..." : `Market "${marketId}" is awaiting active observations or has concluded.`}
+        </div>
+        <Link href="/markets" className="text-[#4DA3FF] text-[13px] hover:underline">
+          ← Return to Markets
+        </Link>
+      </div>
+    );
+  }
 
   const isUp = market.upProbability >= 50;
   const mins = Math.floor(market.secondsRemaining / 60);

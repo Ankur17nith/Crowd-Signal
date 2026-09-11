@@ -37,6 +37,11 @@ Thumbs.db
 .vscode/
 *.suo
 *.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Databases
+*.db
+*.db-wal
+*.db-shm
+data/
+indexer/data/
+web/data/
+

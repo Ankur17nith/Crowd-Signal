@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { INITIAL_WINDOWS } from "@/lib/data";
+import { useActiveMarkets } from "@/lib/queries";
 
 export default function MarketsPage() {
   const [selectedAsset, setSelectedAsset] = useState<string>("All Assets");
@@ -10,8 +10,11 @@ export default function MarketsPage() {
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>("15m");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  const { data: marketsData, isLoading } = useActiveMarkets();
+  const markets = marketsData?.markets || [];
+
   const filteredMarkets = useMemo(() => {
-    return INITIAL_WINDOWS.filter((m) => {
+    return markets.filter((m) => {
       if (selectedAsset !== "All Assets" && m.asset !== selectedAsset) return false;
       if (searchQuery.trim() !== "") {
         const q = searchQuery.toLowerCase();
@@ -22,7 +25,15 @@ export default function MarketsPage() {
       }
       return true;
     });
-  }, [selectedAsset, searchQuery]);
+  }, [markets, selectedAsset, searchQuery]);
+
+  const totalOpenInterest = useMemo(() => {
+    return markets.reduce((sum, m) => sum + (m.openInterestUsd || 0), 0);
+  }, [markets]);
+
+  const totalVolume = useMemo(() => {
+    return markets.reduce((sum, m) => sum + (m.volumeUsd || 0), 0);
+  }, [markets]);
 
   const getAssetIcon = (asset: string) => {
     switch (asset) {
@@ -66,21 +77,22 @@ export default function MarketsPage() {
             <span className="material-symbols-outlined text-[16px] text-[#707070]">pie_chart</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">$742,890</span>
-            <span className="text-[11px] text-[#4DA3FF] tabular-nums bg-[#4DA3FF]/10 px-1.5 py-0.5 rounded">
-              +4.2% 1h
+            <span className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">
+              {totalOpenInterest > 0 ? `$${totalOpenInterest.toLocaleString()}` : "Unavailable"}
             </span>
           </div>
         </div>
 
         <div className="p-4 rounded-lg bg-[#141414] border border-[#292929] flex flex-col justify-between">
           <div className="flex items-center justify-between text-[#A1A1A1] mb-2">
-            <span className="text-[11px] font-mono uppercase tracking-wider">24h Signal Volume</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider">Signal Volume</span>
             <span className="material-symbols-outlined text-[16px] text-[#707070]">stacked_bar_chart</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">$3.84M</span>
-            <span className="text-[11px] text-[#707070] tabular-nums">41,208 executions</span>
+            <span className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">
+              {totalVolume > 0 ? `$${totalVolume.toLocaleString()}` : "$0"}
+            </span>
+            <span className="text-[11px] text-[#707070] tabular-nums">{markets.length} active</span>
           </div>
         </div>
 
@@ -90,19 +102,20 @@ export default function MarketsPage() {
             <span className="material-symbols-outlined text-[16px] text-[#707070]">tune</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">18</span>
-            <span className="text-[11px] text-[#707070]">Across 3 major pairs</span>
+            <span className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">{markets.length}</span>
+            <span className="text-[11px] text-[#707070]">Observed on Somnia</span>
           </div>
         </div>
 
         <div className="p-4 rounded-lg bg-[#141414] border border-[#292929] flex flex-col justify-between">
           <div className="flex items-center justify-between text-[#A1A1A1] mb-2">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-[#E7A94B]">Divergence Alert</span>
-            <span className="material-symbols-outlined text-[16px] text-[#E7A94B]">warning</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[#4DA3FF]">Status</span>
+            <span className="material-symbols-outlined text-[16px] text-[#4DA3FF]">check_circle</span>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-[28px] font-semibold text-[#F5F5F5] tabular-nums">2</span>
-            <span className="text-[11px] text-[#E7A94B]">&gt;12pp smart money delta</span>
+            <span className="text-[20px] font-semibold text-[#F5F5F5]">
+              {markets.length > 0 ? "Trading Active" : "Awaiting Events"}
+            </span>
           </div>
         </div>
       </div>
@@ -196,119 +209,110 @@ export default function MarketsPage() {
       {/* Primary Markets Table */}
       <div className="rounded-lg bg-[#141414] border border-[#292929] overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[820px]">
-            <thead>
-              <tr className="bg-[#0D0D0D] text-[#707070] font-mono text-[11px] uppercase tracking-wider border-b border-[#202020]">
-                <th className="py-3 px-4 font-medium">Asset & Window</th>
-                <th className="py-3 px-4 font-medium min-w-[200px]">Direction & Probability</th>
-                <th className="py-3 px-4 font-medium">Consensus State</th>
-                <th className="py-3 px-4 font-medium text-right">Open Interest</th>
-                <th className="py-3 px-4 font-medium text-right">Capital Skew</th>
-                <th className="py-3 px-4 font-medium text-right">5m Mom.</th>
-                <th className="py-3 px-4 font-medium">Expiration</th>
-                <th className="py-3 px-4 font-medium text-right">Contract</th>
-              </tr>
-            </thead>
-            <tbody className="text-[13px] divide-y divide-[#1A1A1A]">
-              {filteredMarkets.map((market) => {
-                const isUp = market.upProbability >= 50;
-                const skew = isUp ? +28.4 : -14.2;
-                const momentum = isUp ? +7.2 : -3.1;
-                const mins = Math.floor(market.secondsRemaining / 60);
-                const secs = market.secondsRemaining % 60;
+          {filteredMarkets.length === 0 ? (
+            <div className="p-12 text-center text-[#707070] font-mono text-[13px]">
+              {isLoading ? "Synchronizing active contracts from Somnia Shannon..." : "No active event contracts matching query."}
+            </div>
+          ) : (
+            <table className="w-full text-left border-collapse min-w-[820px]">
+              <thead>
+                <tr className="bg-[#0D0D0D] text-[#707070] font-mono text-[11px] uppercase tracking-wider border-b border-[#202020]">
+                  <th className="py-3 px-4 font-medium">Asset & Window</th>
+                  <th className="py-3 px-4 font-medium min-w-[200px]">Direction & Probability</th>
+                  <th className="py-3 px-4 font-medium">Consensus State</th>
+                  <th className="py-3 px-4 font-medium text-right">Open Interest</th>
+                  <th className="py-3 px-4 font-medium text-right">Spread</th>
+                  <th className="py-3 px-4 font-medium">Expiration</th>
+                  <th className="py-3 px-4 font-medium text-right">Contract</th>
+                </tr>
+              </thead>
+              <tbody className="text-[13px] divide-y divide-[#1A1A1A]">
+                {filteredMarkets.map((market) => {
+                  const isUp = market.upProbability >= 50;
+                  const mins = Math.floor(market.secondsRemaining / 60);
+                  const secs = market.secondsRemaining % 60;
 
-                return (
-                  <tr key={market.id} className="hover:bg-[#1A1A1A] transition-colors group">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 rounded bg-[#202020] flex items-center justify-center text-[11px] text-[#F5F5F5] font-semibold">
-                          {getAssetIcon(market.asset)}
+                  return (
+                    <tr key={market.id} className="hover:bg-[#1A1A1A] transition-colors group">
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 rounded bg-[#202020] flex items-center justify-center text-[11px] text-[#F5F5F5] font-semibold">
+                            {getAssetIcon(market.asset)}
+                          </div>
+                          <div>
+                            <div className="font-semibold text-[#F5F5F5]">{market.asset} / USD</div>
+                            <div className="text-[11px] text-[#707070]">{market.interval} window</div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="font-semibold text-[#F5F5F5]">{market.asset} / USD</div>
-                          <div className="text-[11px] text-[#707070]">{market.interval} window</div>
+                      </td>
+
+                      <td className="py-3 px-4">
+                        <div className="flex flex-col gap-1 w-full max-w-[200px]">
+                          <div className="flex justify-between font-mono text-[11px] tabular-nums">
+                            <span className="text-[#4DA3FF] font-medium">
+                              UP {market.upProbability.toFixed(1)}%
+                            </span>
+                            <span className="text-[#E7A94B] font-medium">
+                              {market.downProbability.toFixed(1)}% DOWN
+                            </span>
+                          </div>
+                          <div className="h-1.5 w-full rounded-full bg-[#222222] flex overflow-hidden">
+                            <div
+                              className="bg-[#4DA3FF] h-full"
+                              style={{ width: `${market.upProbability}%` }}
+                            />
+                            <div
+                              className="bg-[#E7A94B] h-full"
+                              style={{ width: `${market.downProbability}%` }}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="py-3 px-4">
-                      <div className="flex flex-col gap-1 w-full max-w-[200px]">
-                        <div className="flex justify-between font-mono text-[11px] tabular-nums">
-                          <span className="text-[#4DA3FF] font-medium">
-                            UP {market.upProbability.toFixed(1)}%
-                          </span>
-                          <span className="text-[#E7A94B] font-medium">
-                            {market.downProbability.toFixed(1)}% DOWN
-                          </span>
-                        </div>
-                        <div className="h-1.5 w-full rounded-full bg-[#222222] flex overflow-hidden">
-                          <div
-                            className="bg-[#4DA3FF] h-full"
-                            style={{ width: `${market.upProbability}%` }}
-                          />
-                          <div
-                            className="bg-[#E7A94B] h-full"
-                            style={{ width: `${market.downProbability}%` }}
-                          />
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="py-3 px-4">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium ${
-                          isUp
-                            ? "bg-[#4DA3FF]/10 text-[#4DA3FF]"
-                            : "bg-[#E7A94B]/10 text-[#E7A94B]"
-                        }`}
-                      >
-                        {isUp ? "Bullish Skew" : "Bearish Skew"}
-                      </span>
-                    </td>
-
-                    <td className="py-3 px-4 text-right tabular-nums text-[#F5F5F5] font-medium">
-                      ${market.openInterestUsd.toLocaleString()}
-                    </td>
-
-                    <td
-                      className={`py-3 px-4 text-right tabular-nums font-medium ${
-                        skew >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
-                      }`}
-                    >
-                      {skew >= 0 ? `+${skew.toFixed(1)}%` : `${skew.toFixed(1)}%`}
-                    </td>
-
-                    <td
-                      className={`py-3 px-4 text-right tabular-nums font-medium ${
-                        momentum >= 0 ? "text-[#4DA3FF]" : "text-[#E7A94B]"
-                      }`}
-                    >
-                      {momentum >= 0 ? `+${momentum.toFixed(1)}%` : `${momentum.toFixed(1)}%`}
-                    </td>
-
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
-                        <span className="font-mono text-[12px] text-[#A1A1A1] tabular-nums">
-                          {`${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`}
+                      <td className="py-3 px-4">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium ${
+                            isUp
+                              ? "bg-[#4DA3FF]/10 text-[#4DA3FF]"
+                              : "bg-[#E7A94B]/10 text-[#E7A94B]"
+                          }`}
+                        >
+                          {isUp ? "Bullish Skew" : "Bearish Skew"}
                         </span>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="py-3 px-4 text-right">
-                      <Link
-                        href={`/market/${market.id}`}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#202020] hover:bg-[#2A2A2A] text-[#F5F5F5] text-[12px] transition-colors"
-                      >
-                        <span>Inspect</span>
-                        <span className="text-[#707070] group-hover:text-white">→</span>
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      <td className="py-3 px-4 text-right tabular-nums text-[#F5F5F5] font-medium">
+                        {market.openInterestUsd > 0 ? `$${market.openInterestUsd.toLocaleString()}` : "Unavailable"}
+                      </td>
+
+                      <td className="py-3 px-4 text-right tabular-nums font-mono text-[#A1A1A1]">
+                        {market.spread > 0 ? market.spread.toFixed(4) : "—"}
+                      </td>
+
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#4DA3FF]" />
+                          <span className="font-mono text-[12px] text-[#A1A1A1] tabular-nums">
+                            {`${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td className="py-3 px-4 text-right">
+                        <Link
+                          href={`/market/${market.id}`}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#202020] hover:bg-[#2A2A2A] text-[#F5F5F5] text-[12px] transition-colors"
+                        >
+                          <span>Inspect</span>
+                          <span className="text-[#707070] group-hover:text-white">→</span>
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
